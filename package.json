@@ -1,0 +1,25 @@
+{
+  "name": "ritba",
+  "version": "1.0.0",
+  "description": "ritba",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ercegmatej/RITBA.git"
+  },
+  "author": "merceg",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ercegmatej/RITBA/issues"
+  },
+  "homepage": "https://github.com/ercegmatej/RITBA#readme",
+  "devDependencies": {
+    "cypress": "^12.8.1"
+  },
+  "keywords": [
+    "ritba"
+  ]
+}
