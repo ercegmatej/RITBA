@@ -17,9 +17,12 @@
   },
   "homepage": "https://github.com/ercegmatej/RITBA#readme",
   "devDependencies": {
-    "cypress": "^12.8.1"
+    "cypress": "^12.9.0"
   },
   "keywords": [
     "ritba"
-  ]
+  ],
+  "dependencies": {
+    "chai-sorted": "^0.2.0"
+  }
 }
