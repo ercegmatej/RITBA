@@ -17,12 +17,14 @@
   },
   "homepage": "https://github.com/ercegmatej/RITBA#readme",
   "devDependencies": {
+    "@4tw/cypress-drag-drop": "^2.2.3",
     "cypress": "^12.9.0"
   },
   "keywords": [
     "ritba"
   ],
   "dependencies": {
-    "chai-sorted": "^0.2.0"
+    "chai-sorted": "^0.2.0",
+    "cypress-real-events": "^1.7.6"
   }
 }
