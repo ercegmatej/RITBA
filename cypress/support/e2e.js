@@ -17,7 +17,15 @@
 import '@4tw/cypress-drag-drop';
 import "cypress-real-events";
 import './commands'
+import addContext from 'mochawesome/addContext'
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 chai.use(require("chai-sorted"));
+
+Cypress.on("test:after:run", (test, runnable) => {  
+    if (test.state === "failed") {    
+        const screenshot = `mochawesome-report/assets/${Cypress.spec.name}/${runnable.parent.title} -- ${test.title} (failed).png`;    
+        addContext({ test }, screenshot);  
+    }
+});

@@ -1,0 +1,232 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 7,
+    "passes": 5,
+    "pending": 0,
+    "failures": 2,
+    "testsRegistered": 7,
+    "passPercent": 71.42857142857143,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false,
+    "start": "2023-04-21T13:41:02.543Z",
+    "end": "2023-04-21T13:41:48.036Z",
+    "duration": 45493
+  },
+  "results": [
+    {
+      "uuid": "69c23e20-0357-4103-b39f-faaab6d8b8a1",
+      "title": "",
+      "fullFile": "cypress\\e2e\\account-search\\T1.cy.js",
+      "file": "cypress\\e2e\\account-search\\T1.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "8d7975f0-d99b-4f83-8163-adb503351fce",
+          "title": "T1 - Account Search - General design and grid functionality",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Login",
+              "fullTitle": "T1 - Account Search - General design and grid functionality Login",
+              "timedOut": null,
+              "duration": 2767,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.login('merceg', 'ritbaVPN%$532', 'Call Center');",
+              "err": {},
+              "uuid": "81ef67c2-bc28-41fe-a7fc-d5c219d8d49d",
+              "parentUUID": "8d7975f0-d99b-4f83-8163-adb503351fce",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Verify toolbar items (2-3)",
+              "fullTitle": "T1 - Account Search - General design and grid functionality Verify toolbar items (2-3)",
+              "timedOut": null,
+              "duration": 266,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.get('kendo-grid-toolbar').find('span:first').should('contain.text', 'Global Search');\ncy.dropdownItems('app-account-search kendo-grid-toolbar', dropdownItems);\ncy.get('[placeholder=\"Search\"]').should('be.visible');\ncy.get('[placeholder=\"Search\"]').parents('kendo-textbox').find('button').should('be.visible');",
+              "err": {},
+              "uuid": "5e036b70-c00d-455e-95a0-5cd63eec5475",
+              "parentUUID": "8d7975f0-d99b-4f83-8163-adb503351fce",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Verify grid headers (4)",
+              "fullTitle": "T1 - Account Search - General design and grid functionality Verify grid headers (4)",
+              "timedOut": null,
+              "duration": 81,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.headers('app-account-search', gridHeaders);",
+              "err": {},
+              "uuid": "4c22f923-256d-4f77-a0d0-cb3d48a45b87",
+              "parentUUID": "8d7975f0-d99b-4f83-8163-adb503351fce",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Verify search functionalities (5-7)",
+              "fullTitle": "T1 - Account Search - General design and grid functionality Verify search functionalities (5-7)",
+              "timedOut": null,
+              "duration": 1913,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.input('kendo-grid-toolbar', 'kendo-textbox', 'Text');\ncy.get('[title=\"Clear\"]').click();\ncy.get('[title=\"Clear\"]').should('not.exist');\ncy.get('[placeholder=\"Search\"]').parents('kendo-textbox').find('button').click();\ncy.popup('Warning', 'Please enter a search term first.', 'Ok');\ncy.search('kendo-grid-toolbar', 'Last Name', 'Smith');\ncy.get('kendo-grid-toolbar').find('span:eq(\"1\")').should('contain.text', ' Records Found');",
+              "err": {},
+              "uuid": "453ee4fc-e827-4595-9427-94acd5ff79ad",
+              "parentUUID": "8d7975f0-d99b-4f83-8163-adb503351fce",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Grid sort (8)",
+              "fullTitle": "T1 - Account Search - General design and grid functionality Grid sort (8)",
+              "timedOut": null,
+              "duration": 6233,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": "\"mochawesome-report/assets/T1.cy.js/T1 - Account Search - General design and grid functionality -- Grid sort (8) (failed).png\"",
+              "code": "cy.sort('app-account-search', ':first');",
+              "err": {
+                "message": "AssertionError: Timed out retrying after 4000ms: Expected <kendo-icon.k-icon.ng-star-inserted.k-i-sort-desc-small> not to exist in the DOM, but it was continuously found. Queried from:\n\n              > cy.get(<th.k-header.k-table-th.k-touch-action-none.k-grid-draggable-header.ng-star-inserted.k-sorted>)",
+                "estack": "AssertionError: Timed out retrying after 4000ms: Expected <kendo-icon.k-icon.ng-star-inserted.k-i-sort-desc-small> not to exist in the DOM, but it was continuously found. Queried from:\n\n              > cy.get(<th.k-header.k-table-th.k-touch-action-none.k-grid-draggable-header.ng-star-inserted.k-sorted>)\n    at Context.eval (webpack:///./cypress/support/commands.js:62:43)",
+                "diff": null
+              },
+              "uuid": "a2e265be-11ad-41af-9bc8-636da27559db",
+              "parentUUID": "8d7975f0-d99b-4f83-8163-adb503351fce",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Pagination (19-20)",
+              "fullTitle": "T1 - Account Search - General design and grid functionality Pagination (19-20)",
+              "timedOut": null,
+              "duration": 19549,
+              "state": "passed",
+              "speed": "slow",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.page('app-account-search');",
+              "err": {},
+              "uuid": "383258c3-52a6-47bc-81c1-8342873c32eb",
+              "parentUUID": "8d7975f0-d99b-4f83-8163-adb503351fce",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Account manager functionalities (9-18)",
+              "fullTitle": "T1 - Account Search - General design and grid functionality Account manager functionalities (9-18)",
+              "timedOut": null,
+              "duration": 14554,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": "\"mochawesome-report/assets/T1.cy.js/T1 - Account Search - General design and grid functionality -- Account manager functionalities (9-18) (failed).png\"",
+              "code": "cy.openAccount('Account Number', '50002183');\ncy.get('app-account-basic-info').find('div').should('contain.text', 'Individual');\ncy.get('app-account-basic-info').find('div').should('contain.text', '50002183');\ncy.get('kendo-dialog-titlebar button').click();\ncy.get('app-account-search').should('be.visible');\ncy.get('app-account-manager').should('not.exist');\ncy.openAccount('Account Number', '52112656');\ncy.get('app-account-basic-info').find('div').should('contain.text', 'Commercial');\ncy.get('app-account-basic-info').find('div').should('contain.text', '52112656');\ncy.get('kendo-dialog-titlebar button').click();\ncy.get('app-account-search').should('be.visible');\ncy.get('app-account-manager').should('not.exist');\ncy.openAccount('Account Number', '52034047');\ncy.get('app-account-basic-info').find('div').should('contain.text', 'Non Revenue');\ncy.get('app-account-basic-info').find('div').should('contain.text', '52034047');\ncy.get('kendo-dialog-titlebar button').click();\ncy.get('app-account-search').should('be.visible');\ncy.get('app-account-manager').should('not.exist');\ncy.openAccount('Account Number', '1005068855');\ncy.get('kendo-dialog-titlebar').should('contain.text', 'Contravention Account Manager');\ncy.get('app-unregistered-account-basic-info').find('div').should('contain.text', '1005068855');\ncy.get('kendo-dialog-titlebar button').click();\ncy.get('app-account-search').should('be.visible');\ncy.get('app-account-manager').should('not.exist');\ncy.openAccount('Account Number', '1002231379');\ncy.get('kendo-dialog-titlebar').should('contain.text', 'Contravention Account Manager');\ncy.get('app-unregistered-account-basic-info').find('div').should('contain.text', '1002231379');\ncy.get('kendo-dialog-titlebar button').click();\ncy.get('app-account-search').should('be.visible');\ncy.get('app-account-manager').should('not.exist');",
+              "err": {
+                "message": "AssertionError: Timed out retrying after 4000ms: expected '<div.mt-2.d-flex.flex-wrap.text-nowrap.basic-info.float-left.float-lg-end>' to contain text '1005068855', but the text was ' John doe | Account Number: 111122223333444455556666 '",
+                "estack": "AssertionError: Timed out retrying after 4000ms: expected '<div.mt-2.d-flex.flex-wrap.text-nowrap.basic-info.float-left.float-lg-end>' to contain text '1005068855', but the text was ' John doe | Account Number: 111122223333444455556666 '\n    at Context.eval (webpack:///./cypress/e2e/account-search/T1.cy.js:69:66)",
+                "diff": "- ' John doe | Account Number: 111122223333444455556666 '\n+ '1005068855'\n"
+              },
+              "uuid": "c8ce55e2-80a7-4cae-839d-20d47a1d55db",
+              "parentUUID": "8d7975f0-d99b-4f83-8163-adb503351fce",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "81ef67c2-bc28-41fe-a7fc-d5c219d8d49d",
+            "5e036b70-c00d-455e-95a0-5cd63eec5475",
+            "4c22f923-256d-4f77-a0d0-cb3d48a45b87",
+            "453ee4fc-e827-4595-9427-94acd5ff79ad",
+            "383258c3-52a6-47bc-81c1-8342873c32eb"
+          ],
+          "failures": [
+            "a2e265be-11ad-41af-9bc8-636da27559db",
+            "c8ce55e2-80a7-4cae-839d-20d47a1d55db"
+          ],
+          "pending": [],
+          "skipped": [],
+          "duration": 45363,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.0.1"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": false,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.3"
+    },
+    "marge": {
+      "options": {
+        "charts": true,
+        "reportPageTitle": "Strabag Headless Results",
+        "inlineAssets": true,
+        "saveAllAttempts": false,
+        "overwrite": false,
+        "html": false,
+        "json": true,
+        "reportDir": "cypress/reports/mochawesome-report"
+      },
+      "version": "6.2.0"
+    }
+  }
+}
