@@ -1,0 +1,3 @@
+-- BY FOLDERS --
+ACCOUNT SEARCH:
+npm run cypress:run -- --spec cypress/e2e/account-search/**cy.js ; npm run merge_and_report
