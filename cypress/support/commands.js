@@ -1,3 +1,5 @@
+const port = 2323;
+
 Cypress.Commands.add('login' , (username, password, mode) => {
     cy.intercept('POST', 'https://ri2-crm.emovis.hr:2323/token').as('token')
     cy.intercept('GET', 'https://ri2-crm.emovis.hr:2323/Agent/SignedInCsr').as('csr')
@@ -18,17 +20,17 @@ Cypress.Commands.add('login' , (username, password, mode) => {
     })
 })
 
-Cypress.Commands.add('headers' , (parent, labels) => {
-    cy.get(parent).find('th').not(':first').each(($th, i) => {
+Cypress.Commands.add('headers' , (parent, filter, labels) => {
+    cy.get(parent).find('th').not(filter).each(($th, i) => {
         cy.get($th).should('contain.text', labels[i])
     })
 })
 
-Cypress.Commands.add('sort', (parent, filter) => {
-    cy.intercept('POST', 'https://ri2-crm.emovis.hr:2323/Search/MatchingAccountsList').as('sort')
+Cypress.Commands.add('sort', (parent, filter, url) => {
+    cy.intercept('POST', 'https://ri2-crm.emovis.hr:' + port + url).as('sort')
     
     cy.get(parent).within(() => {
-        cy.get('th').not(filter).not(':last').each(($th) => {
+        cy.get('th').not(filter).each(($th) => {
             const col = $th.attr('aria-colindex')
             const { _ } = Cypress
             const toStrings = (strings) => _.map(strings, 'textContent')
@@ -77,8 +79,8 @@ Cypress.Commands.add('dropdown' , (parent, listItem) => {
     cy.contains('kendo-popup li', listItem).click()
 })
 
-Cypress.Commands.add('page', (table) => {
-    cy.intercept('POST', 'https://ri2-crm.emovis.hr:2323/Search/MatchingAccountsList').as('page')
+Cypress.Commands.add('page', (table, url) => {
+    cy.intercept('POST', 'https://ri2-crm.emovis.hr:' + port + url).as('page')
 
     cy.get(`${table} kendo-pager kendo-dropdownlist`).click()
     cy.get('kendo-popup').contains(/^5$/).click()
@@ -134,8 +136,8 @@ Cypress.Commands.add('popup', (title, body, button) => {
     })
 })
 
-Cypress.Commands.add('search', (selector, category, term) => {
-    cy.intercept('POST', 'https://ri2-crm.emovis.hr:2323/Search/MatchingAccountsList').as('search')
+Cypress.Commands.add('search', (selector, category, term, url) => {
+    cy.intercept('POST', 'https://ri2-crm.emovis.hr:' + port + url).as('search')
 
     cy.get(`${selector} kendo-dropdownlist`).click()
     cy.contains('kendo-popup li', category).click()
@@ -156,4 +158,46 @@ Cypress.Commands.add('input', (selector, type, input) => {
     // else {
     //     cy.contains(type, label).find('input').clear().type(input)
     // }
+})
+
+Cypress.Commands.add('sidenav', (item, content) => {
+    cy.wait(500)
+    cy.contains('app-tree-view-sidenav [kendotreeviewitem]', item).click()
+    cy.contains('app-tree-view-sidenav [kendotreeviewitem]', item).within(() => {
+        cy.contains('[kendotreeviewitemcontent]', content).click()
+    })
+})
+
+Cypress.Commands.add('verifySearch', (app, category, column, url) => {
+    cy.intercept('POST', 'https://ri2-crm.emovis.hr:' + port + url).as('search')
+
+    cy.get(app).find('kendo-dropdownlist').first().click()
+    cy.contains('kendo-popup li', category).click()
+    cy.get(app).within(() => {
+        cy.contains('kendo-grid th', column).then(($th) => {
+            const td = $th.attr('aria-colindex')
+            cy.log(td)
+            cy.get(`[data-kendo-grid-column-index="${td-1}"]`).then(($td) => {
+                const resultsLength = $td.length
+                cy.log(resultsLength)
+                cy.randomValue(0, resultsLength, 0).then(($rand) => {
+                    cy.get($td.eq($rand)).then(($content) => {
+                        const search = $content.text()
+                        cy.log(search)
+                        cy.get('kendo-textbox').type(search + '{enter}')
+                        cy.wait('@search').its('response.statusCode').should('eq', 200)
+                        cy.get(`[data-kendo-grid-column-index="${td-1}"]`).each(($val) => {
+                            cy.get($val).should('contain.text', search)
+                        })
+                        cy.get('[aria-label="Clear"]').click()
+                    })
+                })
+            })
+        })
+    })
+})
+
+Cypress.Commands.add('randomValue', (min, max, places) => {
+    let value = (Math.random() * (max - min)) + min;
+    return Number.parseFloat(value).toFixed(places);
 })
