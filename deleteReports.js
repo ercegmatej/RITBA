@@ -6,5 +6,3 @@ fs.access("./cypress/reports", function(error) {
         fs.rmSync("./cypress/reports", {recursive: true});
     }
 })
-
-

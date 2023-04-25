@@ -16,7 +16,7 @@ describe('T1 - Account Search - General design and grid functionality', () => {
     });
 
     it('Verify grid headers (4)', () => {
-        cy.headers('app-account-search', gridHeaders)
+        cy.headers('app-account-search', ':first', gridHeaders)
     });
 
     it('Verify search functionalities (5-7)', () => {
@@ -27,16 +27,16 @@ describe('T1 - Account Search - General design and grid functionality', () => {
         cy.get('[placeholder="Search"]').parents('kendo-textbox').find('button').click()
         cy.popup('Warning', 'Please enter a search term first.', 'Ok')
 
-        cy.search('kendo-grid-toolbar', 'Last Name', 'Smith')
+        cy.search('kendo-grid-toolbar', 'Last Name', 'Smith', '/Search/MatchingAccountsList')
         cy.get('kendo-grid-toolbar').find('span:eq("1")').should('contain.text', ' Records Found')
     });
 
     it('Grid sort (8)', () => {
-        cy.sort('app-account-search', ':first')
+        cy.sort('app-account-search', ':first, :last', '/Search/MatchingAccountsList')
     });
 
     it('Pagination (19-20)', () => {
-        cy.page('app-account-search')
+        cy.page('app-account-search', '/Search/MatchingAccountsList')
     });
 
     it('Account manager functionalities (9-18)', () => {
