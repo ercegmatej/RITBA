@@ -32,6 +32,7 @@
   ],
   "dependencies": {
     "chai-sorted": "^0.2.0",
-    "cypress-real-events": "^1.7.6"
+    "cypress-real-events": "^1.7.6",
+    "dayjs": "^1.11.7"
   }
 }

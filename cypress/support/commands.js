@@ -26,7 +26,25 @@ Cypress.Commands.add('headers' , (parent, filter, labels) => {
     })
 })
 
-Cypress.Commands.add('sort', (parent, filter, url) => {
+Cypress.Commands.add('dropdownItems' , (parent, labels) => {
+    cy.get(`${parent} kendo-dropdownlist`).click()
+    cy.get('kendo-popup li').each(($li, i) => {
+        cy.get($li).should('contain.text', labels[i])
+    })
+    cy.get(`${parent} kendo-dropdownlist`).click()
+})
+
+Cypress.Commands.add('search', (selector, category, term, url) => {
+    cy.intercept('POST', 'https://ri2-crm.emovis.hr:' + port + url).as('search')
+
+    cy.dropdown(selector, category)
+    cy.get(`${selector} input`).clear().type(term)
+    cy.get(`${selector} [aria-label="Search"]`).click()
+    
+    cy.wait('@search').its('response.statusCode').should('eq', 200)
+})
+
+Cypress.Commands.add('sortGrid', (parent, filter, url) => {
     cy.intercept('POST', 'https://ri2-crm.emovis.hr:' + port + url).as('sort')
     
     cy.get(parent).within(() => {
@@ -64,14 +82,6 @@ Cypress.Commands.add('sort', (parent, filter, url) => {
             cy.get($th).find('kendo-icon').should('not.exist')
         })
     })
-})
-
-Cypress.Commands.add('dropdownItems' , (parent, labels) => {
-    cy.get(`${parent} kendo-dropdownlist`).click()
-    cy.get('kendo-popup li').each(($li, i) => {
-        cy.get($li).should('contain.text', labels[i])
-    })
-    cy.get(`${parent} kendo-dropdownlist`).click()
 })
 
 Cypress.Commands.add('dropdown' , (parent, listItem) => {
@@ -136,17 +146,6 @@ Cypress.Commands.add('popup', (title, body, button) => {
     })
 })
 
-Cypress.Commands.add('search', (selector, category, term, url) => {
-    cy.intercept('POST', 'https://ri2-crm.emovis.hr:' + port + url).as('search')
-
-    cy.get(`${selector} kendo-dropdownlist`).click()
-    cy.contains('kendo-popup li', category).click()
-    cy.get(`${selector} input`).type(term)
-    cy.get(`${selector} [aria-label="Search"]`).click()
-    
-    cy.wait('@search').its('response.statusCode').should('eq', 200)
-})
-
 Cypress.Commands.add('input', (selector, type, input) => {
     if (type == 'kendo-textbox') {
         cy.get(`${selector} ${type}`).find('input').clear().type(input)
@@ -173,25 +172,81 @@ Cypress.Commands.add('verifySearch', (app, category, column, url) => {
 
     cy.get(app).find('kendo-dropdownlist').first().click()
     cy.contains('kendo-popup li', category).click()
+    cy.get(app).within(($app) => {
+        cy.contains('kendo-grid th', column).then(($th) => {
+            const td = $th.attr('aria-colindex')
+            cy.get(`[data-kendo-grid-column-index="${td-1}"]`).then(($td) => {
+                const resultsLength = $td.length
+                cy.randomValue(0, resultsLength-1, 0).then(($rand) => {
+                    cy.get($td.eq($rand)).then(($content) => {
+                        const search = $content.text()
+                        if ($app.find('kendo-grid-toolbar kendo-dropdownlist').length > 1) {
+                            cy.get('kendo-grid-toolbar kendo-dropdownlist:eq(1)').click()
+                            cy.contains('kendo-popup li', search).click()
+                            cy.wait('@search').its('response.statusCode').should('eq', 200)
+                            cy.get(`[data-kendo-grid-column-index="${td-1}"]`).each(($val) => {
+                                cy.get($val).should('contain.text', search)
+                            })
+                        }
+                        else {
+                            cy.get('kendo-textbox').type(search + '{enter}')
+                            cy.wait('@search').its('response.statusCode').should('eq', 200)
+                            cy.wait(500)
+                            cy.get(`[data-kendo-grid-column-index="${td-1}"]`).each(($val) => {
+                                cy.get($val).should('contain.text', search)
+                            })
+                        }
+                    })
+                })
+            })
+        })
+    })
+    cy.get('[aria-label="Clear"]').click()
+    cy.get('kendo-dropdownlist').first().click()
+    cy.contains('kendo-popup li', 'All').click()
+})
+
+Cypress.Commands.add('verifyDateSearch', (app, column, search) => {
+    const dayjs = require('dayjs')
+    var customParseFormat = require('dayjs/plugin/customParseFormat')
+    dayjs.extend(customParseFormat) 
+    const today = dayjs()
+
+    cy.get(app).find('kendo-dropdownlist').first().click()
+    cy.contains('kendo-popup li', search).click()
+    cy.get(app).then(($app) => {
+        if($app.find('[aria-label="Search"]').length>0) {
+            cy.get('[aria-label="Search"]').last().click({force:true})
+        }
+    })
     cy.get(app).within(() => {
         cy.contains('kendo-grid th', column).then(($th) => {
             const td = $th.attr('aria-colindex')
-            cy.log(td)
-            cy.get(`[data-kendo-grid-column-index="${td-1}"]`).then(($td) => {
-                const resultsLength = $td.length
-                cy.log(resultsLength)
-                cy.randomValue(0, resultsLength, 0).then(($rand) => {
-                    cy.get($td.eq($rand)).then(($content) => {
-                        const search = $content.text()
-                        cy.log(search)
-                        cy.get('kendo-textbox').type(search + '{enter}')
-                        cy.wait('@search').its('response.statusCode').should('eq', 200)
-                        cy.get(`[data-kendo-grid-column-index="${td-1}"]`).each(($val) => {
-                            cy.get($val).should('contain.text', search)
-                        })
-                        cy.get('[aria-label="Clear"]').click()
+            cy.get('kendo-grid-list tr').then(($tr) => {
+                if (!$tr.text().includes('No records available.')) {
+                    cy.get(`[data-kendo-grid-column-index="${td-1}"]`).then(($td) => {
+                        const resultsLength = $td.length
+                        if (resultsLength > 0 ) {
+                            cy.get($td).each(($time) => {
+                                const date = dayjs($time.text().slice(1, -1), 'DD/MM/YYYY')
+                                switch (search) {
+                                    case 'Current Date':
+                                        expect(date.isSame(today))
+                                        break;
+                                    case 'Last 7 Days':
+                                        expect(date.isBefore(today) && date.isAfter(today.subtract(7, 'day'))).to.be.true
+                                        break;
+                                    case 'Last 14 Days':
+                                        expect(date.isBefore(today) && date.isAfter(today.subtract(14, 'day'))).to.be.true
+                                        break;
+                                    case 'Last 30 Days':
+                                        expect(date.isBefore(today) && date.isAfter(today.subtract(30, 'day'))).to.be.true
+                                        break;
+                                }
+                            })
+                        }
                     })
-                })
+                }
             })
         })
     })
@@ -200,4 +255,24 @@ Cypress.Commands.add('verifySearch', (app, category, column, url) => {
 Cypress.Commands.add('randomValue', (min, max, places) => {
     let value = (Math.random() * (max - min)) + min;
     return Number.parseFloat(value).toFixed(places);
+})
+
+Cypress.Commands.add('field', (label, text) => {
+    cy.contains('kendo-formfield', label).then(($field) => {
+        if ($field.find('kendo-dropdownlist').length > 0) {
+            cy.get($field).find('kendo-dropdownlist').click()
+            cy.contains('kendo-popup li', text).click()
+        }
+        else if ($field.find('kendo-textarea').length > 0) {
+            cy.get($field).clear().type(text)
+        }
+        else if ($field.find('kendo-textbox').length > 0) {
+            cy.get($field).clear().type(text)
+        }
+    })
+})
+
+Cypress.Commands.add('requiredError', (label) => {
+    cy.contains('kendo-formfield', label).find('div').children(':first').should('have.class', 'ng-invalid')
+    cy.contains('kendo-formfield', label).find('kendo-formerror').should('contain.text', `${label} is required`)
 })

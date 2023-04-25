@@ -20,9 +20,9 @@ describe('T7 - Cases - Grid Functionality and search', () => {
         cy.dropdownItems('app-case kendo-grid-toolbar', dropdownItems)
     });
 
-    // it('Sort grid (2)', () => {
-    //     cy.sort('app-case', ':eq(0), :eq(1)', '/CaseManagement/CasesList')
-    // });
+    it('Sort grid (2)', () => {
+        cy.sortGrid('app-case', ':eq(0), :eq(1)', '/CaseManagement/CasesList')
+    });
 
     it('Pagination (3)', () => {
         cy.page('app-case', '/CaseManagement/CasesList')
@@ -34,9 +34,21 @@ describe('T7 - Cases - Grid Functionality and search', () => {
         cy.get('[title="Close"]').click()
     });
 
-    it('Search', () => {
-        for (let i = 1; i<dropdownItems.length; i++) {
+    it('Search categories (6-11)', () => {
+        for (let i = 1; i<5; i++) {
             cy.verifySearch('app-case', dropdownItems[i], gridHeaders[i], '/CaseManagement/CasesList')
+        }
+
+        //TODO User search
+
+
+        //TODO Unread Email search (envelope)
+
+    });
+
+    it('Date search 12-13', () => {
+        for (let i = 7; i<10; i++) {
+            cy.verifyDateSearch('app-case', 'Created Date', dropdownItems[i])
         }
     });
 });

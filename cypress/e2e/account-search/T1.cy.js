@@ -32,7 +32,7 @@ describe('T1 - Account Search - General design and grid functionality', () => {
     });
 
     it('Grid sort (8)', () => {
-        cy.sort('app-account-search', ':first, :last', '/Search/MatchingAccountsList')
+        cy.sortGrid('app-account-search', ':first, :last', '/Search/MatchingAccountsList')
     });
 
     it('Pagination (19-20)', () => {
