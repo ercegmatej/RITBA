@@ -18,6 +18,7 @@ import '@4tw/cypress-drag-drop';
 import "cypress-real-events";
 import './commands';
 import 'dayjs';
+import 'cypress-file-upload';
 import addContext from 'mochawesome/addContext';
 
 // Alternatively you can use CommonJS syntax:

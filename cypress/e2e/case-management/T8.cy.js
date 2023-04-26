@@ -43,8 +43,8 @@ describe('T8 - Cases - Add new case (mandatory fields)', () => {
     });
 
     it('Populate the mandatory fields', () => {
-        cy.field('Department', 'dep')
-        cy.field('Case Type', 'test1')
+        cy.field('Department', 'TR1942023')
+        cy.field('Case Type', 'TR_Case_DEP')
         cy.field('Description', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean m')
         cy.contains('kendo-formfield', 'Description').find('kendo-textarea').should('have.attr', 'maxlength', '100')
     });

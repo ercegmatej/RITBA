@@ -269,6 +269,9 @@ Cypress.Commands.add('field', (label, text) => {
         else if ($field.find('kendo-textbox').length > 0) {
             cy.get($field).clear().type(text)
         }
+        else if ($field.find('[type="radio"]').length > 0) {
+            cy.get($field).find('[type="radio"]').check()
+        }
     })
 })
 
