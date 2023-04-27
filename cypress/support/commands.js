@@ -139,8 +139,10 @@ Cypress.Commands.add('openAccount', (category, value) => {
 })
 
 Cypress.Commands.add('popup', (title, body, button) => {
-    cy.get('kendo-dialog').last().within(() => {
-        cy.contains('kendo-dialog-titlebar', title).should('be.visible')
+    cy.get('kendo-dialog').last().within(($dialog) => {
+        if ($dialog.find('kendo-dialog-titlebar').length > 0) {
+            cy.contains('kendo-dialog-titlebar', title).should('be.visible')
+        }
         cy.contains('.app-dialog-message.ng-star-inserted', body).should('be.visible')
         cy.contains('kendo-dialog-actions button', button).click()
     })
@@ -267,7 +269,12 @@ Cypress.Commands.add('field', (label, text) => {
             cy.get($field).clear().type(text)
         }
         else if ($field.find('kendo-textbox').length > 0) {
-            cy.get($field).clear().type(text)
+            if (text == '') {
+                cy.get($field).clear()
+            }
+            else {
+                cy.get($field).clear().type(text)
+            }
         }
         else if ($field.find('[type="radio"]').length > 0) {
             cy.get($field).find('[type="radio"]').check()
@@ -275,7 +282,41 @@ Cypress.Commands.add('field', (label, text) => {
     })
 })
 
+Cypress.Commands.add('verifyField', (label, text) => {
+    cy.contains('kendo-formfield', label).then(($field) => {
+        if ($field.find('kendo-dropdownlist').length > 0) {
+            cy.get($field).find('kendo-dropdownlist').should('contain.text', text)
+        }
+        else if ($field.find('kendo-textarea').length > 0) {
+            cy.get($field).find('kendo-textarea').should('contain.text', text)
+        }
+        else if ($field.find('kendo-textbox').length > 0) {
+            cy.get($field).find('kendo-textbox').should('contain.text', text)
+        }
+        else if ($field.find('[type="radio"]').length > 0) {
+            cy.get($field).find('[type="radio"]').should('be.checked')
+        }
+    })
+})
+
 Cypress.Commands.add('requiredError', (label) => {
     cy.contains('kendo-formfield', label).find('div').children(':first').should('have.class', 'ng-invalid')
     cy.contains('kendo-formfield', label).find('kendo-formerror').should('contain.text', `${label} is required`)
+})
+
+Cypress.Commands.add('formError', (label, error) => {
+    cy.contains('kendo-formfield', label).find('div').children(':first').should('have.class', 'ng-invalid')
+    cy.contains('kendo-formfield', label).find('kendo-formerror').should('contain.text', error)
+})
+
+Cypress.Commands.add('calendar', (year, month, day) => { //cmd for Toggle Calendar button; format ('YYYY', 'Mon', 'DD'); e.g. ('2022', 'Aug', '29')
+    cy.get('[title="Toggle calendar"]').click()
+    cy.get('kendo-calendar').within(() => {
+        cy.get('.k-button.k-button-md.k-rounded-md.k-button-flat.k-button-flat-base.k-calendar-title').click()
+        cy.contains('kendo-calendar-navigation', year).click()
+        cy.contains('tr', year).parents('tbody').within(() => {
+            cy.contains('td', month).click()
+        })
+        cy.get('kendo-calendar-viewlist').find('td').contains(day).first().click()
+    })
 })

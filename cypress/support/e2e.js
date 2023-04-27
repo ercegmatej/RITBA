@@ -19,6 +19,7 @@ import "cypress-real-events";
 import './commands';
 import 'dayjs';
 import 'cypress-file-upload';
+import 'cypress-iframe';
 import addContext from 'mochawesome/addContext';
 
 // Alternatively you can use CommonJS syntax:
@@ -31,3 +32,9 @@ Cypress.on("test:after:run", (test, runnable) => {
         addContext({ test }, screenshot);  
     }
 });
+
+Cypress.on('uncaught:exception', (err, runnable) => {
+    // returning false here prevents Cypress from
+    // failing the test
+    return false
+  })

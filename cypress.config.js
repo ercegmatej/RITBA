@@ -14,6 +14,7 @@ module.exports = defineConfig({
   },
   screenshotsFolder: "cypress/reports/mochawesome-report/assets",
   e2e: {
+    numTestsKeptInMemory: 3,
     defaultCommandTimeout: 10000,
     testIsolation: false,
     baseUrl: "http://trserver:4321/login",
