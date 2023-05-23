@@ -108,7 +108,7 @@ describe('T10 - Cases - Edit case', () => {
 
         cy.field('Case Type', editCase_type)
         cy.field('Priority', 'Low')
-        cy.calendar('2023', 'Sep', '21')
+        cy.calendar(0,'2023', 'Sep', '21')
         cy.field('Notes', 'Test note')
         cy.get('app-edit-case app-upload input').attachFile('test.pdf')
     });

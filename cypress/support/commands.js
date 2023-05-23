@@ -1,8 +1,8 @@
 const port = 2323;
 
 Cypress.Commands.add('login' , (username, password, mode) => {
-    cy.intercept('POST', 'https://ri2-crm.emovis.hr:2323/token').as('token')
-    cy.intercept('GET', 'https://ri2-crm.emovis.hr:2323/Agent/SignedInCsr').as('csr')
+    cy.intercept('POST', 'https://ri2-crm-b.emovis.hr/token').as('token')
+    cy.intercept('GET', 'https://ri2-crm-b.emovis.hr/Agent/SignedInCsr').as('csr')
 
     cy.visit('/')
     cy.input('app-input kendo-formfield:first', 'kendo-textbox', username)
@@ -309,14 +309,14 @@ Cypress.Commands.add('formError', (label, error) => {
     cy.contains('kendo-formfield', label).find('kendo-formerror').should('contain.text', error)
 })
 
-Cypress.Commands.add('calendar', (year, month, day) => { //cmd for Toggle Calendar button; format ('YYYY', 'Mon', 'DD'); e.g. ('2022', 'Aug', '29')
-    cy.get('[title="Toggle calendar"]').click()
+Cypress.Commands.add('calendar', (element, year, month, day) => { //cmd for Toggle Calendar button; format ('YYYY', 'Mon', 'DD'); e.g. ('2022', 'Aug', '29')
+    cy.get(`[title="Toggle calendar"]:eq(${element})`).click()
     cy.get('kendo-calendar').within(() => {
-        cy.get('.k-button.k-button-md.k-rounded-md.k-button-flat.k-button-flat-base.k-calendar-title').click()
-        cy.contains('kendo-calendar-navigation', year).click()
+        cy.get('.k-button.k-button-md.k-rounded-md.k-button-flat.k-button-flat-base.k-calendar-title').click({force:true})
+        cy.contains('kendo-calendar-navigation', year).click({force:true})
         cy.contains('tr', year).parents('tbody').within(() => {
-            cy.contains('td', month).click()
+            cy.contains('td', month).click({force:true})
         })
-        cy.get('kendo-calendar-viewlist').find('td').contains(day).first().click()
+        cy.get('kendo-calendar-viewlist').find('td').contains(day).first().click({force:true})
     })
 })
