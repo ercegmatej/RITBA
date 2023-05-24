@@ -1,8 +1,6 @@
-const port = 2323;
-
 Cypress.Commands.add('login' , (username, password, mode) => {
-    cy.intercept('POST', 'https://ri2-crm-b.emovis.hr/token').as('token')
-    cy.intercept('GET', 'https://ri2-crm-b.emovis.hr/Agent/SignedInCsr').as('csr')
+    cy.intercept('POST', Cypress.env('ip') + '/token').as('token')
+    cy.intercept('GET', Cypress.env('ip') + '/Agent/SignedInCsr').as('csr')
 
     cy.visit('/')
     cy.input('app-input kendo-formfield:first', 'kendo-textbox', username)
@@ -34,8 +32,16 @@ Cypress.Commands.add('dropdownItems' , (parent, labels) => {
     cy.get(`${parent} kendo-dropdownlist`).click()
 })
 
+Cypress.Commands.add('functionItems' , (parent, labels) => {
+    cy.get(`${parent} kendo-dropdownbutton`).click()
+    cy.get('kendo-popup li').each(($li, i) => {
+        cy.get($li).should('contain.text', labels[i])
+    })
+    cy.get(`${parent} kendo-dropdownbutton`).click()
+})
+
 Cypress.Commands.add('search', (selector, category, term, url) => {
-    cy.intercept('POST', 'https://ri2-crm.emovis.hr:' + port + url).as('search')
+    cy.intercept('POST', Cypress.env('ip') + url).as('search')
 
     cy.dropdown(selector, category)
     cy.get(`${selector} input`).clear().type(term)
@@ -45,7 +51,7 @@ Cypress.Commands.add('search', (selector, category, term, url) => {
 })
 
 Cypress.Commands.add('sortGrid', (parent, filter, url) => {
-    cy.intercept('POST', 'https://ri2-crm.emovis.hr:' + port + url).as('sort')
+    cy.intercept('POST', Cypress.env('ip') + url).as('sort')
     
     cy.get(parent).within(() => {
         cy.get('th').not(filter).each(($th) => {
@@ -90,7 +96,7 @@ Cypress.Commands.add('dropdown' , (parent, listItem) => {
 })
 
 Cypress.Commands.add('page', (table, url) => {
-    cy.intercept('POST', 'https://ri2-crm.emovis.hr:' + port + url).as('page')
+    cy.intercept('POST', Cypress.env('ip') + url).as('page')
 
     cy.get(`${table} kendo-pager kendo-dropdownlist`).click()
     cy.get('kendo-popup').contains(/^5$/).click()
@@ -128,14 +134,18 @@ Cypress.Commands.add('page', (table, url) => {
 })
 
 Cypress.Commands.add('openAccount', (category, value) => {
-    cy.intercept('GET', 'https://ri2-crm.emovis.hr:2323/Account/**').as('openAccount')
+    cy.intercept('GET', Cypress.env('ip') + '/Account/**').as('openAccount')
 
     cy.dropdown('app-account-search kendo-grid-toolbar', category)
     cy.get('app-account-search kendo-grid-toolbar input').clear().type(value)
     cy.get('app-account-search kendo-grid-toolbar [aria-label="Search"]').click()
-    cy.contains('app-account-search tbody td', value).click()
 
     cy.wait('@openAccount').its('response.statusCode').should('eq', 200)
+})
+
+Cypress.Commands.add('tab', (name) => {
+    cy.contains('app-account-manager ul li', name).click()
+    cy.wait(1000)
 })
 
 Cypress.Commands.add('popup', (title, body, button) => {
@@ -170,7 +180,7 @@ Cypress.Commands.add('sidenav', (item, content) => {
 })
 
 Cypress.Commands.add('verifySearch', (app, category, column, url) => {
-    cy.intercept('POST', 'https://ri2-crm.emovis.hr:' + port + url).as('search')
+    cy.intercept('POST', Cypress.env('ip') + url).as('search')
 
     cy.get(app).find('kendo-dropdownlist').first().click()
     cy.contains('kendo-popup li', category).click()

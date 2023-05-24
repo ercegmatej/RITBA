@@ -1,11 +1,11 @@
 describe('T1 - Account Search - General design and grid functionality', () => {
-    const gridHeaders = ['Pin', 'Status', 'Account Number', 'First Name', 'Last Name', 'Business Name', 'Address Line 1', 'City', 'Province', 'Postal Code',
-    'Registration', 'Plate No.', 'Open Citations', 'Disputed Citations', 'Mobile Number', 'Email Address', 'Open Date', 'Transponder No.']
-    const dropdownItems = ['Account Number', 'Last Name', 'First Name', 'Business Name', 'Address', 'Plate', 
-    'Transponder Number', 'Day Phone', 'Email Address', 'Last 4 Digits', 'Check Number', 'FJNo']
+    const gridHeaders = ['Pin', 'Status', 'Account Number', 'First Name', 'Last Name', 'Company Name', 'Address', 'City', 'State', 'ZipCode',
+    'Registration', 'Lic.Plate', 'Open Citations', 'Disputed Citations', 'Phone Number', 'Email Address', 'Open Date', 'Transponder No.']
+    const dropdownItems = ['Account Number', 'Last Name', 'First Name', 'Company Name', 'Address', 'Plate', 
+    'Transponder Number', 'Day Time Phone', 'Email Address', 'Last 4 digits Card', 'Check Number', 'FJNo']
 
     it('Login', () => {
-        cy.login('merceg', 'ritbaVPN%$532', 'Call Center')
+        cy.login('merceg', 'RITBAvpn%$532', 'Call Center')
     });
 
     it('Verify toolbar items (2-3)', () => {
@@ -27,7 +27,7 @@ describe('T1 - Account Search - General design and grid functionality', () => {
         cy.get('[placeholder="Search"]').parents('kendo-textbox').find('button').click()
         cy.popup('Warning', 'Please enter a search term first.', 'Ok')
 
-        cy.search('kendo-grid-toolbar', 'Last Name', 'Smith', '/Search/MatchingAccountsList')
+        cy.search('kendo-grid-toolbar', 'Last Name', 'Tate', '/Search/MatchingAccountsList')
         cy.get('kendo-grid-toolbar').find('span:eq("1")').should('contain.text', ' Records Found')
     });
 
