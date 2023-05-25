@@ -1,5 +1,5 @@
-Cypress._.times(1, (i) => {
-    const accNumber = [ '50002183', '52112656', '52034047' ];
+Cypress._.times(3, (i) => {
+    const accNumber = [ '51355556', '52112656', '52034047' ];
     describe('T34 - EZ Pass - Account Links - Grid functionality', () => {
         const gridHeaders = ['Account Number', 'Plate No.', 'Number of Citations', 'Amount Dute', 'Address', 'Linked Account Type']
         it('Login', () => {
@@ -11,7 +11,6 @@ Cypress._.times(1, (i) => {
         });
 
         it('Open the Account Links tab', () => {
-            //cy.contains('kendo-dialog-actions button', 'Ok').click()
             cy.tab('Account Links')
         });
 

@@ -4,7 +4,7 @@ module.exports = defineConfig({
   reporter: 'cypress-mochawesome-reporter',
   reporterOptions: {
     charts: true,
-    reportPageTitle: 'Strabag Headless Results',
+    reportPageTitle: 'RITBA Headless Results',
     inlineAssets: true,
     saveAllAttempts: false,
     overwrite: false,
@@ -14,7 +14,7 @@ module.exports = defineConfig({
   },
   screenshotsFolder: "cypress/reports/mochawesome-report/assets",
   e2e: {
-    numTestsKeptInMemory: 3,
+    numTestsKeptInMemory: 0,
     defaultCommandTimeout: 10000,
     testIsolation: false,
     baseUrl: "http://trserver:4321/login",
