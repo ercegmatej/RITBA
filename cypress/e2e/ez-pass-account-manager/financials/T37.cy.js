@@ -1,4 +1,4 @@
-Cypress._.times(1, (i) => {
+Cypress._.times(3, (i) => {
     const accNumber = [ '51355556', '52112656', '52034047' ];
     describe('T37 - EZ Pass - Financials - Grid', () => {
         const gridHeaders = ['Date', 'Description', 'Payment Type', 'Credit', 'Debit', 'Balance', 'FJNo', 'Transaction Type', 'Message', 'PNRef', 'Payment Details', 'Cheque Date', 'CSR Id']
@@ -24,34 +24,34 @@ Cypress._.times(1, (i) => {
             cy.functionItems('app-account-financial', functionItems)
         });
 
-        // it('Dropdown items', () => {
-        //     cy.dropdownItems('app-account-financial kendo-grid-toolbar', dropdownItems)
-        // });
+        it('Dropdown items', () => {
+            cy.dropdownItems('app-account-financial kendo-grid-toolbar', dropdownItems)
+        });
 
-        // it('Grid sort', () => {
-        //     cy.sortGrid('app-account-financial', '', '/Financial/AccountTransactionsList')
-        // });
+        it('Grid sort', () => {
+            cy.sortGrid('app-account-financial', '', '/Financial/AccountTransactionsList')
+        });
 
-        // it('Pagination', () => {
-        //     cy.page('app-account-financial', '/Financial/AccountTransactionsList')
-        //     cy.get('app-account-financial kendo-pager kendo-dropdownlist').click()
-        //     cy.contains('kendo-popup li', /^5$/).click()
-        //     cy.wait(1000)
-        // });
+        it('Pagination', () => {
+            cy.page('app-account-financial', '/Financial/AccountTransactionsList')
+            cy.get('app-account-financial kendo-pager kendo-dropdownlist').click()
+            cy.contains('kendo-popup li', /^5$/).click()
+            cy.wait(1000)
+        });
 
-        // it('Verify search', () => {
-        //     // cy.verifySearch('app-account-financial', 'Reversal FJNo', 'PNRef', '/Financial/AccountTransactionsList')
-        //     // cy.verifySearch('app-account-financial', 'Credit', 'Credit', '/Financial/AccountTransactionsList')
-        //     // cy.verifySearch('app-account-financial', 'Debit', 'Debit', '/Financial/AccountTransactionsList')
-        //     // cy.verifySearch('app-account-financial', 'FJNo', 'FJNo', '/Financial/AccountTransactionsList')
-        //     cy.verifyMoney('app-account-financial', 'Balance', 'Balance', '/Financial/AccountTransactionsList')
-        //     cy.verifySearch('app-account-financial', 'Message', 'Message', '/Financial/AccountTransactionsList')
-        //     cy.verifySearch('app-account-financial', 'Description', 'Description', '/Financial/AccountTransactionsList')
-        //     cy.verifyDateSearch('app-account-financial', 'Date', 'Today')
-        //     cy.verifyDateSearch('app-account-financial', 'Date', 'Last 7 Days')
-        //     cy.verifyDateSearch('app-account-financial', 'Date', 'Last 14 Days')
-        //     cy.verifyDateSearch('app-account-financial', 'Date', 'Last 30 Days')
-        // });
+        it('Verify search', () => {
+            cy.verifySearch('app-account-financial', 'Reversal FJNo', 'PNRef', '/Financial/AccountTransactionsList')
+            cy.verifySearch('app-account-financial', 'Credit', 'Credit', '/Financial/AccountTransactionsList')
+            cy.verifySearch('app-account-financial', 'Debit', 'Debit', '/Financial/AccountTransactionsList')
+            cy.verifySearch('app-account-financial', 'FJNo', 'FJNo', '/Financial/AccountTransactionsList')
+            cy.verifyMoney('app-account-financial', 'Balance', 'Balance', '/Financial/AccountTransactionsList')
+            cy.verifySearch('app-account-financial', 'Message', 'Message', '/Financial/AccountTransactionsList')
+            cy.verifySearch('app-account-financial', 'Description', 'Description', '/Financial/AccountTransactionsList')
+            cy.verifyDateSearch('app-account-financial', 'Date', 'Today')
+            cy.verifyDateSearch('app-account-financial', 'Date', 'Last 7 Days')
+            cy.verifyDateSearch('app-account-financial', 'Date', 'Last 14 Days')
+            cy.verifyDateSearch('app-account-financial', 'Date', 'Last 30 Days')
+        });
 
         it('Exclude tolls', () => {
             cy.get('app-account-financial kendo-grid-toolbar kendo-dropdownlist').first().click()
@@ -61,18 +61,27 @@ Cypress._.times(1, (i) => {
             cy.contains('kendo-popup li', /^100$/).click()
             cy.wait(2000)
 
-            cy.get('app-account-financial [data-kendo-grid-column-index="7"]').each(($type) => {
-                cy.get($type).should('not.contain.text', 'TOLL')
-            })
-            //TODO Length before and after
-            cy.get('app-account-financial app-account-financial kendo-grid-toolbar [type="checkbox"]').uncheck()
-            cy.get('[data-kendo-grid-column-index="7"]').each(($type) => {
-                cy.get($type).should('contain.text', 'TOLL')
+            cy.get('app-account-financial [data-kendo-grid-column-index="7"]').then(($type) => {
+                const before = $type.length
+                cy.get($type).each(($td) => {
+                    cy.get($td).should('not.contain.text', 'TOLL')
+                })
+                cy.get('app-account-financial kendo-grid-toolbar [type="checkbox"]').uncheck()
+                cy.wait(500)
+                cy.get('app-account-financial kendo-pager-info').then(($numberOfItems) => {
+                    const numberOfItems = $numberOfItems.text()
+                    if (numberOfItems.includes(before)) {
+                    }
+                    else {
+                        cy.get('app-account-financial [data-kendo-grid-column-index="7"]').should('contain.text', 'TOLL')
+                    }
+                })
             })
         });
 
         it('Download', () => {
-            
+            cy.contains('app-account-financial kendo-dropdownbutton', 'Download').click()
+            //TODO WIP
         });
     });
 })

@@ -153,6 +153,7 @@ Cypress.Commands.add('openAccount', (category, value) => {
     cy.get('app-account-search kendo-grid-toolbar [aria-label="Search"]').click()
 
     cy.wait('@openAccount').its('response.statusCode').should('eq', 200)
+    cy.wait(2000)
 })
 
 Cypress.Commands.add('tab', (name) => {
@@ -196,37 +197,40 @@ Cypress.Commands.add('verifySearch', (app, category, column, url) => {
 
     cy.get(app).find('kendo-dropdownlist').first().click()
     cy.contains('kendo-popup li', category).click()
-    cy.get(app).within(($app) => {
-        cy.contains('kendo-grid th', column).then(($th) => {
-            const td = $th.attr('aria-colindex')
-            cy.get(`[data-kendo-grid-column-index="${td-1}"]`).then(($td) => {
-                const resultsLength = $td.length
-                cy.randomValue(0, resultsLength-1, 0).then(($rand) => {
-                    cy.get($td.eq($rand)).then(($content) => {
-                        const search = $content.text()
+    cy.contains(`${app} kendo-grid th`, column).then(($th) => {
+        const td = $th.attr('aria-colindex')
+        cy.get(`${app} [data-kendo-grid-column-index="${td-1}"]`).then(($td) => {
+            const resultsLength = $td.length
+            cy.randomValue(0, resultsLength-1, 0).then(($rand) => {
+                cy.get($td.eq($rand)).then(($content) => {
+                    const search = $content.text()
+                    cy.get(app).then(($app) => {
                         if ($app.find('kendo-grid-toolbar kendo-dropdownlist').length > 1) {
-                            cy.get('kendo-grid-toolbar kendo-dropdownlist:eq(1)').click()
-                            cy.contains('kendo-popup li', search).click()
+                            cy.get(`${app} kendo-grid-toolbar kendo-dropdownlist:eq(1)`).click()
+                            cy.log(search.slice(1,-1))
+                            cy.contains('kendo-popup li span', search.slice(1,-1)).click()
                             cy.wait('@search').its('response.statusCode').should('eq', 200)
-                            cy.get(`[data-kendo-grid-column-index="${td-1}"]`).each(($val) => {
-                                cy.get($val).should('contain.text', search)
+                            cy.wait(500)
+                            cy.get(`${app} [data-kendo-grid-column-index="${td-1}"]`).each(($val) => {
+                                cy.get($val).should('contain.text', search.slice(1,-1))
                             })
                         }
                         else {
-                            cy.get('kendo-textbox').type(search + '{enter}')
+                            cy.get(`${app} kendo-textbox`).type(search + '{enter}')
                             cy.wait('@search').its('response.statusCode').should('eq', 200)
                             cy.wait(500)
-                            cy.get(`[data-kendo-grid-column-index="${td-1}"]`).each(($val) => {
-                                cy.get($val).should('contain.text', search)
+                            cy.get(`${app} [data-kendo-grid-column-index="${td-1}"]`).each(($val) => {
+                                const value = $val.text().toLocaleLowerCase()
+                                expect(value).to.eq(search.toLocaleLowerCase())
                             })
+                            cy.get(`${app} [aria-label="Clear"]`).click()
                         }
                     })
                 })
             })
         })
-        cy.get('[aria-label="Clear"]').click()
-        cy.get('kendo-dropdownlist').first().click()
     })
+    cy.get(`${app} kendo-dropdownlist`).first().click()
     cy.contains('kendo-popup li', 'All').click()
 })
 
@@ -255,6 +259,9 @@ Cypress.Commands.add('verifyDateSearch', (app, column, search) => {
                                 const date = dayjs($time.text().slice(1, -1), 'DD/MM/YYYY')
                                 switch (search) {
                                     case 'Current Date':
+                                        expect(date.isSame(today))
+                                        break;
+                                    case 'Today':
                                         expect(date.isSame(today))
                                         break;
                                     case 'Last 7 Days':
