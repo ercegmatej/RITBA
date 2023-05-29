@@ -4,7 +4,7 @@ Cypress._.times(3, (i) => {
     describe('T38 - EZ Pass - History - Grid' + ' - ' + accType[i], () => {
         const gridHeaders = ['Date/Time', 'Operation', 'Field', 'Original Value', 'New Value', 'Reference Id', 'User', 'Access Channel']
         it('Login', () => {
-            cy.login(Cypress.env('username'), Cypress.env('password'))
+            cy.login(Cypress.env('username'), Cypress.env('password'), 'Call Center')
         });
 
         it('Open the account', () => {

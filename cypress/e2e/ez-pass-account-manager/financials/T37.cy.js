@@ -1,11 +1,12 @@
 Cypress._.times(3, (i) => {
     const accNumber = [ '51355556', '52112656', '52034047' ];
-    describe('T37 - EZ Pass - Financials - Grid', () => {
+    const accType = [ 'Individual', 'Commercial', 'Non-revenue' ];
+    describe('T37 - EZ Pass - Financials - Grid' + ' - ' + accType[i], () => {
         const gridHeaders = ['Date', 'Description', 'Payment Type', 'Credit', 'Debit', 'Balance', 'FJNo', 'Transaction Type', 'Message', 'PNRef', 'Payment Details', 'Cheque Date', 'CSR Id']
         const functionItems = ['Reverse Payment', 'Payment Transfer']
         const dropdownItems = ['All', 'Reversal FJNo', 'Credit', 'Debit', 'FJNo', 'Balance', 'Message', 'Description', 'Today', 'Last 7 Days', 'Last 14 Days', 'Last 30 Days']
         it('Login', () => {
-            cy.login(Cypress.env('username'), Cypress.env('password'))
+            cy.login(Cypress.env('username'), Cypress.env('password'), 'Call Center')
         });
 
         it('Open the account', () => {

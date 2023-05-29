@@ -1,6 +1,6 @@
 describe('T8 - Cases - Add new case (mandatory fields)', () => {
     it('Login', () => {
-        cy.login('merceg', 'ritbaVPN%$532', 'Call Center')
+        cy.login(Cypress.env('username'), Cypress.env('password'), 'Call Center')
     });
 
     it('Open case management - cases', () => {

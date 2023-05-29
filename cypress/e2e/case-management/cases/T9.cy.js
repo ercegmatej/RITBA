@@ -6,7 +6,7 @@ describe('T9 - Cases - Add new case (all fields)', () => {
     const case_type = 'TR_Case_DEP'
     const priority = 'Medium'
     it('Login', () => {
-        cy.login('merceg', 'ritbaVPN%$532', 'Call Center')
+        cy.login(Cypress.env('username'), Cypress.env('password'), 'Call Center')
     });
 
     it('Open case management - cases', () => {

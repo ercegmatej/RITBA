@@ -179,9 +179,6 @@ Cypress.Commands.add('input', (selector, type, input) => {
         cy.get(`${selector} ${type}`).click()
         cy.contains('kendo-popup li', input).click()
     }
-    // else {
-    //     cy.contains(type, label).find('input').clear().type(input)
-    // }
 })
 
 Cypress.Commands.add('sidenav', (item, content) => {
@@ -256,7 +253,7 @@ Cypress.Commands.add('verifyDateSearch', (app, column, search) => {
                         const resultsLength = $td.length
                         if (resultsLength > 0 ) {
                             cy.get($td).each(($time) => {
-                                const date = dayjs($time.text().slice(1, -1), 'DD/MM/YYYY')
+                                const date = dayjs($time.text().slice(1, -1), 'MM/DD/YYYY')
                                 switch (search) {
                                     case 'Current Date':
                                         expect(date.isSame(today))
@@ -281,6 +278,7 @@ Cypress.Commands.add('verifyDateSearch', (app, column, search) => {
             })
         })
     })
+    cy.wait(500)
 })
 
 Cypress.Commands.add('verifyMoney', (app, category, column, url) => {
@@ -327,6 +325,16 @@ Cypress.Commands.add('verifyMoney', (app, category, column, url) => {
 Cypress.Commands.add('randomValue', (min, max, places) => {
     let value = (Math.random() * (max - min)) + min;
     return Number.parseFloat(value).toFixed(places);
+})
+
+Cypress.Commands.add('randomText', () => {
+    var text = '';
+    var possible = 'abcdefghijklmnopqrstuvwxyz';
+
+    for (var i = 0; i < 10; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
 })
 
 Cypress.Commands.add('field', (label, text) => {
@@ -388,5 +396,18 @@ Cypress.Commands.add('calendar', (element, year, month, day) => { //cmd for Togg
             cy.contains('td', month).click({force:true})
         })
         cy.get('kendo-calendar-viewlist').find('td').contains(day).first().click({force:true})
+    })
+})
+
+Cypress.Commands.add('verifyGridAdd', (selector, column, text) => {
+    const dayjs = require('dayjs')
+    const today = dayjs().format('MM/DD/YYYY')
+    cy.contains(selector + ' th', column).then(($th) => {
+        const td = $th.attr('aria-colindex')
+        cy.get(selector + ' kendo-grid-list:first tr:first').should('contain.text', today)
+        cy.get(selector + ` [data-kendo-grid-column-index="${td-1}"]:eq(0)`).then(($td) => {
+            const gridText = $td.text()
+            expect(text).to.eq(gridText)
+        })
     })
 })

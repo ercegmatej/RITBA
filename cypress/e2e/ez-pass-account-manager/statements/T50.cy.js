@@ -1,11 +1,12 @@
 Cypress._.times(3, (i) => {
     const accNumber = [ '51355556', '52112656', '52034047' ];
-    describe('T50 - EZ Pass - Statements - Grid', () => {
+    const accType = [ 'Individual', 'Commercial', 'Non-revenue' ];
+    describe('T50 - EZ Pass - Statements - Grid' + ' - ' + accType[i], () => {
         const gridHeaders = ['Invoice Number', 'Statement Date', 'New Charge', 'Closing Balance', 
         'Toll Charges', 'Video Toll Charges', 'Fee', 'Payments', 'Refunds', 'Due Date', 'Overdue', 'Delivery Status']
         const dropdownItems = ['All', 'Invoice Number', 'Today', 'Last 7 Days', 'Last 14 Days', 'Last 30 Days']
         it('Login', () => {
-            cy.login(Cypress.env('username'), Cypress.env('password'))
+            cy.login(Cypress.env('username'), Cypress.env('password'), 'Call Center')
         });
 
         it('Open the account', () => {

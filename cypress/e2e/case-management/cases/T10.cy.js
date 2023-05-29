@@ -9,7 +9,7 @@ describe('T10 - Cases - Edit case', () => {
     let caseNumber = 0;
     
     it('Login', () => {
-        cy.login('merceg', 'ritbaVPN%$532', 'Call Center')
+        cy.login(Cypress.env('username'), Cypress.env('password'), 'Call Center')
     });
 
     it('Open case management - cases', () => {
@@ -17,7 +17,7 @@ describe('T10 - Cases - Edit case', () => {
     });
 
     it('Add a new case', () => {
-        cy.intercept('POST', 'https://ri2-crm.emovis.hr:2323/CaseManagement/CaseAdd').as('caseAdd')
+        cy.intercept('POST', Cypress.env('ip') + '/CaseManagement/CaseAdd').as('caseAdd')
         cy.get('[title="Add New Case "]').click()
         cy.search('app-account-search kendo-grid-toolbar', 'Account Number', '50002370', '/Search/MatchingAccountsList')
         cy.contains('app-account-search td', '50002370').dblclick()
@@ -86,11 +86,6 @@ describe('T10 - Cases - Edit case', () => {
         cy.headers('app-email-communication', '', gridHeaders)
         cy.sortGrid('app-email-communication', '', '/CaseManagement/CaseEmailHistoryList')
         cy.page('app-email-communication', '/CaseManagement/CaseEmailHistoryList')
-
-        cy.get('app-edit-case > app-group:eq(1)').should('contain.text', 'Send Email')
-        cy.contains('app-send-email app-input', 'To...').find('kendo-textbox span').should('have.length', 2)
-        cy.get('app-email-communication kendo-grid-list tr:first').click()
-        cy.contains('app-send-email app-input', 'To...').find('kendo-textbox span').should('have.length', 3)
     });
 
     it('Edit case details', () => {

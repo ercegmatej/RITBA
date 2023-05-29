@@ -5,7 +5,7 @@ describe('T7 - Cases - Grid Functionality and search', () => {
     'User', 'Current Date', 'Last 7 Days', 'Last 14 Days', 'Last 30 Days', 'Unread Email']
 
     it('Login', () => {
-        cy.login('merceg', 'ritbaVPN%$532', 'Call Center')
+        cy.login(Cypress.env('username'), Cypress.env('password'), 'Call Center')
     });
 
     it('Open case management - cases (1)', () => {

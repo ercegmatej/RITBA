@@ -5,7 +5,7 @@ describe('T1 - Account Search - General design and grid functionality', () => {
     'Transponder Number', 'Day Time Phone', 'Email Address', 'Last 4 digits Card', 'Check Number', 'FJNo']
 
     it('Login', () => {
-        cy.login('merceg', 'RITBAvpn%$532', 'Call Center')
+        cy.login(Cypress.env('username'), Cypress.env('password'), 'Call Center')
     });
 
     it('Verify toolbar items (2-3)', () => {

@@ -1,9 +1,10 @@
 Cypress._.times(3, (i) => {
     const accNumber = [ '51355556', '52112656', '52034047' ];
-    describe('T34 - EZ Pass - Account Links - Grid functionality', () => {
+    const accType = [ 'Individual', 'Commercial', 'Non-revenue' ];
+    describe('T34 - EZ Pass - Account Links - Grid functionality' + ' - ' + accType[i], () => {
         const gridHeaders = ['Account Number', 'Plate No.', 'Number of Citations', 'Amount Dute', 'Address', 'Linked Account Type']
         it('Login', () => {
-            cy.login('merceg', 'RITBAvpn%$532', 'Call Center')
+            cy.login(Cypress.env('username'), Cypress.env('password'), 'Call Center')
         });
     
         it('Open the account', () => {
