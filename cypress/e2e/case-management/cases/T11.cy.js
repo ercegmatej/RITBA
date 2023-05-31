@@ -13,6 +13,7 @@ describe('T11 - Cases - Edit case - Email Communication tab', () => {
         cy.get('[title="Edit Case"]').click()
         cy.contains('app-edit-case > div', 'Case Information').click()
         cy.contains('li', 'Email Communication').click()
+        cy.wait(1000)
     });
 
     it('Send email with wrong data', () => {
@@ -23,7 +24,7 @@ describe('T11 - Cases - Edit case - Email Communication tab', () => {
 
         cy.field('To...', 'testgmail.com')
         cy.field('Subject...', 'Test QA')
-        //cy.formError('To...', 'Email format is invalid.')
+        cy.formError('To...', 'Email format is invalid.')
     });
 
     it('Populate the fields with valid data', () => {
@@ -179,5 +180,21 @@ describe('T11 - Cases - Edit case - Email Communication tab', () => {
         cy.contains('kendo-dialog-actions button', 'Update').click()
     });
 
-    //TODO WIP
+
+    it('Attach a document', () => {
+        cy.contains('app-send-email button', 'Attachment').parent('div').find('input').attachFile('test.pdf')
+        cy.get('.atr-filename').should('contain.text', 'test.pdf')
+    });
+
+    it('Send email', () => {
+        cy.intercept('POST', 'https://ri2-crm-b.emovis.hr/CaseManagement/CaseEmailSend').as('sendEmail');
+        cy.contains('app-send-email button', 'Send Email').click()
+        cy.wait('@sendEmail').its('response.statusCode').should('eq', 200)
+        cy.popup('Success', 'Email successfully sent', 'Ok')
+
+        cy.contains('li', 'Attachment History').click()
+        cy.contains('li', 'Email Communication').click()
+        cy.verifyGridAdd('app-email-communication', 'From Email', 'noreply@xyz.com')
+        cy.verifyGridAdd('app-email-communication', 'Email Type', 'Email Sent')
+    });
 });

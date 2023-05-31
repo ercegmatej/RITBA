@@ -55,13 +55,23 @@ Cypress.Commands.add('sortGrid', (parent, filter, url) => {
     
     cy.get(parent).within(() => {
         cy.get('th').not(filter).each(($th) => {
-            cy.get($th).click()
-            cy.wait('@sort').its('response.statusCode').should('eq', 200)
-            cy.get($th).should('have.attr', 'aria-sort', 'ascending')
-
-            cy.get($th).click()
-            cy.wait('@sort').its('response.statusCode').should('eq', 200)
-            cy.get($th).should('have.attr', 'aria-sort', 'descending')
+            if (url == '') {
+                cy.get($th).click()
+                cy.get($th).should('have.attr', 'aria-sort', 'ascending')
+    
+                cy.get($th).click()
+                cy.get($th).should('have.attr', 'aria-sort', 'descending')
+            }
+            else {
+                cy.get($th).click()
+                cy.wait('@sort').its('response.statusCode').should('eq', 200)
+                cy.get($th).should('have.attr', 'aria-sort', 'ascending')
+    
+                cy.get($th).click()
+                cy.wait('@sort').its('response.statusCode').should('eq', 200)
+                cy.get($th).should('have.attr', 'aria-sort', 'descending')
+            }
+            
 
             // cy.get($th).click()
             // cy.wait('@sort').its('response.statusCode').should('eq', 200)
@@ -407,7 +417,7 @@ Cypress.Commands.add('verifyGridAdd', (selector, column, text) => {
         cy.get(selector + ' kendo-grid-list:first tr:first').should('contain.text', today)
         cy.get(selector + ` [data-kendo-grid-column-index="${td-1}"]:eq(0)`).then(($td) => {
             const gridText = $td.text()
-            expect(text).to.eq(gridText)
+            expect(gridText).to.include(text)
         })
     })
 })

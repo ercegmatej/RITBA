@@ -1,4 +1,5 @@
 const { defineConfig } = require("cypress");
+const { verifyDownloadTasks } = require('cy-verify-downloads');
 
 module.exports = defineConfig({
   reporter: 'cypress-mochawesome-reporter',
@@ -14,7 +15,7 @@ module.exports = defineConfig({
   },
   screenshotsFolder: "cypress/reports/mochawesome-report/assets",
   e2e: {
-    numTestsKeptInMemory: 1,
+    numTestsKeptInMemory: 2,
     defaultCommandTimeout: 10000,
     testIsolation: false,
     baseUrl: "http://trserver:4321/login",
@@ -23,6 +24,7 @@ module.exports = defineConfig({
     chromeWebSecurity: false,
     setupNodeEvents(on, config) {
       // implement node event listeners here
+      on('task', verifyDownloadTasks);
     },
   },
 });
