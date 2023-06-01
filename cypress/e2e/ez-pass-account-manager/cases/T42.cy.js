@@ -25,15 +25,15 @@ Cypress._.times(3, (i) => {
         });
 
         it('Select department', () => {
-            cy.field('Department', department)
+            cy.field('app-add-case', 'Department', department)
             cy.contains('kendo-dialog-actions button', 'Create Case').click()
             cy.requiredError('Case Type')
         });
 
         it('Select case type and enter description', () => {
-            cy.field('Case Type', case_type)
+            cy.field('app-add-case', 'Case Type', case_type)
             cy.randomText().then(($description) => {
-                cy.field('Description', $description)
+                cy.field('app-add-case', 'Description', $description)
             })
         });
 

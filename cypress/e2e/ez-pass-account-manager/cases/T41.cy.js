@@ -21,12 +21,12 @@ const case_type = 'TR_Case_DEP';
         it('Add a new case', () => {
             cy.intercept('POST', Cypress.env('ip') + '/CaseManagement/CaseAdd').as('caseAdd')
             cy.get('[title="Add New Case "]').click()
-            cy.field('Department', department)
-            cy.field('Case Type', case_type)
+            cy.field('app-add-case', 'Department', department)
+            cy.field('app-add-case', 'Case Type', case_type)
             cy.randomText().then(($description) => {
-                cy.field('Description', $description)
+                cy.field('app-add-case', 'Description', $description)
             })
-            cy.field('Assign To Me', '')
+            cy.field('app-add-case', 'Assign To Me', '')
             cy.contains('button', 'Create Case').click()
             cy.wait('@caseAdd').its('response.statusCode').should('eq', 200)
             cy.popup('Add New Case', 'Case has been successfully created.', 'Ok')
@@ -45,18 +45,18 @@ const case_type = 'TR_Case_DEP';
         });
 
         it('Send email with wrong data', () => {
-            cy.field('Subject...', '')
+            cy.field('app-edit-case', 'Subject...', '')
             cy.contains('button', 'Send Email').click()
             cy.requiredError('To...')
             cy.requiredError('Subject...')
 
-            cy.field('To...', 'testgmail.com')
-            cy.field('Subject...', 'Test QA')
+            cy.field('app-edit-case', 'To...', 'testgmail.com')
+            cy.field('app-edit-case', 'Subject...', 'Test QA')
             cy.formError('To...', 'Email format is invalid.')
         });
 
         it('Populate the fields with valid data', () => {
-            cy.field('To...', 'test@gmail.com')
+            cy.field('app-edit-case', 'To...', 'test@gmail.com')
             cy.get('kendo-editor').within(() => {
                 cy.iframe().find('p').type('Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
             })

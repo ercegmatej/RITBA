@@ -347,8 +347,8 @@ Cypress.Commands.add('randomText', () => {
     return text;
 })
 
-Cypress.Commands.add('field', (label, text) => {
-    cy.contains('kendo-formfield', label).then(($field) => {
+Cypress.Commands.add('field', (selector, label, text) => {
+    cy.contains(`${selector} kendo-formfield`, label).then(($field) => {
         if ($field.find('kendo-dropdownlist').length > 0) {
             cy.get($field).find('kendo-dropdownlist').click()
             cy.contains('kendo-popup li', text).click()

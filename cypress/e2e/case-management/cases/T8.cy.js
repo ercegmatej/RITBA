@@ -8,7 +8,7 @@ describe('T8 - Cases - Add new case (mandatory fields)', () => {
     });
 
     it('Add new case window', () => {
-        const dropdownItems = ['Account Number', 'Last Name', 'First Name', 'Transponder Number', 'Day Phone', 'Address', 'Email Address', 'Last 4 Digits']
+        const dropdownItems = ['Account Number', 'Last Name', 'First Name', 'Transponder Number', 'Day Time Phone', 'Address', 'Email Address', 'Last 4 digits Card', 'Plate']
         cy.get('[title="Add New Case "]').click()
 
         cy.get('app-add-case app-account-search').should('contain.text', ' Account Search - Double click to view results ')
@@ -17,7 +17,7 @@ describe('T8 - Cases - Add new case (mandatory fields)', () => {
         cy.dropdownItems('app-account-search kendo-grid-toolbar', dropdownItems)
 
         cy.search('app-account-search kendo-grid-toolbar', 'Last Name', 'Test', '/Search/MatchingAccountsList')
-        //cy.sortGrid('app-account-search', '', '/Search/MatchingAccountsList')
+        cy.sortGrid('app-account-search', '', '/Search/MatchingAccountsList')
     });
 
     it('Select an account', () => {
@@ -38,14 +38,13 @@ describe('T8 - Cases - Add new case (mandatory fields)', () => {
     it('Click create case before', () => {
         cy.contains('button', 'Create Case').click()
         cy.requiredError('Department')
-        cy.requiredError('Case Type')
         cy.requiredError('Description')
     });
 
     it('Populate the mandatory fields', () => {
-        cy.field('Department', 'TR1942023')
-        cy.field('Case Type', 'TR_Case_DEP')
-        cy.field('Description', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean m')
+        cy.field('app-add-case', 'Department', 'TR194')
+        cy.field('app-add-case', 'Case Type', 'TR_Case_DEP')
+        cy.field('app-add-case', 'Description', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean m')
         cy.contains('kendo-formfield', 'Description').find('kendo-textarea').should('have.attr', 'maxlength', '100')
     });
 

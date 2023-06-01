@@ -26,25 +26,25 @@ Cypress._.times(3, (i) => {
         });
 
         it('Select department', () => {
-            cy.field('Department', department)
+            cy.field('app-add-case', 'Department', department)
             cy.contains('kendo-dialog-actions button', 'Create Case').click()
             cy.requiredError('Case Type')
         });
 
         it('Select case type and enter description', () => {
-            cy.field('Case Type', case_type)
+            cy.field('app-add-case', 'Case Type', case_type)
             cy.randomText().then(($description) => {
-                cy.field('Description', $description)
+                cy.field('app-add-case', 'Description', $description)
             })
         });
 
         it('Populate non mandatory fields', () => {
             cy.randomText().then(($notes) => {
-                cy.field('Notes', $notes)
+                cy.field('app-add-case', 'Notes', $notes)
             })
-            cy.field('Priority', priority)
-            cy.field('Severity', 'Low')
-            cy.field('Assign To Me', '')
+            cy.field('app-add-case', 'Priority', priority)
+            cy.field('app-add-case', 'Severity', 'Low')
+            cy.field('app-add-case', 'Assign To Me', '')
             cy.get('app-upload kendo-fileselect input').attachFile('user.pdf')
         });
 

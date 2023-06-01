@@ -17,18 +17,18 @@ describe('T11 - Cases - Edit case - Email Communication tab', () => {
     });
 
     it('Send email with wrong data', () => {
-        cy.field('Subject...', '')
+        cy.field('app-edit-case', 'Subject...', '')
         cy.contains('button', 'Send Email').click()
         cy.requiredError('To...')
         cy.requiredError('Subject...')
 
-        cy.field('To...', 'testgmail.com')
-        cy.field('Subject...', 'Test QA')
+        cy.field('app-edit-case', 'To...', 'testgmail.com')
+        cy.field('app-edit-case', 'Subject...', 'Test QA')
         cy.formError('To...', 'Email format is invalid.')
     });
 
     it('Populate the fields with valid data', () => {
-        cy.field('To...', 'test@gmail.com')
+        cy.field('app-edit-case', 'To...', 'test@gmail.com')
         cy.get('kendo-editor').within(() => {
             cy.iframe().find('p').type('Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
         })

@@ -22,12 +22,12 @@ Cypress._.times(3, (i) => {
         it('Add a new case', () => {
             cy.intercept('POST', Cypress.env('ip') + '/CaseManagement/CaseAdd').as('caseAdd')
             cy.get('[title="Add New Case "]').click()
-            cy.field('Department', department)
-            cy.field('Case Type', case_type)
+            cy.field('app-add-case', 'Department', department)
+            cy.field('app-add-case', 'Case Type', case_type)
             cy.randomText().then(($description) => {
-                cy.field('Description', $description)
+                cy.field('app-add-case', 'Description', $description)
             })
-            cy.field('Assign To Me', '')
+            cy.field('app-add-case', 'Assign To Me', '')
             cy.contains('button', 'Create Case').click()
             cy.wait('@caseAdd').its('response.statusCode').should('eq', 200)
             cy.popup('Add New Case', 'Case has been successfully created.', 'Ok')
@@ -97,17 +97,17 @@ Cypress._.times(3, (i) => {
 
             cy.contains('app-edit-case kendo-formfield', 'Status').find('kendo-dropdownlist').click()
             cy.contains('kendo-popup li', 'Closed').click()
-            cy.field('Disposition Code', 'string')
-            cy.field('Source', 'Web')
+            cy.field('app-edit-case', 'Disposition Code', 'string')
+            cy.field('app-edit-case', 'Source', 'Web')
     
-            cy.field('Department', editDepartment)
+            cy.field('app-edit-case', 'Department', editDepartment)
             cy.contains('kendo-formfield', 'Case Type').find('kendo-dropdownlist').should('not.contain.text', case_type)
             cy.contains('button', 'Update').click()
             cy.requiredError('Case Type')
     
-            cy.field('Case Type', editCase_type)
-            cy.field('Priority', 'Low')
-            cy.field('Notes', 'Test note')
+            cy.field('app-edit-case', 'Case Type', editCase_type)
+            cy.field('app-edit-case', 'Priority', 'Low')
+            cy.field('app-edit-case', 'Notes', 'Test note')
             cy.get('app-edit-case app-upload input').attachFile('test.pdf')
         });
     
