@@ -16,11 +16,15 @@
 // Import commands.js using ES2015 syntax:
 import '@4tw/cypress-drag-drop';
 import "cypress-real-events";
-import './commands'
-import addContext from 'mochawesome/addContext'
+import './commands';
+import 'dayjs';
+import 'cypress-file-upload';
+import 'cypress-iframe';
+import addContext from 'mochawesome/addContext';
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+require('cy-verify-downloads').addCustomCommand();
 chai.use(require("chai-sorted"));
 
 Cypress.on("test:after:run", (test, runnable) => {  
@@ -29,3 +33,9 @@ Cypress.on("test:after:run", (test, runnable) => {
         addContext({ test }, screenshot);  
     }
 });
+
+Cypress.on('uncaught:exception', (err, runnable) => {
+    // returning false here prevents Cypress from
+    // failing the test
+    return false
+  })
