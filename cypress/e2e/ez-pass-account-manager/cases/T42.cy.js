@@ -20,14 +20,14 @@ Cypress._.times(3, (i) => {
             cy.get('app-account-cases kendo-grid-toolbar [title="Add New Case "]').click()
             cy.get('kendo-dialog-titlebar').should('contain.text', 'Add New Case')
             cy.contains('kendo-dialog-actions button', 'Create Case').click()
-            cy.requiredError('Department')
-            cy.requiredError('Description')
+            cy.requiredError('app-add-case', 'Department')
+            cy.requiredError('app-add-case', 'Description')
         });
 
         it('Select department', () => {
             cy.field('app-add-case', 'Department', department)
             cy.contains('kendo-dialog-actions button', 'Create Case').click()
-            cy.requiredError('Case Type')
+            cy.requiredError('app-add-case', 'Case Type')
         });
 
         it('Select case type and enter description', () => {
@@ -45,8 +45,8 @@ Cypress._.times(3, (i) => {
         });
 
         it('Verify addition', () => {
-            cy.verifyGridAdd('app-account-cases', 'Department', ' ' + department + ' ')
-            cy.verifyGridAdd('app-account-cases', 'Case Type', ' ' +  case_type + ' ')
+            cy.verifyGridData('app-account-cases', 'Department', 1, ' ' + department + ' ')
+            cy.verifyGridData('app-account-cases', 'Case Type', 1, ' ' +  case_type + ' ')
         });
     });
 })

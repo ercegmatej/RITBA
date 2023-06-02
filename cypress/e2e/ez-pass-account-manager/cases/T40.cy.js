@@ -103,7 +103,7 @@ Cypress._.times(3, (i) => {
             cy.field('app-edit-case', 'Department', editDepartment)
             cy.contains('kendo-formfield', 'Case Type').find('kendo-dropdownlist').should('not.contain.text', case_type)
             cy.contains('button', 'Update').click()
-            cy.requiredError('Case Type')
+            cy.requiredError('app-edit-case', 'Case Type')
     
             cy.field('app-edit-case', 'Case Type', editCase_type)
             cy.field('app-edit-case', 'Priority', 'Low')
@@ -130,12 +130,12 @@ Cypress._.times(3, (i) => {
         it('Verify that changes are recorded in the case window', () => {
             cy.contains('td', caseNumber).click().dblclick()
     
-            cy.verifyField('Case Type', editCase_type)
-            cy.verifyField('Status', 'Processing')
-            cy.verifyField('Disposition Code', 'string')
-            cy.verifyField('Source', 'Web')
-            cy.verifyField('Department', editDepartment)
-            cy.verifyField('Priority', 'Low')
+            cy.verifyField('app-add-case', 'Case Type', editCase_type)
+            cy.verifyField('app-add-case', 'Status', 'Processing')
+            cy.verifyField('app-add-case', 'Disposition Code', 'string')
+            cy.verifyField('app-add-case', 'Source', 'Web')
+            cy.verifyField('app-add-case', 'Department', editDepartment)
+            cy.verifyField('app-add-case', 'Priority', 'Low')
         });
     
         it('Verify Note History', () => {

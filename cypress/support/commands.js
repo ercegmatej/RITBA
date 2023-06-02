@@ -279,7 +279,16 @@ Cypress.Commands.add('verifyDateSearch', (app, column, search) => {
                                         break;
                                     case 'Last 30 Days':
                                         expect(date.isBefore(today) && date.isAfter(today.subtract(30, 'day'))).to.be.true
-                                        break;
+                                    break;
+                                    case '30 days':
+                                        expect(date.isBefore(today) && date.isAfter(today.subtract(30, 'day'))).to.be.true
+                                    break;
+                                    case '60 days':
+                                        expect(date.isBefore(today) && date.isAfter(today.subtract(60, 'day'))).to.be.true
+                                    break;
+                                    case '90 days':
+                                        expect(date.isBefore(today) && date.isAfter(today.subtract(90, 'day'))).to.be.true
+                                    break;
                                 }
                             })
                         }
@@ -354,14 +363,14 @@ Cypress.Commands.add('field', (selector, label, text) => {
             cy.contains('kendo-popup li', text).click()
         }
         else if ($field.find('kendo-textarea').length > 0) {
-            cy.get($field).clear().type(text)
+            cy.get($field).find('input').clear().type(text)
         }
         else if ($field.find('kendo-textbox').length > 0) {
             if (text == '') {
-                cy.get($field).clear()
+                cy.get($field).find('input').clear()
             }
             else {
-                cy.get($field).clear().type(text)
+                cy.get($field).find('input').clear().type(text)
             }
         }
         else if ($field.find('[type="radio"]').length > 0) {
@@ -370,8 +379,8 @@ Cypress.Commands.add('field', (selector, label, text) => {
     })
 })
 
-Cypress.Commands.add('verifyField', (label, text) => {
-    cy.contains('kendo-formfield', label).then(($field) => {
+Cypress.Commands.add('verifyField', (selector, label, text) => {
+    cy.contains(`${selector} kendo-formfield`, label).then(($field) => {
         if ($field.find('kendo-dropdownlist').length > 0) {
             cy.get($field).find('kendo-dropdownlist').should('contain.text', text)
         }
@@ -387,14 +396,19 @@ Cypress.Commands.add('verifyField', (label, text) => {
     })
 })
 
-Cypress.Commands.add('requiredError', (label) => {
-    cy.contains('kendo-formfield', label).find('div').children(':first').should('have.class', 'ng-invalid')
-    cy.contains('kendo-formfield', label).find('kendo-formerror').should('contain.text', `${label} is required`)
+Cypress.Commands.add('requiredError', (selector, label) => {
+    cy.contains(`${selector} kendo-formfield`, label).find('div').children(':first').should('have.class', 'ng-invalid')
+    cy.contains(`${selector} kendo-formfield`, label).find('kendo-formerror').should('contain.text', `${label} is required`)
 })
 
-Cypress.Commands.add('formError', (label, error) => {
-    cy.contains('kendo-formfield', label).find('div').children(':first').should('have.class', 'ng-invalid')
-    cy.contains('kendo-formfield', label).find('kendo-formerror').should('contain.text', error)
+Cypress.Commands.add('formError', (selector, label, error) => {
+    if(error == '') {
+        cy.contains(`${selector} kendo-formfield`, label).find('div').children(':first').should('not.have.class', 'ng-invalid')
+    }
+    else {
+        cy.contains(`${selector} kendo-formfield`, label).find('div').children(':first').should('have.class', 'ng-invalid')
+        cy.contains(`${selector} kendo-formfield`, label).find('kendo-formerror').should('contain.text', error)
+    }
 })
 
 Cypress.Commands.add('calendar', (element, year, month, day) => { //cmd for Toggle Calendar button; format ('YYYY', 'Mon', 'DD'); e.g. ('2022', 'Aug', '29')
@@ -409,13 +423,17 @@ Cypress.Commands.add('calendar', (element, year, month, day) => { //cmd for Togg
     })
 })
 
-Cypress.Commands.add('verifyGridAdd', (selector, column, text) => {
+Cypress.Commands.add('verifyGridData', (selector, column, row, text) => {
     const dayjs = require('dayjs')
     const today = dayjs().format('MM/DD/YYYY')
     cy.contains(selector + ' th', column).then(($th) => {
         const td = $th.attr('aria-colindex')
-        cy.get(selector + ' kendo-grid-list:first tr:first').should('contain.text', today)
-        cy.get(selector + ` [data-kendo-grid-column-index="${td-1}"]:eq(0)`).then(($td) => {
+        cy.get(selector + ' kendo-grid:first thead').then(($thead) => {
+            if($thead.text().includes('Date')) {
+                cy.get(selector + ` kendo-grid-list:first tr:eq(${row})`).should('contain.text', today)
+            }
+        })
+        cy.get(selector + ` tr:eq(${row}) [data-kendo-grid-column-index="${td-1}"]:eq(0)`).then(($td) => {
             const gridText = $td.text()
             expect(gridText).to.include(text)
         })

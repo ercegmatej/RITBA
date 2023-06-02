@@ -37,8 +37,8 @@ describe('T8 - Cases - Add new case (mandatory fields)', () => {
 
     it('Click create case before', () => {
         cy.contains('button', 'Create Case').click()
-        cy.requiredError('Department')
-        cy.requiredError('Description')
+        cy.requiredError('app-add-case', 'Department')
+        cy.requiredError('app-add-case', 'Description')
     });
 
     it('Populate the mandatory fields', () => {

@@ -47,12 +47,12 @@ const case_type = 'TR_Case_DEP';
         it('Send email with wrong data', () => {
             cy.field('app-edit-case', 'Subject...', '')
             cy.contains('button', 'Send Email').click()
-            cy.requiredError('To...')
-            cy.requiredError('Subject...')
+            cy.requiredError('app-edit-case', 'To...')
+            cy.requiredError('app-edit-case', 'Subject...')
 
             cy.field('app-edit-case', 'To...', 'testgmail.com')
             cy.field('app-edit-case', 'Subject...', 'Test QA')
-            cy.formError('To...', 'Email format is invalid.')
+            cy.formError('app-edit-case', 'To...', 'Email format is invalid.')
         });
 
         it('Populate the fields with valid data', () => {
@@ -222,8 +222,8 @@ const case_type = 'TR_Case_DEP';
 
             cy.contains('li', 'Attachment History').click()
             cy.contains('li', 'Email Communication').click()
-            cy.verifyGridAdd('app-email-communication', 'From Email', 'noreply@xyz.com')
-            cy.verifyGridAdd('app-email-communication', 'Email Type', 'Email Sent')
+            cy.verifyGridData('app-email-communication', 'From Email', 1, 'noreply@xyz.com')
+            cy.verifyGridData('app-email-communication', 'Email Type', 1, 'Email Sent')
         });
     });
 })
