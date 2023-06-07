@@ -1,8 +1,11 @@
 describe('T1 - Account Search - General design and grid functionality', () => {
-    const gridHeaders = ['Pin', 'Status', 'Account Number', 'First Name', 'Last Name', 'Company Name', 'Address', 'City', 'State', 'ZipCode',
+    const accNumber = [ Cypress.env('individual'), Cypress.env('commercial'), Cypress.env('non-revenue'), Cypress.env('unregistered'), Cypress.env('violation') ];
+    const accType = [ 'Individual', 'Commercial', 'Non Revenue', 'Contravention', 'Contravention'];
+    const gridHeaders = ['Pin', 'Status', 'Account Number', 'First Name', 'Last Name', 'Last 4 digits Card', 'Company Name', 'Address', 'City', 'State', 'ZipCode',
     'Registration', 'Lic.Plate', 'Open Citations', 'Disputed Citations', 'Phone Number', 'Email Address', 'Open Date', 'Transponder No.']
-    const dropdownItems = ['Account Number', 'Last Name', 'First Name', 'Company Name', 'Address', 'Plate', 
-    'Transponder Number', 'Day Time Phone', 'Email Address', 'Last 4 digits Card', 'Check Number', 'FJNo']
+    const dropdownItems = ['Account Number', 'Last Name', 'First Name', 'Transponder Number', 'Plate Number', 'Day Time Phone', 'Address',
+    'Email Address', 'Last 4 digits Card', 'Company Name', 'Check Number', 'FJNo', 'PNRef']
+    const term = [Cypress.env('individual'), 'SMITH', 'JOHN', '03200251011', 'DLY7416', '0987654321', 'TEST', 'test@test.com', '1234', 'BUSINESS', '123456', '134242431', '160255268197']
 
     it('Login', () => {
         cy.login(Cypress.env('username'), Cypress.env('password'), 'Call Center')
@@ -27,8 +30,20 @@ describe('T1 - Account Search - General design and grid functionality', () => {
         cy.get('[placeholder="Search"]').parents('kendo-textbox').find('button').click()
         cy.popup('Warning', 'Please enter a search term first.', 'Ok')
 
-        cy.search('kendo-grid-toolbar', 'Last Name', 'Tate', '/Search/MatchingAccountsList')
+        cy.search('kendo-grid-toolbar', 'Check Number', '123456', '/Search/MatchingAccountsList')
         cy.get('kendo-grid-toolbar').find('span:eq("1")').should('contain.text', ' Records Found')
+    });
+
+    it('Search categories', () => {
+        for(let i=0; i<dropdownItems.length; i++) {
+            cy.search('app-account-search kendo-grid-toolbar', dropdownItems[i], term[i], '/Search/MatchingAccountsList')
+            cy.wait(3000)
+            cy.get('app-root').then(($root) => {
+                if($root.find('app-account-manager').length > 0) {
+                    cy.get('kendo-dialog-titlebar [title="Close"]').click()
+                }
+            })
+        }
     });
 
     it('Grid sort (8)', () => {
@@ -39,45 +54,15 @@ describe('T1 - Account Search - General design and grid functionality', () => {
         cy.page('app-account-search', '/Search/MatchingAccountsList')
     });
 
-    it('Account manager functionalities (9-18)', () => {
-        cy.openAccount('Account Number', '50002183')
-        cy.get('app-account-basic-info').find('div').should('contain.text', 'Individual')
-        cy.get('app-account-basic-info').find('div').should('contain.text', '50002183')
-
-        cy.get('kendo-dialog-titlebar button').click()
-        cy.get('app-account-search').should('be.visible')
-        cy.get('app-account-manager').should('not.exist')
-
-        cy.openAccount('Account Number', '52112656')
-        cy.get('app-account-basic-info').find('div').should('contain.text', 'Commercial')
-        cy.get('app-account-basic-info').find('div').should('contain.text', '52112656')
-
-        cy.get('kendo-dialog-titlebar button').click()
-        cy.get('app-account-search').should('be.visible')
-        cy.get('app-account-manager').should('not.exist')
-
-        cy.openAccount('Account Number', '52034047')
-        cy.get('app-account-basic-info').find('div').should('contain.text', 'Non Revenue')
-        cy.get('app-account-basic-info').find('div').should('contain.text', '52034047')
-
-        cy.get('kendo-dialog-titlebar button').click()
-        cy.get('app-account-search').should('be.visible')
-        cy.get('app-account-manager').should('not.exist')
-
-        cy.openAccount('Account Number', '1005068855')
-        cy.get('kendo-dialog-titlebar').should('contain.text', 'Contravention Account Manager')
-        cy.get('app-unregistered-account-basic-info').find('div').should('contain.text', '1005068855')
-
-        cy.get('kendo-dialog-titlebar button').click()
-        cy.get('app-account-search').should('be.visible')
-        cy.get('app-account-manager').should('not.exist')
-
-        cy.openAccount('Account Number', '1002231379')
-        cy.get('kendo-dialog-titlebar').should('contain.text', 'Contravention Account Manager')
-        cy.get('app-unregistered-account-basic-info').find('div').should('contain.text', '1002231379')
-
-        cy.get('kendo-dialog-titlebar button').click()
-        cy.get('app-account-search').should('be.visible')
-        cy.get('app-account-manager').should('not.exist')
+    it('Account manager open (9-18)', () => {
+        for(let i=0; i<accNumber.length; i++) {
+            cy.openAccount('Account Number', accNumber[i])
+            cy.get('app-account-basic-info').find('div').should('contain.text', accType[i])
+            cy.get('app-account-basic-info').find('div').should('contain.text', accNumber[i])
+    
+            cy.get('kendo-dialog-titlebar button').click()
+            cy.get('app-account-search').should('be.visible')
+            cy.get('app-account-manager').should('not.exist')
+        }
     });
 })

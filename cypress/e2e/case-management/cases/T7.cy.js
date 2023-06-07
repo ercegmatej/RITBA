@@ -21,7 +21,7 @@ describe('T7 - Cases - Grid Functionality and search', () => {
     });
 
     it('Sort grid (2)', () => {
-        cy.sortGrid('app-case', ':eq(0), :eq(1)', '/CaseManagement/CasesList')
+        cy.sortGrid('app-case', ':eq(0), :eq(1), :eq(13)', '/CaseManagement/CasesList')
     });
 
     it('Pagination (3)', () => {
@@ -29,7 +29,10 @@ describe('T7 - Cases - Grid Functionality and search', () => {
     });
 
     it('Double click on a case (4-5)', () => {
-        cy.get('app-case kendo-grid-list tr:first').click().dblclick()
+        cy.randomValue(0, 20, 0).then($num => {
+            cy.log($num)
+            cy.get(`app-case kendo-grid-list tr:eq(${$num})`).click().dblclick()
+        })
         cy.get('kendo-dialog-titlebar').should('contain.text', 'Edit Case')
         cy.get('[title="Close"]').click()
     });
@@ -38,12 +41,12 @@ describe('T7 - Cases - Grid Functionality and search', () => {
         for (let i = 1; i<5; i++) {
             cy.verifySearch('app-case', dropdownItems[i], gridHeaders[i], '/CaseManagement/CasesList')
         }
-
-        //TODO User search
-
-
-        //TODO Unread Email search (envelope)
-
+        cy.get('app-case kendo-grid-toolbar kendo-dropdownlist').click()
+        cy.contains('kendo-popup li', 'User').click()
+        cy.get('app-case kendo-grid-toolbar kendo-dropdownlist:eq(1)').click()
+        cy.contains('kendo-popup li', 'Matej Erceg').click()
+        cy.wait(1000)
+        cy.get('app-case kendo-grid-list tr').should('have.length.above', 1)
     });
 
     it('Date search 12-13', () => {

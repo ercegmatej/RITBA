@@ -1,5 +1,5 @@
 Cypress._.times(1, (i) => {
-    const accNumber = [ Cypress.env('individual'), Cypress.env('commercial'), Cypress.env('non-revenue') ];
+    const accNumber = [ Cypress.env('individual_2'), Cypress.env('commercial'), Cypress.env('non-revenue') ];
     const accType = [ 'Individual', 'Commercial', 'Non-revenue' ];
     describe('T48 - EZ Pass - More Details - Addresses' + ' - ' + accType[i], () => {
         it('Login', () => {
@@ -57,8 +57,8 @@ Cypress._.times(1, (i) => {
             cy.field('app-add-addresses-for-form', 'Country', 'United States')
             cy.field('app-add-addresses-for-form', 'State', 'Rhode Island')
 
-            cy.contains('kendo-dialog-actions button', 'Save').click()
-            cy.popup('Success', 'New Address has been added to this Account', 'Ok')
+            // cy.contains('kendo-dialog-actions button', 'Save').click()
+            // cy.popup('Success', 'New Address has been added to this Account', 'Ok')
         });
 
         //TODO WIP

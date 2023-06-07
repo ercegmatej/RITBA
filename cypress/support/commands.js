@@ -363,6 +363,9 @@ Cypress.Commands.add('field', (selector, label, text) => {
             cy.contains('kendo-popup li', text).click()
         }
         else if ($field.find('kendo-textarea').length > 0) {
+            cy.get($field).find('textarea').clear().type(text)
+        }
+        else if ($field.find('kendo-numerictextbox').length > 0) {
             cy.get($field).find('input').clear().type(text)
         }
         else if ($field.find('kendo-textbox').length > 0) {
@@ -375,6 +378,9 @@ Cypress.Commands.add('field', (selector, label, text) => {
         }
         else if ($field.find('[type="radio"]').length > 0) {
             cy.get($field).find('[type="radio"]').check()
+        }
+        else if ($field.find('[type="checkbox"]').length > 0) {
+            cy.get($field).find('[type="checkbox"]').check()
         }
     })
 })
