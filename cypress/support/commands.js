@@ -206,7 +206,7 @@ Cypress.Commands.add('verifySearch', (app, category, column, url) => {
     cy.contains('kendo-popup li', category).click()
     cy.contains(`${app} kendo-grid th`, column).then(($th) => {
         const td = $th.attr('aria-colindex')
-        cy.get(`${app} [data-kendo-grid-column-index="${td-1}"]`).then(($td) => {
+        cy.get(`${app} [data-kendo-grid-column-index="${td-1}"]`).then(($td) => { //TODO filter empty content
             const resultsLength = $td.length
             cy.randomValue(0, resultsLength-1, 0).then(($rand) => {
                 cy.get($td.eq($rand)).then(($content) => {
@@ -313,8 +313,8 @@ Cypress.Commands.add('verifyMoney', (app, category, column, url) => {
                 cy.randomValue(0, resultsLength-1, 0).then(($rand) => {
                     cy.get($td.eq($rand)).then(($content) => {
                         const number = $content.text()
-                        const amount = number.slice(2, -4)
-                        const search = parseInt(amount.replaceAll(',', ''))
+                        const amount = number.slice(2, -1)
+                        const search = parseFloat(amount.replaceAll(',', '')).toFixed(2)
                         if ($app.find('kendo-grid-toolbar kendo-dropdownlist').length > 1) {
                             cy.get('kendo-grid-toolbar kendo-dropdownlist:eq(1)').click()
                             cy.contains('kendo-popup li', search).click()

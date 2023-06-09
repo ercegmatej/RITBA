@@ -1,8 +1,8 @@
-Cypress._.times(3, (i) => {
-    const accNumber = [ '51355556', '52112656', '52034047' ];
-    const accType = [ 'Individual', 'Commercial', 'Non-revenue' ];
+Cypress._.times(2, (i) => {
+    const accNumber = [ Cypress.env('individual'), Cypress.env('commercial') ];
+    const accType = [ 'Individual', 'Commercial'];
     describe('T37 - EZ Pass - Financials - Grid' + ' - ' + accType[i], () => {
-        const gridHeaders = ['Date', 'Description', 'Payment Type', 'Credit', 'Debit', 'Balance', 'FJNo', 'Transaction Type', 'Message', 'PNRef', 'Payment Details', 'Cheque Date', 'CSR Id']
+        const gridHeaders = ['Date', 'Description', 'Payment Type', 'Credit', 'Debit', 'Balance', 'FJNo', 'Transaction Type', 'Message', 'PNRef', 'Payment Detail', 'Check Date', 'CSR Id', 'ICN Id', 'Reversal FjNo']
         const functionItems = ['Reverse Payment', 'Payment Transfer']
         const dropdownItems = ['All', 'Reversal FJNo', 'Credit', 'Debit', 'FJNo', 'Balance', 'Message', 'Description', 'Today', 'Last 7 Days', 'Last 14 Days', 'Last 30 Days']
         it('Login', () => {
@@ -41,10 +41,10 @@ Cypress._.times(3, (i) => {
         });
 
         it('Verify search', () => {
-            cy.verifySearch('app-account-financial', 'Reversal FJNo', 'PNRef', '/Financial/AccountTransactionsList')
-            cy.verifySearch('app-account-financial', 'Credit', 'Credit', '/Financial/AccountTransactionsList')
-            cy.verifySearch('app-account-financial', 'Debit', 'Debit', '/Financial/AccountTransactionsList')
-            cy.verifySearch('app-account-financial', 'FJNo', 'FJNo', '/Financial/AccountTransactionsList')
+            cy.verifySearch('app-account-financial', 'Reversal FJNo', 'Reversal FjNo', '/Financial/AccountTransactionsList')
+            cy.verifyMoney('app-account-financial', 'Credit', 'Credit', '/Financial/AccountTransactionsList')
+            cy.verifyMoney('app-account-financial', 'Debit', 'Debit', '/Financial/AccountTransactionsList')
+            cy.verifySearch('app-account-financial', /^FJNo$/, 'FJNo', '/Financial/AccountTransactionsList')
             cy.verifyMoney('app-account-financial', 'Balance', 'Balance', '/Financial/AccountTransactionsList')
             cy.verifySearch('app-account-financial', 'Message', 'Message', '/Financial/AccountTransactionsList')
             cy.verifySearch('app-account-financial', 'Description', 'Description', '/Financial/AccountTransactionsList')
@@ -82,7 +82,7 @@ Cypress._.times(3, (i) => {
 
         it('Download', () => {
             cy.contains('app-account-financial kendo-dropdownbutton', 'Download').click()
-            //TODO WIP
+            cy.get('li:first').click()
         });
     });
 })

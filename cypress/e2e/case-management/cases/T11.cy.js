@@ -187,7 +187,7 @@ describe('T11 - Cases - Edit case - Email Communication tab', () => {
     });
 
     it('Send email', () => {
-        cy.intercept('POST', 'https://ri2-crm-b.emovis.hr/CaseManagement/CaseEmailSend').as('sendEmail');
+        cy.intercept('POST', Cypress.env('ip') + '/CaseManagement/CaseEmailSend').as('sendEmail');
         cy.contains('app-send-email button', 'Send Email').click()
         cy.wait('@sendEmail').its('response.statusCode').should('eq', 200)
         cy.popup('Success', 'Email successfully sent', 'Ok')
