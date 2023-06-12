@@ -34,11 +34,28 @@ Cypress._.times(3, (i) => {
             cy.page('app-notes', '/Account/NotesList')
         });
 
-        it('Search functionality', () => {
-            cy.verifySearch('app-notes', 'Content', 'Content', '/Account/NotesList')
-            cy.verifyDateSearch('app-notes', 'Date', 'Last 30 Days')
-            cy.verifyDateSearch('app-notes', 'Date', 'Last 60 Days')
-            cy.verifyDateSearch('app-notes', 'Date', 'Last 90 Days')
+        it('Content search', () => {
+            cy.get('app-notes .card-header kendo-dropdownlist').click()
+            cy.contains('kendo-popup li', 'Content').click()
+            cy.contains('app-notes th', 'Content').click().click()
+            cy.get(`app-notes kendo-grid-list tr:eq(2) [data-kendo-grid-column-index="3"]`).then(($td) => {
+                const search = $td.text()
+                cy.get(`app-notes kendo-textbox`).type(search + '{enter}')
+                cy.wait(500)
+                cy.get(`app-notes [data-kendo-grid-column-index="3"]`).each(($val) => {
+                    const value = $val.text().toLocaleLowerCase()
+                    expect(value).to.eq(search.toLocaleLowerCase())
+                })
+                cy.get(`app-notes [aria-label="Clear"]`).click()
+            })
+            cy.get(`app-notes .card-header kendo-dropdownlist`).first().click()
+            cy.contains('kendo-popup li', 'All').click()
+        });
+
+        it('Date search functionality', () => {
+            cy.verifyDateSearch('app-notes', 'Date', 'Last 30 Days', '/Account/NotesList')
+            cy.verifyDateSearch('app-notes', 'Date', 'Last 60 Days', '/Account/NotesList')
+            cy.verifyDateSearch('app-notes', 'Date', 'Last 90 Days', '/Account/NotesList')
         });
 
         it('Show Only User Notes', () => {
@@ -49,10 +66,10 @@ Cypress._.times(3, (i) => {
             cy.get('app-account-user-notes ul').should('exist')
         });
 
-        // it('Download button', () => {
-        //     cy.intercept('POST', '/Account/NoteToCsvExport').as('download');
-        //     cy.contains('app-notes button', 'Download').click()
-        //     cy.wait('@download').its('response.statusCode').should('eq', 200);
-        // });
+        it('Download button', () => {
+            cy.intercept('POST', '/Account/NoteToCsvExport').as('download');
+            cy.contains('app-notes button', 'Download').click()
+            cy.wait('@download').its('response.statusCode').should('eq', 200);
+        });
     });
 })

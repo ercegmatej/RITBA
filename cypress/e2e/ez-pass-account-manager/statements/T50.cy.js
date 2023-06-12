@@ -1,10 +1,10 @@
 Cypress._.times(3, (i) => {
-    const accNumber = [ '51355556', '52112656', '52034047' ];
+    const accNumber = [ Cypress.env('individual'), Cypress.env('commercial'), Cypress.env('non-revenue') ];
     const accType = [ 'Individual', 'Commercial', 'Non-revenue' ];
     describe('T50 - EZ Pass - Statements - Grid' + ' - ' + accType[i], () => {
-        const gridHeaders = ['Invoice Number', 'Statement Date', 'New Charge', 'Closing Balance', 
-        'Toll Charges', 'Video Toll Charges', 'Fee', 'Payments', 'Refunds', 'Due Date', 'Overdue', 'Delivery Status']
-        const dropdownItems = ['All', 'Invoice Number', 'Today', 'Last 7 Days', 'Last 14 Days', 'Last 30 Days']
+        const gridHeaders = ['Statement Number', 'Statement Date', 'New Charge', 'Closing Balance', 
+        'Toll Charges', 'Video Toll Charges', 'Fee', 'Payments', 'Refunds', 'Due Date', 'Delivery Status']
+        const dropdownItems = ['All', 'Statement Number', 'Today', 'Last 7 Days', 'Last 14 Days', 'Last 30 Days']
         it('Login', () => {
             cy.login(Cypress.env('username'), Cypress.env('password'), 'Call Center')
         });
@@ -22,7 +22,7 @@ Cypress._.times(3, (i) => {
         });
 
         it('Function items', () => {
-            cy.functionItems('app-account-billing-statements', 'Refund Statement')
+            cy.functionItems('app-account-billing-statements', 'Resend Statement')
         });
 
         it('Dropdown items', () => {
@@ -38,11 +38,11 @@ Cypress._.times(3, (i) => {
         });
 
         it('Verify search', () => {
-            cy.verifySearch('app-account-billing-statements', 'Invoice Number', 'Invoice Number', '/Account/StatementsList')
-            cy.verifyDateSearch('app-account-billing-statements', 'Statement Date', 'Today')
-            cy.verifyDateSearch('app-account-billing-statements', 'Statement Date', 'Last 7 Days')
-            cy.verifyDateSearch('app-account-billing-statements', 'Statement Date', 'Last 14 Days')
-            cy.verifyDateSearch('app-account-billing-statements', 'Statement Date', 'Last 30 Days')
+            cy.verifySearch('app-account-billing-statements', 'Statement Number', 'Statement Number', '/Account/StatementsList')
+            cy.verifyDateSearch('app-account-billing-statements', 'Statement Date', 'Today', '/Account/StatementsList')
+            cy.verifyDateSearch('app-account-billing-statements', 'Statement Date', 'Last 7 Days', '/Account/StatementsList')
+            cy.verifyDateSearch('app-account-billing-statements', 'Statement Date', 'Last 14 Days', '/Account/StatementsList')
+            cy.verifyDateSearch('app-account-billing-statements', 'Statement Date', 'Last 30 Days', '/Account/StatementsList')
         });
     });
 })

@@ -48,10 +48,10 @@ Cypress._.times(2, (i) => {
             cy.verifyMoney('app-account-financial', 'Balance', 'Balance', '/Financial/AccountTransactionsList')
             cy.verifySearch('app-account-financial', 'Message', 'Message', '/Financial/AccountTransactionsList')
             cy.verifySearch('app-account-financial', 'Description', 'Description', '/Financial/AccountTransactionsList')
-            cy.verifyDateSearch('app-account-financial', 'Date', 'Today')
-            cy.verifyDateSearch('app-account-financial', 'Date', 'Last 7 Days')
-            cy.verifyDateSearch('app-account-financial', 'Date', 'Last 14 Days')
-            cy.verifyDateSearch('app-account-financial', 'Date', 'Last 30 Days')
+            cy.verifyDateSearch('app-account-financial', 'Date', 'Today', '/Financial/AccountTransactionsList')
+            cy.verifyDateSearch('app-account-financial', 'Date', 'Last 7 Days', '/Financial/AccountTransactionsList')
+            cy.verifyDateSearch('app-account-financial', 'Date', 'Last 14 Days', '/Financial/AccountTransactionsList')
+            cy.verifyDateSearch('app-account-financial', 'Date', 'Last 30 Days', '/Financial/AccountTransactionsList')
         });
 
         it('Exclude tolls', () => {

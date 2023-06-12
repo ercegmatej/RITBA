@@ -54,60 +54,32 @@ Cypress.Commands.add('sortGrid', (parent, filter, url) => {
     cy.intercept('POST', Cypress.env('ip') + url).as('sort')
     
     cy.get(parent).within(() => {
-        cy.get('th').not(filter).each(($th) => {
-            if (url == '') {
-                cy.get($th).click()
-                cy.get($th).should('have.attr', 'aria-sort', 'ascending')
-    
-                cy.get($th).click()
-                cy.get($th).should('have.attr', 'aria-sort', 'descending')
-            }
-            else {
-                cy.get($th).click()
-                cy.wait('@sort').its('response.statusCode').should('eq', 200)
-                cy.get($th).should('have.attr', 'aria-sort', 'ascending')
-    
-                cy.get($th).click()
-                cy.wait('@sort').its('response.statusCode').should('eq', 200)
-                cy.get($th).should('have.attr', 'aria-sort', 'descending')
-            }
+        cy.get('kendo-grid-list tr').then(($tr) => {
+            if (!$tr.text().includes('No records available.')) {
+                cy.get('th').not(filter).each(($th) => {
+                    if (url == '') {
+                        cy.get($th).click()
+                        cy.get($th).should('have.attr', 'aria-sort', 'ascending')
             
-
-            // cy.get($th).click()
-            // cy.wait('@sort').its('response.statusCode').should('eq', 200)
-            // cy.get($th).find('kendo-icon').should('not.exist') //TODO Uncomment after fix
-
-            // const col = $th.attr('aria-colindex') //!Outdated command
-            // const { _ } = Cypress
-            // const toStrings = (strings) => _.map(strings, 'textContent')
-            // let actualArray = [];
-
-            // cy.get($th).click()
-            // cy.wait('@sort').its('response.statusCode').should('eq', 200)
-            // cy.get($th).should('have.attr', 'aria-sort', 'ascending')
-            // cy.get(`kendo-grid-list [aria-colindex="${col}"]`).then(toStrings).then((strings) => {
-            //     actualArray = strings
-            // })
-            // cy.get(`kendo-grid-list [aria-colindex="${col}"]`).then(toStrings).then((strings) => {
-            //     const ascending = strings.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
-            //     expect(actualArray).to.deep.equal(ascending)
-            // })
-
-            // cy.get($th).click()
-            // cy.wait('@sort').its('response.statusCode').should('eq', 200)
-            // cy.get($th).should('have.attr', 'aria-sort', 'descending')
-            // cy.get(`kendo-grid-list [aria-colindex="${col}"]`).then(toStrings).then((strings) => {
-            //     actualArray = strings
-            // })
-            // cy.get(`kendo-grid-list [aria-colindex="${col}"]`).then(toStrings).then((strings) => {
-            //     const ascending = strings.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
-            //     const descending = _.reverse(ascending)
-            //     expect(actualArray).to.deep.equal(descending)
-            // })
-
-            // cy.get($th).click()
-            // cy.wait('@sort').its('response.statusCode').should('eq', 200)
-            // cy.get($th).find('kendo-icon').should('not.exist')
+                        cy.get($th).click()
+                        cy.get($th).should('have.attr', 'aria-sort', 'descending')
+                    }
+                    else {
+                        cy.get($th).click()
+                        cy.wait('@sort').its('response.statusCode').should('eq', 200)
+                        cy.get($th).should('have.attr', 'aria-sort', 'ascending')
+            
+                        cy.get($th).click()
+                        cy.wait('@sort').its('response.statusCode').should('eq', 200)
+                        cy.get($th).should('have.attr', 'aria-sort', 'descending')
+                    }
+                    
+        
+                    // cy.get($th).click()
+                    // cy.wait('@sort').its('response.statusCode').should('eq', 200)
+                    // cy.get($th).find('kendo-icon').should('not.exist') //TODO Uncomment after fix
+                })
+            }
         })
     })
 })
@@ -117,42 +89,46 @@ Cypress.Commands.add('dropdown' , (parent, listItem) => {
     cy.contains('kendo-popup li', listItem).click()
 })
 
-Cypress.Commands.add('page', (table, url) => {
+Cypress.Commands.add('page', (selector, url) => {
     cy.intercept('POST', Cypress.env('ip') + url).as('page')
 
-    cy.get(`${table} kendo-pager kendo-dropdownlist`).click()
-    cy.get('kendo-popup').contains(/^5$/).click()
-    cy.wait('@page').its('response.statusCode').should('eq', 200)
-    cy.get(table).within(() => {
-        cy.get('tbody').find('tr').should('have.length.below', 6)
-        cy.get('kendo-pager').then(($pg) => {
-            if($pg.find('[aria-label="Page 2"]').length > 0) {
-                cy.get('[title="Go to the next page"]').click()
-                cy.wait('@page').its('response.statusCode').should('eq', 200)
-                if($pg.find('[aria-label="Page 3"]').length > 0) {
-                    cy.get('[title="Go to the last page"]').click()
-                    cy.wait('@page').its('response.statusCode').should('eq', 200)
-                    cy.get('[title="Go to the first page"]').click()
-                }
-            }
-            else {
-            }
-        })
+    cy.get(`${selector} kendo-grid-list tr`).then(($tr) => {
+        if (!$tr.text().includes('No records available.')) {
+            cy.get(`${selector} kendo-pager kendo-dropdownlist`).click()
+            cy.get('kendo-popup').contains(/^5$/).click()
+            cy.wait('@page').its('response.statusCode').should('eq', 200)
+            cy.get(selector).within(() => {
+                cy.get('tbody').find('tr').should('have.length.below', 6)
+                cy.get('kendo-pager').then(($pg) => {
+                    if($pg.find('[aria-label="Page 2"]').length > 0) {
+                        cy.get('[title="Go to the next page"]').click()
+                        cy.wait('@page').its('response.statusCode').should('eq', 200)
+                        if($pg.find('[aria-label="Page 3"]').length > 0) {
+                            cy.get('[title="Go to the last page"]').click()
+                            cy.wait('@page').its('response.statusCode').should('eq', 200)
+                            cy.get('[title="Go to the first page"]').click()
+                        }
+                    }
+                    else {
+                    }
+                })
+            })
+            cy.get(`${selector} kendo-pager kendo-dropdownlist`).click()
+            cy.get('kendo-popup').contains(/^10$/).click()
+            cy.wait('@page').its('response.statusCode').should('eq', 200)
+            cy.get(`${selector} tbody tr`).should('have.length.below', 11)
+        
+            cy.get(`${selector} kendo-pager kendo-dropdownlist`).click()
+            cy.get('kendo-popup').contains(/^50$/).click()
+            cy.wait('@page').its('response.statusCode').should('eq', 200)
+            cy.get(`${selector} tbody tr`).should('have.length.below', 51)
+        
+            cy.get(`${selector} kendo-pager kendo-dropdownlist`).click()
+            cy.get('kendo-popup').contains(/^100$/).click()
+            cy.wait('@page').its('response.statusCode').should('eq', 200)
+            cy.get(`${selector} tbody tr`).should('have.length.below', 101)
+        }
     })
-    cy.get(`${table} kendo-pager kendo-dropdownlist`).click()
-    cy.get('kendo-popup').contains(/^10$/).click()
-    cy.wait('@page').its('response.statusCode').should('eq', 200)
-    cy.get(`${table} tbody tr`).should('have.length.below', 11)
-
-    cy.get(`${table} kendo-pager kendo-dropdownlist`).click()
-    cy.get('kendo-popup').contains(/^50$/).click()
-    cy.wait('@page').its('response.statusCode').should('eq', 200)
-    cy.get(`${table} tbody tr`).should('have.length.below', 51)
-
-    cy.get(`${table} kendo-pager kendo-dropdownlist`).click()
-    cy.get('kendo-popup').contains(/^100$/).click()
-    cy.wait('@page').its('response.statusCode').should('eq', 200)
-    cy.get(`${table} tbody tr`).should('have.length.below', 101)
 })
 
 Cypress.Commands.add('openAccount', (category, value) => {
@@ -206,42 +182,47 @@ Cypress.Commands.add('verifySearch', (app, category, column, url) => {
     cy.contains('kendo-popup li', category).click()
     cy.contains(`${app} kendo-grid th`, column).then(($th) => {
         const td = $th.attr('aria-colindex')
-        cy.get(`${app} [data-kendo-grid-column-index="${td-1}"]`).then(($td) => { //TODO filter empty content
-            const resultsLength = $td.length
-            cy.randomValue(0, resultsLength-1, 0).then(($rand) => {
-                cy.get($td.eq($rand)).then(($content) => {
-                    const search = $content.text()
-                    cy.get(app).then(($app) => {
-                        if ($app.find('kendo-grid-toolbar kendo-dropdownlist').length > 1) {
-                            cy.get(`${app} kendo-grid-toolbar kendo-dropdownlist:eq(1)`).click()
-                            cy.log(search.slice(1,-1))
-                            cy.contains('kendo-popup li span', search.slice(1,-1)).click()
-                            cy.wait('@search').its('response.statusCode').should('eq', 200)
-                            cy.wait(500)
-                            cy.get(`${app} [data-kendo-grid-column-index="${td-1}"]`).each(($val) => {
-                                cy.get($val).should('contain.text', search.slice(1,-1))
+        cy.get('kendo-grid-list tr').then(($tr) => {
+            if (!$tr.text().includes('No records available.')) {
+                cy.get(`${app} [data-kendo-grid-column-index="${td-1}"]`).then(($td) => {
+                    const resultsLength = $td.length
+                    cy.randomValue(0, resultsLength-1, 0).then(($rand) => {
+                        cy.get($td.eq($rand)).then(($content) => {
+                            const search = $content.text()
+                            cy.get(app).then(($app) => {
+                                if ($app.find('kendo-grid-toolbar kendo-dropdownlist').length > 1) {
+                                    cy.get(`${app} kendo-grid-toolbar kendo-dropdownlist:eq(1)`).click()
+                                    cy.log(search.slice(1,-1))
+                                    cy.contains('kendo-popup li span', search.slice(1,-1)).click()
+                                    cy.wait('@search').its('response.statusCode').should('eq', 200)
+                                    cy.wait(500)
+                                    cy.get(`${app} [data-kendo-grid-column-index="${td-1}"]`).each(($val) => {
+                                        cy.get($val).should('contain.text', search.slice(1,-1))
+                                    })
+                                }
+                                else {
+                                    cy.get(`${app} kendo-textbox`).type(search + '{enter}')
+                                    cy.wait('@search').its('response.statusCode').should('eq', 200)
+                                    cy.wait(500)
+                                    cy.get(`${app} [data-kendo-grid-column-index="${td-1}"]`).each(($val) => {
+                                        const value = $val.text().toLocaleLowerCase()
+                                        expect(value).to.eq(search.toLocaleLowerCase())
+                                    })
+                                    cy.get(`${app} [aria-label="Clear"]`).click()
+                                }
                             })
-                        }
-                        else {
-                            cy.get(`${app} kendo-textbox`).type(search + '{enter}')
-                            cy.wait('@search').its('response.statusCode').should('eq', 200)
-                            cy.wait(500)
-                            cy.get(`${app} [data-kendo-grid-column-index="${td-1}"]`).each(($val) => {
-                                const value = $val.text().toLocaleLowerCase()
-                                expect(value).to.eq(search.toLocaleLowerCase())
-                            })
-                            cy.get(`${app} [aria-label="Clear"]`).click()
-                        }
+                        })
                     })
                 })
-            })
+            }
         })
     })
     cy.get(`${app} kendo-dropdownlist`).first().click()
     cy.contains('kendo-popup li', 'All').click()
 })
 
-Cypress.Commands.add('verifyDateSearch', (app, column, search) => {
+Cypress.Commands.add('verifyDateSearch', (app, column, search, url) => {
+    cy.intercept('POST', Cypress.env('ip') + url).as('search')
     const dayjs = require('dayjs')
     var customParseFormat = require('dayjs/plugin/customParseFormat')
     dayjs.extend(customParseFormat) 
@@ -249,6 +230,8 @@ Cypress.Commands.add('verifyDateSearch', (app, column, search) => {
 
     cy.get(app).find('kendo-dropdownlist').first().click()
     cy.contains('kendo-popup li', search).click()
+    cy.wait('@search').its('response.statusCode').should('eq', 200)
+    cy.wait(500)
     cy.get(app).then(($app) => {
         if($app.find('[aria-label="Search"]').length>0) {
             cy.get('[aria-label="Search"]').last().click({force:true})

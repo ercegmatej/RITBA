@@ -54,9 +54,9 @@ Cypress._.times(2, (i) => {
             cy.headers('app-information-notes', '', gridHeaders)
             cy.sortGrid('app-information-notes', '', '/Account/NotesList')
             cy.page('app-information-notes', '/Account/NotesList')
-            // cy.verifyDateSearch('app-information-notes', 'Date', '30 days')
-            // cy.verifyDateSearch('app-information-notes', 'Date', '60 days')
-            // cy.verifyDateSearch('app-information-notes', 'Date', '90 days')
+            // cy.verifyDateSearch('app-information-notes', 'Date', '30 days', '/Account/NotesList')
+            // cy.verifyDateSearch('app-information-notes', 'Date', '60 days', '/Account/NotesList')
+            // cy.verifyDateSearch('app-information-notes', 'Date', '90 days', '/Account/NotesList')
         });
 
         it('Vehicles grid', () => {

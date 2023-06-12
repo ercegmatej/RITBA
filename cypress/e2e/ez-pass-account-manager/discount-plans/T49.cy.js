@@ -1,5 +1,5 @@
 Cypress._.times(3, (i) => {
-    const accNumber = [ '50037164', '52112656', '52034047' ];
+    const accNumber = [ Cypress.env('individual'), Cypress.env('commercial'), Cypress.env('non-revenue') ];
     const accType = [ 'Individual', 'Commercial', 'Non-revenue' ];
     describe('T49 - EZ Pass - Discount Plans - Grid functionality' + ' - ' + accType[i], () => {
         const gridHeaders = ['Assigned Device', 'Plan', 'Start Date', 'End Date', 'Transponder Status', 'IAG Code', 'Transponder Type']

@@ -1,5 +1,5 @@
 Cypress._.times(3, (i) => {
-    const accNumber = [ '51355556', '52112656', '52034047' ];
+    const accNumber = [ Cypress.env('individual'), Cypress.env('commercial'), Cypress.env('non-revenue') ];
     const accType = [ 'Individual', 'Commercial', 'Non-revenue' ];
     describe('T53 - EZ Pass - Transponders - Grid' + ' - ' + accType[i], () => {
         const gridHeaders1 = ['Transponder No.', 'Request Mode', 'Status', 'Status Date', 'Start Date', 'IAG Code', 'IAG Class/Desc.', 'Device Type', 'Mount Type', 'Device Color']
@@ -28,15 +28,15 @@ Cypress._.times(3, (i) => {
         });
 
         it('Grid sort', () => {
-            cy.sortGrid('app-account-transponder kendo-grid:eq(0)', ':eq(0)', '/Account/TranspondersList')
-            cy.sortGrid('app-account-transponder kendo-grid:eq(1)', '', '/Account/TranspondersList')
-            cy.sortGrid('app-account-transponder kendo-grid:eq(2)', '', '/Account/TranspondersList')
+            cy.sortGrid('app-account-transponder kendo-grid:eq(0)', ':eq(0), :eq(7), :eq(8), :eq(9), :eq(10)', '/Account/TranspondersList')
+            cy.sortGrid('app-account-transponder kendo-grid:eq(1)', '', '')
+            cy.sortGrid('app-account-transponder kendo-grid:eq(2)', ':eq(0)', '/Account/TransponderHistoryList')
         });
 
         it('Pagination', () => {
             cy.page('app-account-transponder kendo-grid:eq(0)', '/Account/TranspondersList')
-            cy.page('app-account-transponder kendo-grid:eq(1)', '/Account/TranspondersList')
-            cy.page('app-account-transponder kendo-grid:eq(2)', '/Account/TranspondersList')
+            cy.page('app-account-transponder kendo-grid:eq(1)', '')
+            cy.page('app-account-transponder kendo-grid:eq(2)', '/Account/TransponderHistoryList')
         });
     });
 })

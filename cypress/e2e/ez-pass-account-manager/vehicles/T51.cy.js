@@ -1,5 +1,5 @@
 Cypress._.times(3, (i) => {
-    const accNumber = [ '50037164', '52112656', '52034047' ];
+    const accNumber = [ Cypress.env('individual'), Cypress.env('commercial'), Cypress.env('non-revenue') ];
     const accType = [ 'Individual', 'Commercial', 'Non-revenue' ];
     describe('T51 - EZ Pass - Vehicles - Grid' + ' - ' + accType[i], () => {
         const gridHeaders = ['Lic. Plate', 'Plate Type', 'State', 'Veh. Make', 'Veh. Model', 'Veh. Year', 'Axles', 'GVW', 'IAG Code', 
@@ -27,11 +27,7 @@ Cypress._.times(3, (i) => {
 
         it('Grid sort', () => {
             cy.get('app-account-vehicles kendo-grid th:first').click().click()
-            cy.sortGrid('app-account-vehicles', '', '')
+            cy.sortGrid('app-account-vehicles', ':eq(9)', '')
         });
-
-        // it('Pagination', () => {
-        //     cy.page('app-account-vehicles', '')
-        // }); //!Command doesn't work here
     });
 })

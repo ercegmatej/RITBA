@@ -51,7 +51,7 @@ describe('T7 - Cases - Grid Functionality and search', () => {
 
     it('Date search 12-13', () => {
         for (let i = 7; i<10; i++) {
-            cy.verifyDateSearch('app-case', 'Created Date', dropdownItems[i])
+            cy.verifyDateSearch('app-case', 'Created Date', dropdownItems[i], '/CaseManagement/CasesList')
         }
     });
 });

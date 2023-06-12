@@ -48,10 +48,10 @@ Cypress._.times(3, (i) => {
             cy.get('kendo-popup li:eq(0)').click()
             cy.wait('@search').its('response.statusCode').should('eq', 200)
 
-            cy.verifyDateSearch('app-account-cases', 'Created Date', 'Current Date')
-            cy.verifyDateSearch('app-account-cases', 'Created Date', 'Last 7 Days')
-            cy.verifyDateSearch('app-account-cases', 'Created Date', 'Last 14 Days')
-            cy.verifyDateSearch('app-account-cases', 'Created Date', 'Last 30 Days')
+            cy.verifyDateSearch('app-account-cases', 'Created Date', 'Current Date', '/CaseManagement/CasesList')
+            cy.verifyDateSearch('app-account-cases', 'Created Date', 'Last 7 Days', '/CaseManagement/CasesList')
+            cy.verifyDateSearch('app-account-cases', 'Created Date', 'Last 14 Days', '/CaseManagement/CasesList')
+            cy.verifyDateSearch('app-account-cases', 'Created Date', 'Last 30 Days', '/CaseManagement/CasesList')
 
             cy.get('app-account-cases kendo-grid-toolbar kendo-dropdownlist:first').click()
             cy.contains('kendo-popup li', 'Unread Email').click()
