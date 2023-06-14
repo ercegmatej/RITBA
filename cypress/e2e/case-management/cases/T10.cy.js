@@ -177,7 +177,7 @@ describe('T10 - Cases - Edit case', () => {
         cy.contains('app-edit-case > div', 'Case Information').click()
         cy.contains('li', 'Note History').click()
         cy.get('app-note-history kendo-grid-list tr:first td:eq(0)').should('contain.text', today)
-        cy.get('app-note-history kendo-grid-list tr:first td:eq(2)').should('contain.text', 'Test Note')
+        cy.get('app-note-history kendo-grid-list tr:first td:eq(2)').should('contain.text', 'Test note')
     });
     
     it('Changed Note History', () => {

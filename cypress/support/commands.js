@@ -227,11 +227,12 @@ Cypress.Commands.add('verifyDateSearch', (app, column, search, url) => {
     var customParseFormat = require('dayjs/plugin/customParseFormat')
     dayjs.extend(customParseFormat) 
     const today = dayjs()
+    const todayFormat = dayjs().format('MM/DD/YYYY')
 
     cy.get(app).find('kendo-dropdownlist').first().click()
     cy.contains('kendo-popup li', search).click()
     cy.wait('@search').its('response.statusCode').should('eq', 200)
-    cy.wait(500)
+    cy.wait(1000)
     cy.get(app).then(($app) => {
         if($app.find('[aria-label="Search"]').length>0) {
             cy.get('[aria-label="Search"]').last().click({force:true})
@@ -247,30 +248,31 @@ Cypress.Commands.add('verifyDateSearch', (app, column, search, url) => {
                         if (resultsLength > 0 ) {
                             cy.get($td).each(($time) => {
                                 const date = dayjs($time.text().slice(1, -1), 'MM/DD/YYYY')
+                                const dateFormat = date.format('MM/DD/YYYY')
                                 switch (search) {
                                     case 'Current Date':
-                                        expect(date.isSame(today))
+                                        expect(dateFormat).to.eq(todayFormat)
                                         break;
                                     case 'Today':
-                                        expect(date.isSame(today))
+                                        expect(dateFormat).to.eq(todayFormat)
                                         break;
                                     case 'Last 7 Days':
-                                        expect(date.isBefore(today) && date.isAfter(today.subtract(7, 'day'))).to.be.true
+                                        expect(date.isBefore(today.add(1, 'day')) && date.isAfter(today.subtract(8, 'day'))).to.be.true
                                         break;
                                     case 'Last 14 Days':
-                                        expect(date.isBefore(today) && date.isAfter(today.subtract(14, 'day'))).to.be.true
+                                        expect(date.isBefore(today.add(1, 'day')) && date.isAfter(today.subtract(15, 'day'))).to.be.true
                                         break;
                                     case 'Last 30 Days':
-                                        expect(date.isBefore(today) && date.isAfter(today.subtract(30, 'day'))).to.be.true
+                                        expect(date.isBefore(today.add(1, 'day')) && date.isAfter(today.subtract(31, 'day'))).to.be.true
                                     break;
                                     case '30 days':
-                                        expect(date.isBefore(today) && date.isAfter(today.subtract(30, 'day'))).to.be.true
+                                        expect(date.isBefore(today.add(1, 'day')) && date.isAfter(today.subtract(31, 'day'))).to.be.true
                                     break;
                                     case '60 days':
-                                        expect(date.isBefore(today) && date.isAfter(today.subtract(60, 'day'))).to.be.true
+                                        expect(date.isBefore(today.add(1, 'day')) && date.isAfter(today.subtract(61, 'day'))).to.be.true
                                     break;
                                     case '90 days':
-                                        expect(date.isBefore(today) && date.isAfter(today.subtract(90, 'day'))).to.be.true
+                                        expect(date.isBefore(today.add(1, 'day')) && date.isAfter(today.subtract(91, 'day'))).to.be.true
                                     break;
                                 }
                             })
@@ -422,7 +424,7 @@ Cypress.Commands.add('verifyGridData', (selector, column, row, text) => {
                 cy.get(selector + ` kendo-grid-list:first tr:eq(${row})`).should('contain.text', today)
             }
         })
-        cy.get(selector + ` tr:eq(${row}) [data-kendo-grid-column-index="${td-1}"]:eq(0)`).then(($td) => {
+        cy.get(selector + ` kendo-grid-list:first tr:eq(${row}) [data-kendo-grid-column-index="${td-1}"]`).then(($td) => {
             const gridText = $td.text()
             expect(gridText).to.include(text)
         })

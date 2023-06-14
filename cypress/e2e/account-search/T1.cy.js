@@ -1,11 +1,11 @@
 describe('T1 - Account Search - General design and grid functionality', () => {
     const accNumber = [ Cypress.env('individual'), Cypress.env('commercial'), Cypress.env('non-revenue'), Cypress.env('unregistered'), Cypress.env('violation') ];
     const accType = [ 'Individual', 'Commercial', 'Non Revenue', 'Contravention', 'Contravention'];
-    const gridHeaders = ['Pin', 'Status', 'Account Number', 'First Name', 'Last Name', 'Last 4 digits Card', 'Company Name', 'Address', 'City', 'State', 'ZipCode',
-    'Registration', 'Lic.Plate', 'Open Citations', 'Disputed Citations', 'Phone Number', 'Email Address', 'Open Date', 'Transponder No.']
+    const gridHeaders = ['Pin', 'Status', 'Account Number', 'First Name', 'Last Name', 'Company Name', 'Address', 'City', 'State', 'ZipCode',
+    'Registration', 'Lic.Plate', 'Open Citations', 'Disputed Citations', 'Phone Number', 'Email Address', 'Last 4 digits Card', 'Open Date', 'Transponder No.']
     const dropdownItems = ['Account Number', 'Last Name', 'First Name', 'Transponder Number', 'Plate Number', 'Day Time Phone', 'Address',
     'Email Address', 'Last 4 digits Card', 'Company Name', 'Check Number', 'FJNo', 'PNRef']
-    const term = [Cypress.env('individual'), 'SMITH', 'JOHN', '03200251011', 'DLY7416', '0987654321', 'TEST', 'test@test.com', '1234', 'BUSINESS', '123456', '134242431', '160255268197']
+    const term = [Cypress.env('individual'), 'KENNEDY', 'GERARD', '03200251011', 'DLY7416', '0987654321', 'TEST', 'test@test.com', '9903', 'BUSINESS', '12345', '134242431', '116489267052']
 
     it('Login', () => {
         cy.login(Cypress.env('username'), Cypress.env('password'), 'Call Center')
@@ -30,8 +30,16 @@ describe('T1 - Account Search - General design and grid functionality', () => {
         cy.get('[placeholder="Search"]').parents('kendo-textbox').find('button').click()
         cy.popup('Warning', 'Please enter a search term first.', 'Ok')
 
-        cy.search('kendo-grid-toolbar', 'Check Number', '123456', '/Search/MatchingAccountsList')
+        cy.search('kendo-grid-toolbar', 'Last Name', 'Kennedy', '/Search/MatchingAccountsList')
         cy.get('kendo-grid-toolbar').find('span:eq("1")').should('contain.text', ' Records Found')
+    });
+
+    it('Grid sort (8)', () => {
+        cy.sortGrid('app-account-search', ':first, :last', '/Search/MatchingAccountsList')
+    });
+
+    it('Pagination (19-20)', () => {
+        cy.page('app-account-search', '/Search/MatchingAccountsList')
     });
 
     it('Search categories', () => {
@@ -44,14 +52,6 @@ describe('T1 - Account Search - General design and grid functionality', () => {
                 }
             })
         }
-    });
-
-    it('Grid sort (8)', () => {
-        cy.sortGrid('app-account-search', ':first, :last', '/Search/MatchingAccountsList')
-    });
-
-    it('Pagination (19-20)', () => {
-        cy.page('app-account-search', '/Search/MatchingAccountsList')
     });
 
     it('Account manager open (9-18)', () => {
