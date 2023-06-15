@@ -33,6 +33,11 @@ describe('T2 - Account Search - Search by account number type (Individual, comme
         cy.contains('app-account-plan-information h5', 'Automatic Replenishment').should('not.be.visible')
         cy.contains('app-account-plan-information h5', 'Thresholds').should('not.be.visible')
 
-        //TODO Tools verification
+        cy.contains('button', 'Tools').click()
+        cy.get('kendo-popup').should('not.contain.text', 'One-Time Payment')
+        .and('not.contain.text', 'One-Time Refund')
+        .and('not.contain.text', 'Account Fee')
+        .and('not.contain.text', 'Adjustment')
+        .and('not.contain.text', 'Convert to Commercial')
     });
 });

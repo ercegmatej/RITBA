@@ -194,7 +194,7 @@ describe('T11 - Cases - Edit case - Email Communication tab', () => {
 
         cy.contains('li', 'Attachment History').click()
         cy.contains('li', 'Email Communication').click()
-        cy.verifyGridData('app-email-communication', 'From Email', 1, 'noreply@xyz.com')
-        cy.verifyGridData('app-email-communication', 'Email Type', 1, 'Email Sent')
+        cy.verifyGridData('app-email-communication', 'From Email', 0, 'noreply@xyz.com')
+        cy.verifyGridData('app-email-communication', 'Email Type', 0, 'Email Sent')
     });
 });
