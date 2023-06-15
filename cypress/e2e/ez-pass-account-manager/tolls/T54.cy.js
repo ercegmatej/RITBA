@@ -39,19 +39,19 @@ Cypress._.times(3, (i) => {
             cy.contains('kendo-popup li', /^100$/).click()
             cy.wait(2000)
 
-            cy.get('app-account-tolls [data-kendo-grid-column-index="18"]').then(($type) => { //TODO verify not chekced then checked after show all tolls
-                const before = $type.length
-                cy.get($type).each(($td) => {
-                    cy.get($td).should('not.contain.text', 'TOLL')
+            cy.get('app-account-tolls [data-kendo-grid-column-index="18"]').then(($reversed) => {
+                const before = $reversed.length
+                cy.get($reversed).each(($td) => {
+                    cy.get($td).should('not.be.checked')
                 })
-                cy.get('app-account-tolls kendo-grid-toolbar [type="checkbox"]').uncheck()
+                cy.get('app-account-tolls kendo-grid-toolbar [type="checkbox"]').check()
                 cy.wait(500)
                 cy.get('app-account-tolls kendo-pager-info').then(($numberOfItems) => {
                     const numberOfItems = $numberOfItems.text()
                     if (numberOfItems.includes(before)) {
                     }
                     else {
-                        cy.get('app-account-tolls [data-kendo-grid-column-index="7"]').should('contain.text', 'TOLL')
+                        cy.get('app-account-tolls [data-kendo-grid-column-index="18"]').should('be.checked')
                     }
                 })
             })

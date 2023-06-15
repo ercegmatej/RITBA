@@ -402,13 +402,18 @@ Cypress.Commands.add('formError', (selector, label, error) => {
 
 Cypress.Commands.add('calendar', (element, year, month, day) => { //cmd for Toggle Calendar button; format ('YYYY', 'Mon', 'DD'); e.g. ('2022', 'Aug', '29')
     cy.get(`[title="Toggle calendar"]:eq(${element})`).click()
+    cy.wait(500)
     cy.get('kendo-calendar').within(() => {
         cy.get('.k-button.k-button-md.k-rounded-md.k-button-flat.k-button-flat-base.k-calendar-title').click({force:true})
-        cy.contains('kendo-calendar-navigation', year).click({force:true})
+        cy.wait(500)
+        cy.contains('kendo-calendar-navigation li', year).click({force:true})
+        cy.wait(500)
         cy.contains('tr', year).parents('tbody').within(() => {
             cy.contains('td', month).click({force:true})
+            cy.wait(500)
         })
         cy.get('kendo-calendar-viewlist').find('td').contains(day).first().click({force:true})
+        cy.wait(500)
     })
 })
 
