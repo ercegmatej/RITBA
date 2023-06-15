@@ -1,9 +1,9 @@
 Cypress._.times(4, (i) => {
-const accNumber = [ '50037164', '52136866', '52034047', '52034047' ];
+const accNumber = [ Cypress.env('individual'), Cypress.env('commercial'), Cypress.env('non-revenue'), Cypress.env('non-revenue') ];
 const accType = [ 'Individual (pdf)', 'Commercial (jpg)', 'Non-revenue (png)', 'Non-revenue (xsl)' ];
 const file = [ 'test.pdf', 'test.jpg', 'test.png', 'test.xls']
 const department = 'TR194';
-const case_type = 'TR_Case_DEP';
+const case_type = 'TR_CDaa';
     describe('T41 - EZ pass - Cases - Edit case, Email Communication tab' + ' - ' + accType[i], () => {
 
         it('Login', () => {
@@ -215,15 +215,15 @@ const case_type = 'TR_Case_DEP';
         });
 
         it('Send email', () => {
-            cy.intercept('POST', 'https://ri2-crm-b.emovis.hr/CaseManagement/CaseEmailSend').as('sendEmail');
+            cy.intercept('POST', Cypress.env('ip') + '/CaseManagement/CaseEmailSend').as('sendEmail');
             cy.contains('app-send-email button', 'Send Email').click()
             cy.wait('@sendEmail').its('response.statusCode').should('eq', 200)
             cy.popup('Success', 'Email successfully sent', 'Ok')
 
             cy.contains('li', 'Attachment History').click()
             cy.contains('li', 'Email Communication').click()
-            cy.verifyGridData('app-email-communication', 'From Email', 1, 'noreply@xyz.com')
-            cy.verifyGridData('app-email-communication', 'Email Type', 1, 'Email Sent')
+            cy.verifyGridData('app-email-communication', 'From Email', 0, 'noreply@xyz.com')
+            cy.verifyGridData('app-email-communication', 'Email Type', 0, 'Email Sent')
         });
     });
 })

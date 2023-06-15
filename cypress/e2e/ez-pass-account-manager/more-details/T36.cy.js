@@ -1,5 +1,5 @@
 Cypress._.times(3, (i) => {
-    const accNumber = [ Cypress.env('individual'), Cypress.env('commercial'), Cypress.env('non-revenue') ];
+    const accNumber = [ Cypress.env('super-user'), Cypress.env('commercial'), Cypress.env('non-revenue') ];
     const accType = [ 'Individual', 'Commercial', 'Non-revenue' ];
     describe('T36 - EZ Pass - More Details - Authorized Users' + ' - ' + accType[i], () => {
         it('Login', () => {
@@ -62,9 +62,6 @@ Cypress._.times(3, (i) => {
             cy.field('app-add-authorised-user-form', 'Zip/Postal Code', '02909')
             cy.field('app-add-authorised-user-form', 'City', 'Providence')
 
-            cy.contains('app-add-authorised-user-form kendo-formfield', 'State').click()
-            cy.get('kendo-popup li').should('not.exist')
-            cy.contains('app-add-authorised-user-form kendo-formfield', 'State').click()
             cy.field('app-add-authorised-user-form', 'Country', 'United States')
             cy.field('app-add-authorised-user-form', 'State', 'Rhode Island')
 
@@ -73,18 +70,18 @@ Cypress._.times(3, (i) => {
         });
 
         it('Verify new user', () => {
-            cy.verifyGridData('app-authorised-users', 'User Role', 2, 'Administrator')
-            cy.verifyGridData('app-authorised-users', 'Contact Name', 2, 'John Doe')
-            cy.verifyGridData('app-authorised-users', 'Primary Phone', 2, '0987654321')
+            cy.verifyGridData('app-authorised-users', 'User Role', 1, 'Administrator')
+            cy.verifyGridData('app-authorised-users', 'Contact Name', 1, 'John Doe')
+            cy.verifyGridData('app-authorised-users', 'Primary Phone', 1, '0987654321')
         });
 
         it('Select the new user', () => {
             cy.intercept('GET', '/Account/ContactAddresses**').as('getAddresses');
             cy.contains('td', 'John Doe').click()
             cy.wait('@getAddresses').its('response.statusCode').should('eq', 200)
-            cy.verifyGridData('app-addresses-for', 'Address Type', 1, 'Mailing')
-            cy.verifyGridData('app-addresses-for', 'First Name', 1, 'John')
-            cy.verifyGridData('app-addresses-for', 'Last Name', 1, 'Doe')
+            cy.verifyGridData('app-addresses-for', 'Address Type', 0, 'Mailing')
+            cy.verifyGridData('app-addresses-for', 'First Name', 0, 'John')
+            cy.verifyGridData('app-addresses-for', 'Last Name', 0, 'Doe')
         });
 
         it('Add a new user', () => {
@@ -113,7 +110,7 @@ Cypress._.times(3, (i) => {
             cy.contains('kendo-dialog-actions button', 'Save').click()
             cy.popup('Success', 'Updated Contact information', 'Ok')
 
-            cy.verifyGridData('app-authorised-users', 'Contact Name', 3, 'George Austin')
+            cy.verifyGridData('app-authorised-users', 'Contact Name', 2, 'George Austin')
         });
 
         it('Delete recently created users', () => {

@@ -2,7 +2,7 @@ Cypress._.times(3, (i) => {
     const accNumber = [ Cypress.env('individual'), Cypress.env('commercial'), Cypress.env('non-revenue') ];
     const accType = [ 'Individual', 'Commercial', 'Non-revenue' ];
     describe('T34 - EZ Pass - Account Links - Grid functionality' + ' - ' + accType[i], () => {
-        const gridHeaders = ['Account Number', 'Plate No.', 'Number of Citations', 'Amount Dute', 'Address', 'Linked Account Type']
+        const gridHeaders = ['Account Number', 'Plate No', 'Number of Citations', 'Amount Due', 'Address', 'Linked Account Type']
         it('Login', () => {
             cy.login(Cypress.env('username'), Cypress.env('password'), 'Call Center')
         });

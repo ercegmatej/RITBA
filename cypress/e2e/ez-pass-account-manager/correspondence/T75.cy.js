@@ -1,5 +1,5 @@
 Cypress._.times(1, (i) => {
-    const accNumber = [ '51355556', '52112656', '52034047' ];
+    const accNumber = [ Cypress.env('individual'), Cypress.env('commercial'), Cypress.env('non-revenue') ];
     const accType = [ 'Individual', 'Commercial', 'Non-revenue' ];
     describe('T38 - EZ pass - Correspondence - Grid Functionality and search' + ' - ' + accType[i], () => {
         const gridHeaders1 = ['Correspondence Id', 'Correspondence Date', 'Correspondence Type', 'Status', 'Notification Date', 'User']

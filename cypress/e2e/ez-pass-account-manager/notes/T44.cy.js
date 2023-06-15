@@ -1,5 +1,5 @@
 Cypress._.times(3, (i) => {
-    const accNumber = [ Cypress.env('individual'), Cypress.env('commercial'), Cypress.env('non-revenue') ];
+    const accNumber = [ Cypress.env('speed-violations'), Cypress.env('commercial'), Cypress.env('non-revenue') ];
     const accType = [ 'Individual', 'Commercial', 'Non-revenue' ];
     describe('T44 - EZ pass - Notes - Grid Functionality and search' + ' - ' + accType[i], () => {
         const gridHeaders = ['Date', 'Note Type', 'User', 'Content', 'Status', 'Notification', 'Attachment']

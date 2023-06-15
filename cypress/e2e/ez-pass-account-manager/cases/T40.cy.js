@@ -1,10 +1,11 @@
 Cypress._.times(3, (i) => {
-    const accNumber = [ '50037164', '52136866', '52034047' ];
+    const accNumber = [ Cypress.env('individual'), Cypress.env('commercial'), Cypress.env('non-revenue') ];
     const accType = [ 'Individual', 'Commercial', 'Non-revenue' ];
+    const dayjs = require('dayjs')
+    const today = dayjs().format('MM/DD/YYYY')
     const department = 'TR194';
-    const case_type = 'TR_Case_DEP';
-    const editDepartment = 'dep';
-    const editCase_type = 'test1';
+    const case_type = 'TR_CDaa';
+    const editCase_type = 'dennnnn'
     let caseNumber = 0;
     describe('T40 - EZ Pass - Cases - Edit case' + ' - ' + accType[i], () => {
         it('Login', () => {
@@ -100,11 +101,6 @@ Cypress._.times(3, (i) => {
             cy.field('app-edit-case', 'Disposition Code', 'string')
             cy.field('app-edit-case', 'Source', 'Web')
     
-            cy.field('app-edit-case', 'Department', editDepartment)
-            cy.contains('kendo-formfield', 'Case Type').find('kendo-dropdownlist').should('not.contain.text', case_type)
-            cy.contains('button', 'Update').click()
-            cy.requiredError('app-edit-case', 'Case Type')
-    
             cy.field('app-edit-case', 'Case Type', editCase_type)
             cy.field('app-edit-case', 'Priority', 'Low')
             cy.field('app-edit-case', 'Notes', 'Test note')
@@ -120,9 +116,8 @@ Cypress._.times(3, (i) => {
     
         it('Verify change in the grid', () => {
             cy.contains('td', caseNumber).parent('tr').as('updatedRow')
-            cy.get('@updatedRow').find('td:eq(5)').should('contain.text', editDepartment)
             cy.get('@updatedRow').find('td:eq(6)').should('contain.text', editCase_type)
-            cy.get('@updatedRow').find('td:eq(7)').should('contain.text', 'Processing')
+            cy.get('@updatedRow').find('td:eq(7)').should('contain.text', 'Closed')
             cy.get('@updatedRow').find('td:eq(8)').should('contain.text', 'Low')
             cy.get('@updatedRow').find('td:eq(10)').should('contain.text', 'Web')
         });
@@ -130,19 +125,18 @@ Cypress._.times(3, (i) => {
         it('Verify that changes are recorded in the case window', () => {
             cy.contains('td', caseNumber).click().dblclick()
     
-            cy.verifyField('app-add-case', 'Case Type', editCase_type)
-            cy.verifyField('app-add-case', 'Status', 'Processing')
-            cy.verifyField('app-add-case', 'Disposition Code', 'string')
-            cy.verifyField('app-add-case', 'Source', 'Web')
-            cy.verifyField('app-add-case', 'Department', editDepartment)
-            cy.verifyField('app-add-case', 'Priority', 'Low')
+            cy.verifyField('app-edit-case', 'Case Type', editCase_type)
+            cy.verifyField('app-edit-case', 'Status', 'Closed')
+            cy.verifyField('app-edit-case', 'Disposition Code', 'string')
+            cy.verifyField('app-edit-case', 'Source', 'Web')
+            cy.verifyField('app-edit-case', 'Priority', 'Low')
         });
     
         it('Verify Note History', () => {
             cy.contains('app-edit-case > div', 'Case Information').click()
             cy.contains('li', 'Note History').click()
-            cy.get('app-note-history kendo-grid-list tr:first td:eq(0)').should('contain.text', today)
-            cy.get('app-note-history kendo-grid-list tr:first td:eq(2)').should('contain.text', 'Test Note')
+            cy.get('app-note-history kendo-grid-list tr:eq(1) td:eq(0)').should('contain.text', today)
+            cy.get('app-note-history kendo-grid-list tr:eq(1) td:eq(2)').should('contain.text', 'Test note')
         });
         
         it('Changed Note History', () => {

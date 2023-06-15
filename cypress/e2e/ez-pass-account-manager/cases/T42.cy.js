@@ -1,8 +1,8 @@
 Cypress._.times(3, (i) => {
-    const accNumber = [ '50002370', '52136866', '52034047' ];
+    const accNumber = [ Cypress.env('individual'), Cypress.env('commercial'), Cypress.env('non-revenue') ];
     const accType = [ 'Individual', 'Commercial', 'Non-revenue' ];
     const department = 'TR194';
-    const case_type = 'TR_Case_DEP';
+    const case_type = 'TR_CDaa';
     describe('T42 - EZ Pass - Cases - Add new case (mandatory fields)' + ' - ' + accType[i], () => {
         it('Login', () => {
             cy.login(Cypress.env('username'), Cypress.env('password'), 'Call Center')
@@ -45,8 +45,8 @@ Cypress._.times(3, (i) => {
         });
 
         it('Verify addition', () => {
-            cy.verifyGridData('app-account-cases', 'Department', 1, ' ' + department + ' ')
-            cy.verifyGridData('app-account-cases', 'Case Type', 1, ' ' +  case_type + ' ')
+            cy.verifyGridData('app-account-cases', 'Department', 0, ' ' + department + ' ')
+            cy.verifyGridData('app-account-cases', 'Case Type', 0, ' ' +  case_type + ' ')
         });
     });
 })

@@ -72,12 +72,11 @@ Cypress.Commands.add('sortGrid', (parent, filter, url) => {
                         cy.get($th).click()
                         cy.wait('@sort').its('response.statusCode').should('eq', 200)
                         cy.get($th).should('have.attr', 'aria-sort', 'descending')
-                    }
-                    
-        
-                    // cy.get($th).click()
-                    // cy.wait('@sort').its('response.statusCode').should('eq', 200)
-                    // cy.get($th).find('kendo-icon').should('not.exist') //TODO Uncomment after fix
+
+                        cy.get($th).click()
+                        cy.wait('@sort').its('response.statusCode').should('eq', 200)
+                        cy.get($th).find('kendo-icon').should('not.exist')
+                    }                   
                 })
             }
         })
@@ -180,10 +179,11 @@ Cypress.Commands.add('verifySearch', (app, category, column, url) => {
 
     cy.get(app).find('kendo-dropdownlist').first().click()
     cy.contains('kendo-popup li', category).click()
+    cy.wait(500)
     cy.contains(`${app} kendo-grid th`, column).then(($th) => {
         const td = $th.attr('aria-colindex')
         cy.get('kendo-grid-list tr').then(($tr) => {
-            if (!$tr.text().includes('No records available.')) {
+            if (!$tr.text().includes('No records available.' && !$tr.length == 1)) {
                 cy.get(`${app} [data-kendo-grid-column-index="${td-1}"]`).then(($td) => {
                     const resultsLength = $td.length
                     cy.randomValue(0, resultsLength-1, 0).then(($rand) => {
