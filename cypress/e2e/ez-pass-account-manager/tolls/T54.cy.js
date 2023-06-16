@@ -13,7 +13,7 @@ Cypress._.times(3, (i) => {
             cy.openAccount('Account Number', accNumber[i])
         });
 
-        it('Open the Transponders tab', () => {
+        it('Open the Tolls tab', () => {
             cy.tab('Tolls')
         });
 
@@ -58,9 +58,9 @@ Cypress._.times(3, (i) => {
         });
 
         it('Download button', () => {
-            cy.intercept('POST', '/Tolls/TollsToCsvExport').as('download');
+            cy.intercept('POST', '/Tolls/AccountPassagesCsvList').as('download');
             cy.contains('app-account-tolls button', 'Download').click()
             cy.wait('@download').its('response.statusCode').should('eq', 200);
-        });//! API
+        });
     });
 })

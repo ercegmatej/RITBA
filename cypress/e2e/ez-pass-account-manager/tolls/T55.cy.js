@@ -10,7 +10,7 @@ Cypress._.times(3, (i) => {
             cy.openAccount('Account Number', accNumber[i])
         });
 
-        it('Open the Transponders tab', () => {
+        it('Open the Tolls tab', () => {
             cy.tab('Tolls')
         });
 
@@ -87,49 +87,56 @@ Cypress._.times(3, (i) => {
             dayjs.extend(customParseFormat) 
 
             cy.intercept('POST', Cypress.env('ip') + '/Tolls/AccountPassagesList').as('search')
-            cy.contains('app-account-tolls th', 'Post Date').click().click()
+            cy.contains('app-account-tolls th', 'Trans Date').click().click()
             cy.wait(1000)
-            cy.get(`app-account-tolls kendo-grid-list tr:eq(0) [data-kendo-grid-column-index="6"]`).then(($td) => {
-                const searchSubtracted = dayjs($td.text()).subtract(1, 'day')
-                const search = dayjs($td.text()).format('MMM/DD/YYYY')
-                const mth = search.slice(0,-8)
-                const day = search.slice(4,6)
-                const yr = search.slice(7)
-                cy.contains('button', 'Advanced Search').click()
-                cy.contains('app-advance-search app-radio', 'Date').find('input').check()
-                cy.calendar(0, yr, mth, day)
-                cy.contains('kendo-dialog-actions button', 'Begin Search').click()
-                cy.wait('@search').its('response.statusCode').should('eq', 200)
-                cy.wait(1000)
-                cy.get(`app-account-tolls [data-kendo-grid-column-index="6"]`).each(($val) => {
-                    const value = dayjs($val.text())
-                    expect(value.isBefore(today) && value.isAfter(searchSubtracted)).to.be.true
+            cy.get(`app-account-tolls [data-kendo-grid-column-index="5"]`).then(($len) => {
+                const resultsLength = $len.length
+                cy.randomValue(0, resultsLength-1, 0).then(($rand) => {
+                    const random = $rand
+                    cy.get(`app-account-tolls kendo-grid-list tr:eq(${random}) [data-kendo-grid-column-index="5"]`).then(($td) => {
+                        const searchSubtracted = dayjs($td.text()).subtract(1, 'day')
+                        const search = searchSubtracted.format('MMM/DD/YYYY')
+                        const mth = search.slice(0,-8)
+                        const day = search.slice(4,6)
+                        const yr = search.slice(7)
+                        cy.contains('button', 'Advanced Search').click()
+                        cy.contains('app-advance-search app-radio', 'Date').find('input').check()
+                        cy.contains('app-advance-search app-date-picker', 'Date Start').find('input').type(yr)
+                        cy.calendar(0, yr, mth, day)
+                        cy.contains('kendo-dialog-actions button', 'Begin Search').click()
+                        cy.wait('@search').its('response.statusCode').should('eq', 200)
+                        cy.wait(1000)
+                        cy.get(`app-account-tolls [data-kendo-grid-column-index="5"]`).each(($val) => {
+                            const value = dayjs($val.text())
+                            expect(value.isBefore(today) && value.isAfter(searchSubtracted)).to.be.true
+                        })
+                    })
                 })
             })
             cy.get('app-account-tolls kendo-grid-toolbar [type="checkbox"]').check()
             cy.get('app-account-tolls kendo-grid-toolbar [type="checkbox"]').uncheck()
         });
         
-        // it('Agency search', () => {
-        //     cy.intercept('POST', Cypress.env('ip') + '/Tolls/AccountPassagesList').as('search')
-        //     cy.contains('app-account-tolls th', 'Agency').click().click()
-        //     cy.wait(1000)
-        //     cy.get(`app-account-tolls kendo-grid-list tr:eq(0) [data-kendo-grid-column-index="1"]`).then(($td) => {
-        //         const search = $td.text()
-        //         cy.contains('button', 'Advanced Search').click()
-        //         cy.contains('app-advance-search app-radio', 'Agency').find('input').check()
-        //         cy.contains('app-advance-search app-select-one kendo-formfield', 'Agency').find('kendo-dropdownlist').click()
-        //         cy.contains('kendo-popup li', search).click()
-        //         cy.contains('kendo-dialog-actions button', 'Begin Search').click()
-        //         cy.wait('@search').its('response.statusCode').should('eq', 200)
-        //         cy.wait(1000)
-        //         cy.get(`app-account-tolls [data-kendo-grid-column-index="2"]`).each(($val) => {
-        //             const value = $val.text()
-        //             expect(value).to.eq(search)
-        //         })
-        //     })
-        //     cy.get('app-account-tolls kendo-grid-toolbar [type="checkbox"]').check()
-        //     cy.get('app-account-tolls kendo-grid-toolbar [type="checkbox"]').uncheck()
-        // });//!API
+        it('Agency search', () => {
+            cy.intercept('POST', Cypress.env('ip') + '/Tolls/AccountPassagesList').as('search')
+            cy.contains('app-account-tolls th', 'Agency').click().click()
+            cy.wait(1000)
+            cy.get(`app-account-tolls kendo-grid-list tr:eq(0) [data-kendo-grid-column-index="1"]`).then(($td) => {
+                const search = $td.text().slice(1, -1)
+                cy.contains('button', 'Advanced Search').click()
+                cy.contains('app-advance-search app-radio', 'Agency').find('input').check()
+                cy.contains('app-advance-search app-select-one kendo-formfield', 'Agency').find('kendo-dropdownlist').click()
+                cy.contains('kendo-popup kendo-list li', search).click()
+                cy.contains('kendo-dialog-actions button', 'Begin Search').click()
+                cy.wait('@search').its('response.statusCode').should('eq', 200)
+                cy.wait(1000)
+                cy.get(`app-account-tolls [data-kendo-grid-column-index="1"]`).each(($val) => {
+                    const value = $val.text().slice(1, -1)
+                    expect(value).to.eq(search)
+                })
+            })
+            cy.get('app-account-tolls kendo-grid-toolbar [type="checkbox"]').check()
+            cy.get('app-account-tolls kendo-grid-toolbar [type="checkbox"]').uncheck()
+        });
     });
 })

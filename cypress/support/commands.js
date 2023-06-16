@@ -137,6 +137,8 @@ Cypress.Commands.add('openAccount', (category, value) => {
     cy.get('app-account-search kendo-grid-toolbar input').clear().type(value)
     cy.get('app-account-search kendo-grid-toolbar [aria-label="Search"]').click()
 
+    cy.get('app-account-search kendo-grid-list tr:first').click() //! DELETE AFTER FIX
+
     cy.wait('@openAccount').its('response.statusCode').should('eq', 200)
     cy.wait(2000)
 })
