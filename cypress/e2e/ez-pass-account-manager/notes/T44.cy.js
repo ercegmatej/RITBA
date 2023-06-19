@@ -12,7 +12,7 @@ Cypress._.times(3, (i) => {
             cy.openAccount('Account Number', accNumber[i])
         });
 
-        it('Open the History tab', () => {
+        it('Open the Notes tab', () => {
             cy.tab('Notes')
             cy.contains('app-notes button', 'Show All Notes').should('exist')
             cy.contains('app-notes button', 'Show All Notes').click()

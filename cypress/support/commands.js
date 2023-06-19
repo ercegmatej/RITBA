@@ -346,8 +346,14 @@ Cypress.Commands.add('randomText', () => {
 Cypress.Commands.add('field', (selector, label, text) => {
     cy.contains(`${selector} kendo-formfield`, label).then(($field) => {
         if ($field.find('kendo-dropdownlist').length > 0) {
-            cy.get($field).find('kendo-dropdownlist').click()
-            cy.contains('kendo-popup li', text).click()
+            if (text == ':first') {
+                cy.get($field).find('kendo-dropdownlist').click()
+                cy.get('kendo-popup li:first').click()
+            }
+            else {
+                cy.get($field).find('kendo-dropdownlist').click()
+                cy.contains('kendo-popup li', text).click()
+            }
         }
         else if ($field.find('kendo-textarea').length > 0) {
             cy.get($field).find('textarea').clear().type(text)
@@ -385,6 +391,9 @@ Cypress.Commands.add('verifyField', (selector, label, text) => {
         }
         else if ($field.find('[type="radio"]').length > 0) {
             cy.get($field).find('[type="radio"]').should('be.checked')
+        }
+        else if ($field.find('[type="checkbox"]').length > 0) {
+            cy.get($field).find('[type="checkbox"]').should('be.checked')
         }
     })
 })

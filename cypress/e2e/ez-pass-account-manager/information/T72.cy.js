@@ -22,7 +22,7 @@ Cypress._.times(2, (i) => {
 
         it('Account Status', () => {
             const dropdownItems = ['Open Pending', 'Open', 'Closed Pending', 'Closed']
-            cy.dropdownItems('app-account-status', dropdownItems)
+            cy.dropdownItems('app-account-status kendo-formfield:first', dropdownItems)
         });
 
         it('Account Type', () => {
@@ -34,7 +34,7 @@ Cypress._.times(2, (i) => {
         });
 
         it('Payment Method', () => {
-            const dropdownItems = ['None', 'Cash', 'Cheque', 'Credit Card', 'Ach', 'Non Revenue', 'Pre Paid Toll']
+            const dropdownItems = ['None', 'Cash', 'Cheque', 'Credit Card', 'ACH', 'Non Revenue', 'Pre Paid Toll']
             cy.dropdownItems('app-account-plan-information kendo-formfield:contains("Payment Method")', dropdownItems)
         });
 
@@ -54,9 +54,9 @@ Cypress._.times(2, (i) => {
             cy.headers('app-information-notes', '', gridHeaders)
             cy.sortGrid('app-information-notes', '', '/Account/NotesList')
             cy.page('app-information-notes', '/Account/NotesList')
-            // cy.verifyDateSearch('app-information-notes', 'Date', '30 days', '/Account/NotesList')
-            // cy.verifyDateSearch('app-information-notes', 'Date', '60 days', '/Account/NotesList')
-            // cy.verifyDateSearch('app-information-notes', 'Date', '90 days', '/Account/NotesList')
+            cy.verifyDateSearch('app-information-notes', 'Date', '30 Days', '/Account/NotesList')
+            cy.verifyDateSearch('app-information-notes', 'Date', '60 Days', '/Account/NotesList')
+            cy.verifyDateSearch('app-information-notes', 'Date', '90 Days', '/Account/NotesList')
         });
 
         it('Vehicles grid', () => {

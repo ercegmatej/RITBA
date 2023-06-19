@@ -1,7 +1,7 @@
 Cypress._.times(1, (i) => {
-    const accNumber = [ Cypress.env('individual_2'), Cypress.env('commercial'), Cypress.env('non-revenue') ];
+    const accNumber = [ Cypress.env('individual'), Cypress.env('commercial'), Cypress.env('non-revenue') ];
     const accType = [ 'Individual', 'Commercial', 'Non-revenue' ];
-    describe('T52 - EZ Pass - Replenishment - Add, Edit, Delete' + ' - ' + accType[i], () => {
+    describe('T56 - EZ Pass - Replenishment - Add, Edit, Delete' + ' - ' + accType[i], () => {
         it('Login', () => {
             cy.login(Cypress.env('username'), Cypress.env('password'), 'Call Center')
         });
