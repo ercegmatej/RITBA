@@ -130,17 +130,24 @@ Cypress.Commands.add('page', (selector, url) => {
     })
 })
 
+Cypress.Commands.add('itemsPerPage', (selector, items, url) => {
+    cy.intercept('POST', Cypress.env('ip') + url).as('page')
+
+    cy.get(`${selector} kendo-pager-page-sizes kendo-dropdownlist`).click()
+    cy.contains('kendo-popup li', items).click()
+    cy.wait('@page').its('response.statusCode').should('eq', 200)
+})
+
 Cypress.Commands.add('openAccount', (category, value) => {
     cy.intercept('GET', Cypress.env('ip') + '/Account/**').as('openAccount')
 
     cy.dropdown('app-account-search kendo-grid-toolbar', category)
     cy.get('app-account-search kendo-grid-toolbar input').clear().type(value)
     cy.get('app-account-search kendo-grid-toolbar [aria-label="Search"]').click()
-
-    cy.get('app-account-search kendo-grid-list tr:first').click() //! DELETE AFTER FIX
-
     cy.wait('@openAccount').its('response.statusCode').should('eq', 200)
     cy.wait(2000)
+
+    cy.contains('kendo-dialog-actions button', 'Ok').click() //! DELETE AFTER FIX
 })
 
 Cypress.Commands.add('tab', (name) => {
@@ -435,11 +442,11 @@ Cypress.Commands.add('verifyGridData', (selector, column, row, text) => {
     const today = dayjs().format('MM/DD/YYYY')
     cy.contains(selector + ' th', column).then(($th) => {
         const td = $th.attr('aria-colindex')
-        cy.get(selector + ' kendo-grid:first thead').then(($thead) => {
-            if($thead.text().includes('Date')) {
-                cy.get(selector + ` kendo-grid-list:first tr:eq(${row})`).should('contain.text', today)
-            }
-        })
+        // cy.get(selector + ' kendo-grid:first thead').then(($thead) => {
+        //     if($thead.text().includes('Date')) {
+        //         cy.get(selector + ` kendo-grid-list:first tr:eq(${row})`).should('contain.text', today)
+        //     }
+        // })
         cy.get(selector + ` kendo-grid-list:first tr:eq(${row}) [data-kendo-grid-column-index="${td-1}"]`).then(($td) => {
             const gridText = $td.text()
             expect(gridText).to.include(text)

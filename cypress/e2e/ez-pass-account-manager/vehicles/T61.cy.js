@@ -17,17 +17,16 @@ Cypress._.times(1, (i) => {
         it('Add New Vehicle window', () => {
             cy.get('app-account-vehicles kendo-grid-toolbar [title="Add"]').click()
             cy.contains('kendo-dialog-actions button', 'Save').click()
-            cy.requiredError('app-add-vehicle', 'Plate Type')
             cy.requiredError('app-add-vehicle', 'Lic. Plate Number')
             cy.requiredError('app-add-vehicle', 'Veh. Make')
             cy.requiredError('app-add-vehicle', 'IAG Codes')
         });
 
         it('Populate the fields with data', () => {
-            cy.field('app-add-vehicle', 'Plate Type', ':first')
             cy.field('app-add-vehicle', 'Veh. State/Province', 'Alabama')
             cy.contains('kendo-formfield', 'Plate Type').should('not.be.visible')
             cy.field('app-add-vehicle', 'Veh. State/Province', 'Rhode Island')
+            cy.field('app-add-vehicle', 'Plate Type', ':first')
 
             cy.field('app-add-vehicle', 'Veh. Year', '2022')
             cy.field('app-add-vehicle', 'Veh. Make', 'AUDI')
