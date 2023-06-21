@@ -380,7 +380,12 @@ Cypress.Commands.add('field', (selector, label, text) => {
             cy.get($field).find('[type="radio"]').check()
         }
         else if ($field.find('[type="checkbox"]').length > 0) {
-            cy.get($field).find('[type="checkbox"]').check()
+            if (text == 'check') {
+                cy.get($field).find('[type="checkbox"]').check()
+            }
+            else if (text == 'uncheck') {
+                cy.get($field).find('[type="checkbox"]').uncheck()
+            }
         }
     })
 })
@@ -397,10 +402,10 @@ Cypress.Commands.add('verifyField', (selector, label, text) => {
             cy.get($field).find('kendo-textbox').should('contain.text', text)
         }
         else if ($field.find('[type="radio"]').length > 0) {
-            cy.get($field).find('[type="radio"]').should('be.checked')
+            cy.get($field).find('[type="radio"]').should(text)
         }
         else if ($field.find('[type="checkbox"]').length > 0) {
-            cy.get($field).find('[type="checkbox"]').should('be.checked')
+            cy.get($field).find('[type="checkbox"]').should(text)
         }
     })
 })

@@ -34,13 +34,13 @@ Cypress._.times(1, (i) => {
             cy.field('app-add-vehicle', 'GVW', '2000')
 
             cy.field('app-add-vehicle', 'IAG Codes', '203')
-            cy.verifyField('app-add-vehicle', 'Dual Tires', '')
+            cy.verifyField('app-add-vehicle', 'Dual Tires', 'be.checked')
 
             cy.field('app-add-vehicle', 'Lic. Plate Number', '7357QA')
         });
 
         it('Temporary plate', () => {
-            cy.field('app-add-vehicle', 'This is a temporary plate', '')
+            cy.field('app-add-vehicle', 'This is a temporary plate', 'check')
             cy.contains('app-add-vehicle kendo-formfield', 'Start Date').should('exist')
             cy.contains('app-add-vehicle kendo-formfield', 'End Date').should('exist')
 
@@ -71,7 +71,7 @@ Cypress._.times(1, (i) => {
             cy.field('app-add-vehicle', 'GVW', '2000')
 
             cy.field('app-add-vehicle', 'IAG Codes', '203')
-            cy.verifyField('app-add-vehicle', 'Dual Tires', '')
+            cy.verifyField('app-add-vehicle', 'Dual Tires', 'be.checked')
 
             cy.field('app-add-vehicle', 'Lic. Plate Number', '7357QA')
         });
@@ -84,7 +84,7 @@ Cypress._.times(1, (i) => {
         it('Change to valid vehicle data and save', () => {
             cy.intercept('POST', '/Account/VehicleAdd').as('addVehicle');
             cy.field('app-add-vehicle', 'Lic. Plate Number', '6357QA')
-            cy.field('app-add-vehicle', 'This is a rental plate', '')
+            cy.field('app-add-vehicle', 'This is a rental plate', 'check')
             cy.contains('app-add-vehicle kendo-formfield', 'Start Date').should('exist')
             cy.contains('app-add-vehicle kendo-formfield', 'End Date').should('exist')
             cy.calendar(1, '2023', 'Dec', '25')

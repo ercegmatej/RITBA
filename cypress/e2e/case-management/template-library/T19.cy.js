@@ -1,4 +1,4 @@
-describe('T19 - Cases - Template library grid functionality and add new template', () => {
+describe('T19 - Case Management - Template library grid functionality and add new template', () => {
     it('Login', () => {
         cy.login(Cypress.env('username'), Cypress.env('password'), 'Call Center')
     });
