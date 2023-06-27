@@ -210,7 +210,7 @@ Cypress.Commands.add('verifySearch', (app, category, column, url) => {
                                     })
                                 }
                                 else {
-                                    cy.get(`${app} kendo-textbox`).type(search + '{enter}')
+                                    cy.get(`${app} kendo-textbox`).clear().type(search + '{enter}')
                                     cy.wait('@search').its('response.statusCode').should('eq', 200)
                                     cy.wait(500)
                                     cy.get(`${app} [data-kendo-grid-column-index="${td-1}"]`).each(($val) => {
