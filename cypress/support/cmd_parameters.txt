@@ -18,3 +18,8 @@ requiredError(selector, label)
 formError(selector, label, error)
 calendar(element, year, month, day)
 verifyGridData(selector, column, row, text)
+
+INTERCEPT
+
+cy.intercept('', '').as('')
+cy.wait('@').its('response.statusCode').should('eq', 200)
