@@ -4,7 +4,7 @@ describe('T1 - Account Search - General design and grid functionality', () => {
     const gridHeaders = ['Pin', 'Status', 'Account Number', 'First Name', 'Last Name', 'Company Name', 'Address', 'City', 'State', 'ZipCode',
     'Registration', 'Lic.Plate', 'Open Citations', 'Disputed Citations', 'Phone Number', 'Email Address', 'Last 4 digits Card', 'Open Date', 'Transponder No.']
     const dropdownItems = ['Account Number', 'Last Name', 'First Name', 'Transponder Number', 'Plate Number', 'Day Time Phone', 'Address',
-    'Email Address', 'Last 4 digits Card', 'Company Name', 'Check Number', 'FJNo', 'PNRef']
+    'Email Address', 'Last 4 digits Card', 'Company Name', 'Check Number', 'FJNo', 'PNRef', 'ACH Last 4 Digits']
     const term = [Cypress.env('individual'), 'KENNEDY', 'GERARD', '03200251011', 'DLY7416', '0987654321', 'TEST', 'test@test.com', '9903', 'BUSINESS', '12345', '134242431', '116489267052']
 
     it('Login', () => {

@@ -27,7 +27,7 @@ Cypress._.times(3, (i) => {
 
         it('Grid sort', () => {
             cy.get('app-account-vehicles kendo-grid th:first').click().click()
-            cy.sortGrid('app-account-vehicles', ':eq(9)', '')
+            cy.sortGrid('app-account-vehicles', ':eq(0), :eq(9)', '')
         });
     });
 })
