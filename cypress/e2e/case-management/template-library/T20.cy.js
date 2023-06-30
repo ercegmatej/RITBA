@@ -102,7 +102,7 @@ describe('T20 - Case Management - Template library - edit template', () => {
 
     it('Insert image', () => {
         cy.get('kendo-editor').within(() => {
-            cy.get('[title="Insert Image"]').click()
+            cy.get('[title="Insert image"]').click()
         })
         cy.contains('kendo-label', 'Web address').parents('.k-form-field').find('input').type('https://picsum.photos/200/300')
         cy.contains('kendo-label', 'Alternate text').parents('.k-form-field').find('input').type('Image')

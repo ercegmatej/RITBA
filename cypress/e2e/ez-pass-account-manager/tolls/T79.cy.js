@@ -1,6 +1,7 @@
 const accNumber = [ Cypress.env('individual'), Cypress.env('commercial'), Cypress.env('non-revenue') ];
 const accType = [ 'Individual', 'Commercial', 'Non-revenue' ];
-describe('T79 - EZ Pass - Tolls - Toll transfer' + ' - ' + accType[i], () => {
+const i = 0;
+describe('T79 - EZ Pass - Tolls - Toll transfer', () => {
     it('Login', () => {
         cy.login(Cypress.env('username'), Cypress.env('password'), 'Call Center')
     });

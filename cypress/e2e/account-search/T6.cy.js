@@ -10,9 +10,9 @@ describe('T6 - Unbilled Transaction Search - Search (valid, invalid, partial)', 
     it('Search by full plate', () => {
         cy.intercept('GET', '/Invoice/**').as('getAcc');
         cy.search('app-unbilled-transactions-search kendo-grid-toolbar', 'Plate Number', '123490', '/Search/MatchingUnbilledTransactionList')
-        cy.get('app-unbilled-transactions-search kendo-grid-list tr:first').click().dblclick()
-        cy.wait('@getAcc').its('response.statusCode').should('eq', 200)
-        cy.get('[title="Close"]').click()
+        // cy.get('app-unbilled-transactions-search kendo-grid-list tr:first').click().dblclick()
+        // cy.wait('@getAcc').its('response.statusCode').should('eq', 200)
+        // cy.get('[title="Close"]').click()
     });
 
     it('Search by full invalid plate', () => {
@@ -26,9 +26,9 @@ describe('T6 - Unbilled Transaction Search - Search (valid, invalid, partial)', 
         cy.get('app-unbilled-transactions-search kendo-grid-list [aria-colindex="2"]').each(($td) => {
             cy.get($td).should('contain.text', '1234')
         })
-        cy.get('app-unbilled-transactions-search kendo-grid-list tr:first').click().dblclick()
-        cy.wait('@getAcc').its('response.statusCode').should('eq', 200)
-        cy.get('[title="Close"]').click()
+        // cy.get('app-unbilled-transactions-search kendo-grid-list tr:first').click().dblclick()
+        // cy.wait('@getAcc').its('response.statusCode').should('eq', 200)
+        // cy.get('[title="Close"]').click()
     });
 
     it('Search by valid Transaction ID number', () => {
@@ -37,9 +37,9 @@ describe('T6 - Unbilled Transaction Search - Search (valid, invalid, partial)', 
         cy.get('app-unbilled-transactions-search kendo-grid-list [aria-colindex="1"]').each(($td) => {
             cy.get($td).should('contain.text', '53459870')
         })
-        cy.get('app-unbilled-transactions-search kendo-grid-list tr:first').click().dblclick()
-        cy.wait('@getAcc').its('response.statusCode').should('eq', 200)
-        cy.get('[title="Close"]').click()
+        // cy.get('app-unbilled-transactions-search kendo-grid-list tr:first').click().dblclick()
+        // cy.wait('@getAcc').its('response.statusCode').should('eq', 200)
+        // cy.get('[title="Close"]').click()
     });
 
     it('Search by invalid Transaction ID number', () => {

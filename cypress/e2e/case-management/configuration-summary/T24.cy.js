@@ -17,7 +17,7 @@ describe('T24 - Case Management - Advanced configuration - Add, Edit and Remove 
     it('Errors', () => {
         cy.contains('app-case-advanced-configuration button', ' Add ').click()
         cy.requiredError('app-case-advanced-configuration', 'New Case Type')
-        cy.requiredError('app-case-advanced-configuration', 'Email associate with case type')
+        cy.requiredError('app-case-advanced-configuration', 'Email associated with case type')
 
         cy.contains('app-case-advanced-configuration button', 'Remove').click()
         cy.popup('Remove New Case', 'Please select a case type to remove', 'Ok')
@@ -28,7 +28,7 @@ describe('T24 - Case Management - Advanced configuration - Add, Edit and Remove 
     it('Add new case type', () => {
         cy.intercept('POST', '/CaseManagement/CaseTypeAdd').as('add');
         cy.field('app-case-advanced-configuration', 'New Case Type', 'Add Test')
-        cy.field('app-case-advanced-configuration', 'Email associate with case type', 'addtest@test.com')
+        cy.field('app-case-advanced-configuration', 'Email associated with case type', 'addtest@test.com')
         cy.contains('app-case-advanced-configuration button', ' Add ').click()
         cy.wait('@add').its('response.statusCode').should('eq', 200)
         cy.popup('Success', 'Case Type has been successfully added', 'Ok')

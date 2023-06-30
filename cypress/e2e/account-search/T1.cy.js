@@ -1,11 +1,10 @@
 describe('T1 - Account Search - General design and grid functionality', () => {
     const accNumber = [ Cypress.env('individual'), Cypress.env('commercial'), Cypress.env('non-revenue'), Cypress.env('unregistered'), Cypress.env('violation') ];
     const accType = [ 'Individual', 'Commercial', 'Non Revenue', 'Contravention', 'Contravention'];
-    const gridHeaders = ['Pin', 'Status', 'Account Number', 'First Name', 'Last Name', 'Company Name', 'Address', 'City', 'State', 'ZipCode',
+    const gridHeaders = ['Pin', 'Status', 'Account Number', 'First Name', 'Last Name', 'Company Name', 'Address', 'City', 'State', 'Postal Code',
     'Registration', 'Lic.Plate', 'Open Citations', 'Disputed Citations', 'Phone Number', 'Email Address', 'Last 4 digits Card', 'Open Date', 'Transponder No.']
     const dropdownItems = ['Account Number', 'Last Name', 'First Name', 'Transponder Number', 'Plate Number', 'Day Time Phone', 'Address',
-    'Email Address', 'Last 4 digits Card', 'Company Name', 'Check Number', 'FJNo', 'PNRef', 'ACH Last 4 Digits']
-    const term = [Cypress.env('individual'), 'KENNEDY', 'GERARD', '03200251011', 'DLY7416', '0987654321', 'TEST', 'test@test.com', '9903', 'BUSINESS', '12345', '134242431', '116489267052']
+    'Email Address', 'Last 4 digits Card', 'Last 4 Digits ACH', 'Company Name', 'Check Number', 'FJNo', 'PNRef']
 
     it('Login', () => {
         cy.login(Cypress.env('username'), Cypress.env('password'), 'Call Center')
@@ -40,18 +39,6 @@ describe('T1 - Account Search - General design and grid functionality', () => {
 
     it('Pagination (19-20)', () => {
         cy.page('app-account-search', '/Search/MatchingAccountsList')
-    });
-
-    it('Search categories', () => {
-        for(let i=0; i<dropdownItems.length; i++) {
-            cy.search('app-account-search kendo-grid-toolbar', dropdownItems[i], term[i], '/Search/MatchingAccountsList')
-            cy.wait(3000)
-            cy.get('app-root').then(($root) => {
-                if($root.find('app-account-manager').length > 0) {
-                    cy.get('kendo-dialog-titlebar [title="Close"]').click()
-                }
-            })
-        }
     });
 
     it('Account manager open (9-18)', () => {

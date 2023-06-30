@@ -73,9 +73,9 @@ Cypress.Commands.add('sortGrid', (parent, filter, url) => {
                         cy.wait('@sort').its('response.statusCode').should('eq', 200)
                         cy.get($th).should('have.attr', 'aria-sort', 'descending')
 
-                        // cy.get($th).click()
-                        // cy.wait('@sort').its('response.statusCode').should('eq', 200)
-                        // cy.get($th).find('kendo-icon').should('not.exist') //! Uncomment after fix
+                        cy.get($th).click()
+                        cy.wait('@sort').its('response.statusCode').should('eq', 200)
+                        cy.get($th).find('kendo-icon').should('not.exist')
                     }                   
                 })
             }
@@ -146,8 +146,6 @@ Cypress.Commands.add('openAccount', (category, value) => {
     cy.get('app-account-search kendo-grid-toolbar [aria-label="Search"]').click()
     cy.wait('@openAccount').its('response.statusCode').should('eq', 200)
     cy.wait(2000)
-
-    //cy.contains('kendo-dialog-actions button', 'Ok').click() //! DELETE AFTER FIX
 })
 
 Cypress.Commands.add('tab', (name) => {
