@@ -190,7 +190,7 @@ Cypress.Commands.add('verifySearch', (app, category, column, url) => {
     cy.contains(`${app} kendo-grid th`, column).then(($th) => {
         const td = $th.attr('aria-colindex')
         cy.get('kendo-grid-list tr').then(($tr) => {
-            if (!$tr.text().includes('No records available.' && !$tr.length == 1)) {
+            if (!$tr.find('td:visible').text().includes('No records available.')) {
                 cy.get(`${app} [data-kendo-grid-column-index="${td-1}"]`).then(($td) => {
                     const resultsLength = $td.length
                     cy.randomValue(0, resultsLength-1, 0).then(($rand) => {

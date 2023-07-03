@@ -4,7 +4,7 @@ Cypress._.times(2, (i) => {
     describe('T37 - EZ Pass - Financials - Grid' + ' - ' + accType[i], () => {
         const gridHeaders = ['Date', 'Description', 'Payment Type', 'Credit', 'Debit', 'Balance', 'FJNo', 'Transaction Type', 'Message', 'PNRef', 'Payment Detail', 'Check Date', 'CSR Id', 'ICN Id', 'Reversal FjNo']
         const functionItems = ['Reverse Payment', 'Payment Transfer']
-        const dropdownItems = ['All', 'Reversal FJNo', 'Credit', 'Debit', 'FJNo', 'Balance', 'Message', 'Description', 'Today', 'Last 7 Days', 'Last 14 Days', 'Last 30 Days']
+        const dropdownItems = ['All', 'Reversal  FJ No', 'Credit', 'Debit', 'FJ No', 'Balance', 'Message', 'Description', 'Today', 'Last 7 Days', 'Last 14 Days', 'Last 30 Days']
         it('Login', () => {
             cy.login(Cypress.env('username'), Cypress.env('password'), 'Call Center')
         });
@@ -41,10 +41,10 @@ Cypress._.times(2, (i) => {
         });
 
         it('Verify search', () => {
-            cy.verifySearch('app-account-financial', 'Reversal FJNo', 'Reversal FjNo', '/Financial/AccountTransactionsList')
+            cy.verifySearch('app-account-financial', 'Reversal FJ No', 'Reversal FjNo', '/Financial/AccountTransactionsList')
             cy.verifyMoney('app-account-financial', 'Credit', 'Credit', '/Financial/AccountTransactionsList')
             cy.verifyMoney('app-account-financial', 'Debit', 'Debit', '/Financial/AccountTransactionsList')
-            cy.verifySearch('app-account-financial', /^FJNo$/, 'FJNo', '/Financial/AccountTransactionsList')
+            cy.verifySearch('app-account-financial', /^FJ No$/, 'FJNo', '/Financial/AccountTransactionsList')
             cy.verifyMoney('app-account-financial', 'Balance', 'Balance', '/Financial/AccountTransactionsList')
             cy.verifySearch('app-account-financial', 'Message', 'Message', '/Financial/AccountTransactionsList')
             cy.verifySearch('app-account-financial', 'Description', 'Description', '/Financial/AccountTransactionsList')

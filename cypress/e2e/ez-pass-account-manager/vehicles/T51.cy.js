@@ -5,6 +5,7 @@ Cypress._.times(3, (i) => {
         const gridHeaders = ['Lic. Plate', 'Plate Type', 'State', 'Veh. Make', 'Veh. Model', 'Veh. Year', 'Axles', 'GVW', 'IAG Code', 
         'IAG Class/desc.', 'Country', 'Start Date', 'End Date', 'DMV Hold', 'Is Rental', 'Is Temporary']
         const functionItems = ['DMV Hold', 'DMV Release']
+        const commercialItems = ['DMV Hold', 'DMV Release', 'Bulk Upload']
         it('Login', () => {
             cy.login(Cypress.env('username'), Cypress.env('password'), 'Call Center')
         });
@@ -22,12 +23,17 @@ Cypress._.times(3, (i) => {
         });
 
         it('Vehicles dropdown items', () => {
-            cy.functionItems('app-account-vehicles', functionItems)
+            if (accType[i] == 'Commercial') {
+                cy.functionItems('app-account-vehicles', commercialItems)
+            }
+            else {
+                cy.functionItems('app-account-vehicles', functionItems)
+            }
         });
 
         it('Grid sort', () => {
             cy.get('app-account-vehicles kendo-grid th:first').click().click()
-            cy.sortGrid('app-account-vehicles', ':eq(0), :eq(9)', '')
+            cy.sortGrid('app-account-vehicles', ':eq(0), :eq(8)', '')
         });
     });
 })

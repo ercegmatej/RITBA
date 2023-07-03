@@ -38,7 +38,7 @@ Cypress._.times(3, (i) => {
             cy.wait('@addNote').its('response.statusCode').should('eq', 200);
 
             cy.contains('app-notes button', ' Show All Notes ').click()
-            cy.verifyGridData('app-notes', 'Content', 0, 'Test QA')
+            cy.verifyGridData('app-notes', 'Title/Comment', 0, 'Test QA')
         });
 
         it('Verify addition in info tab', () => {

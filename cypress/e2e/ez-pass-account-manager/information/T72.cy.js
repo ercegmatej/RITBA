@@ -34,7 +34,7 @@ Cypress._.times(2, (i) => {
         });
 
         it('Payment Method', () => {
-            const dropdownItems = ['None', 'Cash', 'Cheque', 'Credit Card', 'ACH', 'Non Revenue', 'Pre Paid Toll']
+            const dropdownItems = ['None', 'Cash', 'Check', 'Credit Card', 'ACH', 'Non Revenue', 'Pre Paid Toll']
             cy.dropdownItems('app-account-plan-information kendo-formfield:contains("Payment Method")', dropdownItems)
         });
 
@@ -44,7 +44,7 @@ Cypress._.times(2, (i) => {
         });
 
         it('Correspond. Method', () => {
-            const dropdownItems = ['Postal', 'Email', 'Voice Mail', 'Fax Back', 'Print', 'S M S']
+            const dropdownItems = ['Postal', 'Email', 'SMS']
             cy.dropdownItems('app-account-plan-information kendo-formfield:contains("Correspond. Method"):eq(0)', dropdownItems)
         });
 

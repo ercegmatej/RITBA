@@ -45,13 +45,15 @@ Cypress._.times(3, (i) => {
                     cy.get($td).should('not.be.checked')
                 })
                 cy.get('app-account-tolls kendo-grid-toolbar [type="checkbox"]').check()
+                cy.wait(1000)
+                cy.contains('app-account-tolls th', 'Reversed').click().click()
                 cy.wait(500)
                 cy.get('app-account-tolls kendo-pager-info').then(($numberOfItems) => {
                     const numberOfItems = $numberOfItems.text()
                     if (numberOfItems.includes(before)) {
                     }
                     else {
-                        cy.get('app-account-tolls [data-kendo-grid-column-index="18"]').should('be.checked')
+                        cy.get('app-account-tolls [data-kendo-grid-column-index="18"]:first input').should('be.checked')
                     }
                 })
             })

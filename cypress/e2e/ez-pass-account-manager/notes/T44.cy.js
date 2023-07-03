@@ -2,7 +2,7 @@ Cypress._.times(3, (i) => {
     const accNumber = [ Cypress.env('speed-violations'), Cypress.env('commercial'), Cypress.env('non-revenue') ];
     const accType = [ 'Individual', 'Commercial', 'Non-revenue' ];
     describe('T44 - EZ pass - Notes - Grid Functionality and search' + ' - ' + accType[i], () => {
-        const gridHeaders = ['Date', 'Note Type', 'User', 'Content', 'Status', 'Notification', 'Attachment']
+        const gridHeaders = ['Date', 'Note Type', 'Who', 'Title/Comment', 'Status', 'Notification', 'Attachment']
         const dropdownItems = ['All', 'Last 30 Days', 'Last 60 Days', 'Last 90 Days', 'Content']
         it('Login', () => {
             cy.login(Cypress.env('username'), Cypress.env('password'), 'Call Center')
@@ -37,7 +37,7 @@ Cypress._.times(3, (i) => {
         it('Content search', () => {
             cy.get('app-notes .card-header kendo-dropdownlist').click()
             cy.contains('kendo-popup li', 'Content').click()
-            cy.contains('app-notes th', 'Content').click().click()
+            cy.contains('app-notes th', 'Title/Comment').click().click()
             cy.get(`app-notes kendo-grid-list tr:eq(2) [data-kendo-grid-column-index="3"]`).then(($td) => {
                 const search = $td.text()
                 cy.get(`app-notes kendo-textbox`).type(search + '{enter}')

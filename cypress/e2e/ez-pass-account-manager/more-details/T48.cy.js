@@ -131,7 +131,7 @@ Cypress._.times(3, (i) => {
             cy.get('app-authorised-users [title="Remove User"]').click()
             cy.popup('Warning', 'Are you sure you want to delete this contact?', 'Yes')
             cy.popup('Success', 'Contact has been deleted', 'Ok')
-            cy.contains('td', 'Jane Austin').should('not.exist')
+            cy.contains('td', 'Jane Austin').should('not.be.visible')
 
             cy.contains('td', 'Billing').click()
             cy.get('app-addresses-for [title="Remove Address"]').click()
@@ -145,7 +145,7 @@ Cypress._.times(3, (i) => {
             cy.popup('Warning', 'Are you sure you want to remove Shipping address?', 'Yes')
             cy.popup('Success', 'Address has been Deleted', 'Ok')
             cy.wait(500)
-            cy.contains('td', 'Shipping').should('not.exist')
+            cy.contains('td', 'Shipping').should('not.be.visible')
         });
 
         it('Show removed addresses checkbox', () => {
@@ -161,7 +161,7 @@ Cypress._.times(3, (i) => {
 
             cy.get('app-addresses-for [type="checkbox"]').uncheck()
             cy.contains('td', 'Billing').should('not.be.visible')
-            cy.contains('td', 'Shipping').should('not.exist')
+            cy.contains('td', 'Shipping').should('not.be.visible')
         });
     });
 })
