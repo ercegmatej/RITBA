@@ -348,6 +348,26 @@ Cypress.Commands.add('randomText', () => {
     return text;
 })
 
+Cypress.Commands.add('randomPlate', () => {
+    var text = '';
+    var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+    for (var i = 0; i < 5; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+})
+
+Cypress.Commands.add('randomEmail', () => {
+    var text = '';
+    var possible = 'abcdefghijklmnopqrstuvwxyz1234567890';
+
+    for (var i = 0; i < 10; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return (text + '@gmail.com');
+})
+
 Cypress.Commands.add('field', (selector, label, text) => {
     cy.contains(`${selector} kendo-formfield`, label).then(($field) => {
         if ($field.find('kendo-dropdownlist').length > 0) {
@@ -441,18 +461,69 @@ Cypress.Commands.add('calendar', (element, year, month, day) => { //cmd for Togg
 })
 
 Cypress.Commands.add('verifyGridData', (selector, column, row, text) => {
-    const dayjs = require('dayjs')
-    const today = dayjs().format('MM/DD/YYYY')
     cy.contains(selector + ' th', column).then(($th) => {
         const td = $th.attr('aria-colindex')
-        // cy.get(selector + ' kendo-grid:first thead').then(($thead) => {
-        //     if($thead.text().includes('Date')) {
-        //         cy.get(selector + ` kendo-grid-list:first tr:eq(${row})`).should('contain.text', today)
-        //     }
-        // })
         cy.get(selector + ` kendo-grid-list:first tr:eq(${row}) [data-kendo-grid-column-index="${td-1}"]`).then(($td) => {
             const gridText = $td.text()
             expect(gridText).to.include(text)
         })
     })
+})
+
+Cypress.Commands.add('mandatoryFields', () => {
+    cy.field('app-account-information', 'First Name', 'IME')
+    cy.field('app-account-information', 'Last Name', 'PREZIME')
+    cy.field('app-account-information', 'Address Line 1', 'ADRESA 1')
+    cy.field('app-account-information', 'Zip/Postal Code', '02886')
+    cy.randomEmail().then(($email) => {
+        cy.field('app-account-information', 'Email', $email)
+    })
+    cy.field('app-account-information', 'Primary Phone', '1800999663')
+    cy.field('app-account-information', 'PIN', '1234')
+})
+
+Cypress.Commands.add('accountPlan', (type, method, delivery, corrMethod) => {
+    cy.field('app-account-information', 'Account Type', type)
+    cy.field('app-account-information', 'Payment Method', method)
+    if(method == 'Credit Card') {
+        
+    }
+    else {
+        cy.field('app-account-information', 'Statement Delivery', delivery)
+        cy.field('app-account-information', 'Correspond. Method', corrMethod)
+    }
+})
+
+Cypress.Commands.add('addVehicle', () => {
+    cy.contains('li', 'Vehicles').click()
+    cy.get('app-account-vehicles [title="Add"]').click()
+    cy.wait(500)
+    cy.contains('kendo-dialog-actions button', 'Save').click()
+    cy.requiredError('app-add-vehicle', 'Plate Type')
+    cy.requiredError('app-add-vehicle', 'Lic. Plate Number')
+    cy.requiredError('app-add-vehicle', 'Veh. Make')
+    cy.requiredError('app-add-vehicle', 'IAG Codes')
+    cy.verifyField('app-add-vehicle', 'Veh. Country', 'United States')
+    cy.verifyField('app-add-vehicle', 'Veh. State/Province', 'Rhode Island')
+    cy.field('app-add-vehicle', 'Plate Type', ':first')
+    cy.randomPlate().then(($plate) => {
+        cy.field('app-add-vehicle', 'Lic. Plate Number', $plate)
+    })
+    cy.field('app-add-vehicle', 'Veh. Year', '2019')
+    cy.field('app-add-vehicle', 'Veh. Make', 'AUDI')
+    cy.field('app-add-vehicle', 'Veh. Model', 'A7')
+    cy.field('app-add-vehicle', 'GVW', '3000')
+    cy.field('app-add-vehicle', 'IAG Codes', ':first')
+    cy.contains('kendo-dialog-actions button', 'Save').click()
+    cy.popup('Success', 'New Vehicle has been added', 'Ok')
+})
+
+Cypress.Commands.add('newCreditCard', (card) => {
+    cy.field('app-credit-debit-card-edit', 'Same as Member', 'check')
+    cy.field('app-credit-debit-card-edit', 'Card Type', card.name)
+    cy.field('app-credit-debit-card-edit', 'Card Number Token', card.number)
+    cy.field('app-credit-debit-card-edit', 'Expiration Month', card.month)
+    cy.field('app-credit-debit-card-edit', 'Expiration Year', card.year)
+    cy.field('app-credit-debit-card-edit', 'Postal Code', '02886')
+    cy.contains('kendo-dialog-actions button', 'Save').click()
 })
