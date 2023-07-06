@@ -1,5 +1,5 @@
 Cypress._.times(3, (i) => {
-    const accNumber = [ '51355556', '52112656', '52034047' ];
+    const accNumber = [ Cypress.env('individual'), Cypress.env('commercial'), Cypress.env('non-revenue') ];
     const accType = [ 'Individual', 'Commercial', 'Non-revenue' ];
     describe('T38 - EZ Pass - History - Grid' + ' - ' + accType[i], () => {
         const gridHeaders = ['Date/Time', 'Operation', 'Field', 'Original Value', 'New Value', 'Reference Id', 'User', 'Access Channel']

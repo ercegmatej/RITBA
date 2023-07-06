@@ -1,5 +1,5 @@
 Cypress._.times(3, (i) => {
-    const accNumber = [ '50002370', '52136866', '52034047' ];
+    const accNumber = [ Cypress.env('individual'), Cypress.env('commercial'), Cypress.env('non-revenue') ];
     const accType = [ 'Individual', 'Commercial', 'Non-revenue' ];
     describe('T38 - EZ Pass - Cases - Grid' + ' - ' + accType[i], () => {
         const gridHeaders = ['', '', 'Created Date', 'Case Number', 'Description', 'Department', 'Case Type', 'Status', 'Priority', 'Due Date', 'Source', 'Notified',
@@ -48,14 +48,15 @@ Cypress._.times(3, (i) => {
             cy.get('kendo-popup li:eq(0)').click()
             cy.wait('@search').its('response.statusCode').should('eq', 200)
 
-            cy.verifyDateSearch('app-account-cases', 'Created Date', 'Current Date')
-            cy.verifyDateSearch('app-account-cases', 'Created Date', 'Last 7 Days')
-            cy.verifyDateSearch('app-account-cases', 'Created Date', 'Last 14 Days')
-            cy.verifyDateSearch('app-account-cases', 'Created Date', 'Last 30 Days')
+            cy.verifyDateSearch('app-account-cases', 'Created Date', 'Current Date', '/CaseManagement/CasesList')
+            cy.verifyDateSearch('app-account-cases', 'Created Date', 'Last 7 Days', '/CaseManagement/CasesList')
+            cy.verifyDateSearch('app-account-cases', 'Created Date', 'Last 14 Days', '/CaseManagement/CasesList')
+            cy.verifyDateSearch('app-account-cases', 'Created Date', 'Last 30 Days', '/CaseManagement/CasesList')
 
             cy.get('app-account-cases kendo-grid-toolbar kendo-dropdownlist:first').click()
             cy.contains('kendo-popup li', 'Unread Email').click()
             cy.wait('@search').its('response.statusCode').should('eq', 200)
+            cy.wait(1000)
             cy.get('app-account-cases kendo-grid-list tr').then(($tr) => {
                 if (!$tr.text().includes('No records available.')) {
                     cy.get($tr).find('td:eq(0)').should('have.class', 'k-i-email')

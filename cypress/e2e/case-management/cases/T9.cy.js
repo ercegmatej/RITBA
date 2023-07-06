@@ -1,9 +1,9 @@
 describe('T9 - Cases - Add new case (all fields)', () => {
     const dayjs = require('dayjs')
-    const today = dayjs().format('DD/MM/YYYY')
+    const today = dayjs().format('MM/DD/YYYY')
     const description = 'Cypress'
-    const department = 'TR1942023'
-    const case_type = 'TR_Case_DEP'
+    const department = 'TR194'
+    const case_type = 'TR_CDaa'
     const priority = 'Medium'
     it('Login', () => {
         cy.login(Cypress.env('username'), Cypress.env('password'), 'Call Center')
@@ -18,8 +18,8 @@ describe('T9 - Cases - Add new case (all fields)', () => {
     });
 
     it('Search by', () => {
-        const dropdownItems = ['Account Number', 'Last Name', 'First Name', 'Transponder Number', 'Day Phone', 'Address', 'Email Address', 'Last 4 Digits']
-        const term = ['50002370', 'Smith', 'Test', '03200038252', '048173', 'TEST1234', 'test@test.com', '1111']
+        const dropdownItems = ['Account Number', 'Last Name', 'First Name', 'Transponder Number', 'Day Time Phone', 'Address', 'Email Address', 'Last 4 digits Card', 'Plate']
+        const term = [Cypress.env('individual'), 'Kennedy', 'TESTQA', '03200038252', '048173', 'ADRESA 1', 'test@test.com', '9903', 'LL621']
         for (let i=0; i<dropdownItems.length; i++) {
             cy.search('app-account-search kendo-grid-toolbar', dropdownItems[i], term[i], '/Search/MatchingAccountsList')
             switch (dropdownItems[i]) {
@@ -40,16 +40,15 @@ describe('T9 - Cases - Add new case (all fields)', () => {
     });
 
     it('Select an account', () => {
-        cy.search('app-account-search kendo-grid-toolbar', 'Account Number', '50002370', '/Search/MatchingAccountsList')
-        cy.contains('app-account-search td', '50002370').dblclick()
+        cy.search('app-account-search kendo-grid-toolbar', 'Account Number', Cypress.env('individual'), '/Search/MatchingAccountsList')
+        cy.contains('app-account-search td', Cypress.env('individual')).dblclick()
         cy.wait(1000)
     });
 
     it('Click create case before', () => {
         cy.contains('button', 'Create Case').click()
-        cy.requiredError('Department')
-        cy.requiredError('Case Type')
-        cy.requiredError('Description')
+        cy.requiredError('app-add-case', 'Department')
+        cy.requiredError('app-add-case', 'Description')
     });
 
     it('Populate the mandatory fields', () => {
@@ -68,7 +67,7 @@ describe('T9 - Cases - Add new case (all fields)', () => {
     });
 
     it('Create case', () => {
-        cy.intercept('POST', 'https://ri2-crm.emovis.hr:2323/CaseManagement/CaseAdd').as('caseAdd')
+        cy.intercept('POST', Cypress.env('ip') + '/CaseManagement/CaseAdd').as('caseAdd')
 
         cy.contains('button', 'Create Case').click()
         cy.wait('@caseAdd').its('response.statusCode').should('eq', 200)

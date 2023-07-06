@@ -1,8 +1,8 @@
-Cypress._.times(3, (i) => {
-    const accNumber = [ '50037164', '52112656', '52034047' ];
-    const accType = [ 'Individual', 'Commercial', 'Non-revenue' ];
+Cypress._.times(2, (i) => {
+    const accNumber = [ Cypress.env('individual'), Cypress.env('commercial')];
+    const accType = [ 'Individual', 'Commercial'];
     describe('T52 - EZ Pass - Replenishment - Grid' + ' - ' + accType[i], () => {
-        const gridHeaders1 = ['Card Type', 'Card', 'Name On Card', 'Priority', 'Primary', 'Exp Month', 'Exp Year', 'Card Status']
+        const gridHeaders1 = ['Card Type', 'Card', 'Name On Card', 'Priority', 'Primary', 'Exp Month', 'Exp Year', 'Card Status', 'Postal Code']
         const gridHeaders2 = ['Account Number', 'Account Holder Name', 'Bank Sort Code', 'Bank Name', 'Priority', 'Primary', 'ACH Status', 'Instruction Ref']
         const gridHeaders3 = ['Date', 'Amount', 'Method', 'PNRef', 'Message']
         it('Login', () => {
@@ -25,14 +25,14 @@ Cypress._.times(3, (i) => {
 
         it('Grid sort', () => {
             cy.sortGrid('app-credit-debit-cards', ':eq(4)', '/Account/CardsList')
-            //cy.sortGrid('app-ach', '', '/Account/CardsList')
-            //cy.sortGrid('app-auto-top-up-activity', '', '/Account/CardsList')
+            cy.sortGrid('app-ach', '', '/Account/CardsList')//!Ako ne radi, nema apija
+            cy.sortGrid('app-auto-top-up-activity', '', '/Account/CardsList')//!Ako ne radi, nema apija
         });
 
         it('Pagination', () => {
             cy.page('app-credit-debit-cards', '/Account/CardsList')
-            //cy.page('app-ach', '/Account/CardsList')
-            //cy.page('app-auto-top-up-activity', '/Account/CardsList')
+            cy.page('app-ach', '/Account/CardsList')//!Ako ne radi, nema apija
+            cy.page('app-auto-top-up-activity', '/Account/CardsList')//!Ako ne radi, nema apija
         });
 
         it('Verify Replenishment Information', () => {

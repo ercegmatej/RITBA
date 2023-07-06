@@ -1,7 +1,7 @@
-describe('T12 - Cases - Summary', () => {
+describe('T12 - Case Management - Summary', () => {
 
     it('Login', () => {
-        cy.login('merceg', 'ritbaVPN%$532', 'Call Center')
+        cy.login(Cypress.env('username'), Cypress.env('password'), 'Call Center')
     });
     
     it('Open case management - Case Summary', () => {
@@ -9,9 +9,8 @@ describe('T12 - Cases - Summary', () => {
     });
 
     it('Case Summary - dates', () => {
-        cy.contains('kendo-dialog-actions button', 'Ok').click()
-        cy.calendar(0, '2023', 'Dec', '11')
-        cy.calendar(1, '2023', 'Apr', '15')
+        cy.calendar(0, '2022', 'Dec', '11')
+        cy.calendar(1, '2023', 'Nov', '15')
 
     });
 

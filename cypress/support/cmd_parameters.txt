@@ -12,6 +12,14 @@ input(selector, type, input)
 sidenav(item, content)
 verifySearch(app, category, column, url)
 verifyDateSearch(app, column, search)
-field(label, text)
-requiredError(label)
-verifyGridAdd(selector, column, text)
+field(selector, label, text)
+verifyField(selector, label, text)
+requiredError(selector, label)
+formError(selector, label, error)
+calendar(element, year, month, day)
+verifyGridData(selector, column, row, text)
+
+
+INTERCEPT
+cy.intercept('', '').as('')
+cy.wait('@').its('response.statusCode').should('eq', 200)

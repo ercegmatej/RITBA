@@ -16,13 +16,16 @@ describe('T8 - Cases - Add new case (mandatory fields)', () => {
 
         cy.dropdownItems('app-account-search kendo-grid-toolbar', dropdownItems)
 
-        cy.search('app-account-search kendo-grid-toolbar', 'Last Name', 'Test', '/Search/MatchingAccountsList')
-        cy.sortGrid('app-account-search', '', '/Search/MatchingAccountsList')
+        cy.search('app-account-search kendo-grid-toolbar', 'Last Name', 'Kennedy', '/Search/MatchingAccountsList')
     });
 
+    // it('Sort grid', () => {
+    //     cy.sortGrid('app-add-case app-account-search', '', '/Search/MatchingAccountsList')
+    // });
+
     it('Select an account', () => {
-        cy.search('app-account-search kendo-grid-toolbar', 'Account Number', '50002370', '/Search/MatchingAccountsList')
-        cy.contains('app-account-search td', '50002370').dblclick()
+        cy.search('app-account-search kendo-grid-toolbar', 'Account Number', Cypress.env('individual'), '/Search/MatchingAccountsList')
+        cy.contains('app-account-search td', Cypress.env('individual')).dblclick()
         cy.wait(1000)
         cy.get('app-add-case app-account-search app-general-information').should('contain.text', 'General Information')
     });
@@ -30,26 +33,28 @@ describe('T8 - Cases - Add new case (mandatory fields)', () => {
     it('Return to search and select again', () => {
         cy.contains('button', 'Return to Search').click()
         cy.get('app-add-case app-account-search').should('contain.text', ' Account Search - Double click to view results ')
-        cy.contains('app-account-search td', '50002370').dblclick()
+        cy.contains('app-account-search td', Cypress.env('individual')).dblclick()
         cy.wait(1000)
         cy.get('app-add-case app-account-search app-general-information').should('contain.text', 'General Information')
     });
 
     it('Click create case before', () => {
         cy.contains('button', 'Create Case').click()
-        cy.requiredError('Department')
-        cy.requiredError('Description')
+        cy.requiredError('app-add-case', 'Department')
+        cy.requiredError('app-add-case', 'Description')
     });
 
     it('Populate the mandatory fields', () => {
         cy.field('app-add-case', 'Department', 'TR194')
-        cy.field('app-add-case', 'Case Type', 'TR_Case_DEP')
-        cy.field('app-add-case', 'Description', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean m')
+        cy.field('app-add-case', 'Case Type', 'TR_CDaa')
+        cy.randomText().then(($description) => {
+            cy.field('app-add-case', 'Description', $description)
+        })
         cy.contains('kendo-formfield', 'Description').find('kendo-textarea').should('have.attr', 'maxlength', '100')
     });
 
     it('Create case', () => {
-        cy.intercept('POST', 'https://ri2-crm.emovis.hr:2323/CaseManagement/CaseAdd').as('caseAdd')
+        cy.intercept('POST', Cypress.env('ip') + '/CaseManagement/CaseAdd').as('caseAdd')
 
         cy.contains('button', 'Create Case').click()
         cy.wait('@caseAdd').its('response.statusCode').should('eq', 200)

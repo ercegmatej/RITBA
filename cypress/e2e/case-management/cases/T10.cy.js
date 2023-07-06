@@ -1,11 +1,11 @@
 describe('T10 - Cases - Edit case', () => {
     const dayjs = require('dayjs')
-    const today = dayjs().format('DD/MM/YYYY')
+    const today = dayjs().format('MM/DD/YYYY')
     const description = 'Cypress'
-    const department = 'TR1942023'
-    const case_type = 'TR_Case_DEP'
+    const department = 'TR194'
+    const case_type = 'TR_CDaa'
     const editDepartment = 'dep'
-    const editCase_type = 'test1'
+    const editCase_type = 'testCase1'
     let caseNumber = 0;
     
     it('Login', () => {
@@ -16,11 +16,23 @@ describe('T10 - Cases - Edit case', () => {
         cy.sidenav('Case Management', 'Cases')
     });
 
-    it('Add a new case', () => {
+    it('Add two new cases', () => {
         cy.intercept('POST', Cypress.env('ip') + '/CaseManagement/CaseAdd').as('caseAdd')
         cy.get('[title="Add New Case "]').click()
-        cy.search('app-account-search kendo-grid-toolbar', 'Account Number', '50002370', '/Search/MatchingAccountsList')
-        cy.contains('app-account-search td', '50002370').dblclick()
+        cy.search('app-account-search kendo-grid-toolbar', 'Account Number', Cypress.env('individual'), '/Search/MatchingAccountsList')
+        cy.contains('app-account-search td', Cypress.env('individual')).dblclick()
+        cy.wait(1000)
+        cy.field('app-add-case', 'Department', department)
+        cy.field('app-add-case', 'Case Type', case_type)
+        cy.field('app-add-case', 'Description', description)
+        cy.field('app-add-case', 'Assign To Me', '')
+        cy.contains('button', 'Create Case').click()
+        cy.wait('@caseAdd').its('response.statusCode').should('eq', 200)
+        cy.popup('Add New Case', 'Case has been successfully created.', 'Ok')
+
+        cy.get('[title="Add New Case "]').click()
+        cy.search('app-account-search kendo-grid-toolbar', 'Account Number', Cypress.env('individual'), '/Search/MatchingAccountsList')
+        cy.contains('app-account-search td', Cypress.env('individual')).dblclick()
         cy.wait(1000)
         cy.field('app-add-case', 'Department', department)
         cy.field('app-add-case', 'Case Type', case_type)
@@ -34,9 +46,10 @@ describe('T10 - Cases - Edit case', () => {
     it('Case edit', () => {
         cy.get('app-case kendo-grid-list tr:first td:eq(3)').then(($case) => {
             caseNumber = $case.text()
+            cy.log(caseNumber)
             cy.get($case).click()
         })
-        cy.get('[title="Edit Case"]').click()
+        cy.get('.k-i-edit').click()
         cy.get('app-edit-case > div').should('contain.text', 'Case Information')
         cy.get('app-edit-case > app-group:first').should('contain.text', 'Case Details')
     });
@@ -57,7 +70,7 @@ describe('T10 - Cases - Edit case', () => {
         cy.contains('li', 'Note History').click()
         cy.wait(500)
         cy.headers('app-note-history', '', gridHeaders)
-        cy.sortGrid('app-note-history', '', '/CaseManagement/CaseNotesList')
+        cy.sortGrid('app-note-history', ':first', '/CaseManagement/CaseNotesList')
         cy.page('app-note-history', '/CaseManagement/CaseNotesList')
     });
 
@@ -66,7 +79,7 @@ describe('T10 - Cases - Edit case', () => {
         cy.contains('li', 'Changed History').click()
         cy.wait(500)
         cy.headers('app-changed-history', '', gridHeaders)
-        cy.sortGrid('app-changed-history', '', '/CaseManagement/CaseHistoryList')
+        cy.sortGrid('app-changed-history', ':first', '/CaseManagement/CaseHistoryList')
         cy.page('app-changed-history', '/CaseManagement/CaseHistoryList')
     });
 
@@ -75,7 +88,7 @@ describe('T10 - Cases - Edit case', () => {
         cy.contains('li', 'Attachment History').click()
         cy.wait(500)
         cy.headers('app-attachment-history', '', gridHeaders)
-        cy.sortGrid('app-attachment-history', '', '/CaseManagement/CaseAttachmentsList')
+        cy.sortGrid('app-attachment-history', ':first', '/CaseManagement/CaseAttachmentsList')
         cy.page('app-attachment-history', '/CaseManagement/CaseAttachmentsList')
     });
 
@@ -84,32 +97,61 @@ describe('T10 - Cases - Edit case', () => {
         cy.contains('li', 'Email Communication').click()
         cy.wait(500)
         cy.headers('app-email-communication', '', gridHeaders)
-        cy.sortGrid('app-email-communication', '', '/CaseManagement/CaseEmailHistoryList')
+        cy.sortGrid('app-email-communication', ':first', '/CaseManagement/CaseEmailHistoryList')
         cy.page('app-email-communication', '/CaseManagement/CaseEmailHistoryList')
     });
 
-    it('Edit case details', () => {
+    it('Edit case details - different department', () => {
         cy.contains('li', 'Account Summary').click()
         cy.wait(500)
 
-        cy.field('app-add-case', 'Status', 'Processing')
-        cy.field('app-add-case', 'Disposition Code', 'string')
-        cy.field('app-add-case', 'Source', 'Web')
+        cy.field('app-edit-case', 'Status', 'Closed')
+        cy.field('app-edit-case', 'Disposition Code', 'Test_Reason_Update_1')
+        cy.field('app-edit-case', 'Source', 'Web')
 
-        cy.field('app-add-case', 'Department', editDepartment)
+        cy.field('app-edit-case', 'Department', editDepartment)
         cy.contains('kendo-formfield', 'Case Type').find('kendo-dropdownlist').should('not.contain.text', case_type)
         cy.contains('button', 'Update').click()
-        cy.requiredError('Case Type')
+        cy.requiredError('app-edit-case', 'Case Type')
 
-        cy.field('app-add-case', 'Case Type', editCase_type)
-        cy.field('app-add-case', 'Priority', 'Low')
-        cy.calendar(0,'2023', 'Sep', '21')
-        cy.field('app-add-case', 'Notes', 'Test note')
+        cy.field('app-edit-case', 'Case Type', editCase_type)
+        cy.field('app-edit-case', 'Priority', 'Low')
+        cy.field('app-edit-case', 'Notes', 'Test note')
         cy.get('app-edit-case app-upload input').attachFile('test.pdf')
     });
 
     it('Update case', () => {
-        cy.intercept('POST', 'https://ri2-crm.emovis.hr:2323/CaseManagement/CaseUpdate').as('update')
+        cy.intercept('POST', Cypress.env('ip') + '/CaseManagement/CaseUpdate').as('update')
+        cy.contains('button', 'Update').click()
+        cy.wait('@update').its('response.statusCode').should('eq', 200)
+        cy.popup('', 'Case successfully saved.', 'Ok')
+    })
+
+    it('Verify that the case is not displayed in the grid', () => {
+        cy.contains('td', caseNumber).should('not.exist')
+    });
+
+    it('Edit case details - same department', () => {
+        cy.get('app-case kendo-grid-list tr:first td:eq(3)').then(($case) => {
+            caseNumber = $case.text()
+            cy.log(caseNumber)
+            cy.get($case).click()
+        })
+        cy.wait(500)
+        cy.get('.k-i-edit').click()
+        cy.get('app-edit-case > div').should('contain.text', 'Case Information')
+
+        cy.field('app-edit-case', 'Status', 'Closed')
+        cy.field('app-edit-case', 'Disposition Code', 'Test_Reason_Update_1')
+        cy.field('app-edit-case', 'Source', 'Web')
+
+        cy.field('app-edit-case', 'Priority', 'Low')
+        cy.field('app-edit-case', 'Notes', 'Test note')
+        cy.get('app-edit-case app-upload input').attachFile('test.pdf')
+    });
+
+    it('Update case', () => {
+        cy.intercept('POST', Cypress.env('ip') + '/CaseManagement/CaseUpdate').as('update')
         cy.contains('button', 'Update').click()
         cy.wait('@update').its('response.statusCode').should('eq', 200)
         cy.popup('', 'Case successfully saved.', 'Ok')
@@ -117,36 +159,30 @@ describe('T10 - Cases - Edit case', () => {
 
     it('Verify change in the grid', () => {
         cy.contains('td', caseNumber).parent('tr').as('updatedRow')
-        cy.get('@updatedRow').find('td:eq(5)').should('contain.text', editDepartment)
-        cy.get('@updatedRow').find('td:eq(6)').should('contain.text', editCase_type)
-        cy.get('@updatedRow').find('td:eq(7)').should('contain.text', 'Processing')
+        cy.get('@updatedRow').find('td:eq(7)').should('contain.text', 'Closed')
         cy.get('@updatedRow').find('td:eq(8)').should('contain.text', 'Low')
-        cy.get('@updatedRow').find('td:eq(9)').should('contain.text', '21/09/2023')
         cy.get('@updatedRow').find('td:eq(10)').should('contain.text', 'Web')
     });
 
     it('Verify that changes are recorded in the case window', () => {
         cy.contains('td', caseNumber).click().dblclick()
 
-        cy.verifyField('Case Type', editCase_type)
-        cy.verifyField('Status', 'Processing')
-        cy.verifyField('Disposition Code', 'string')
-        cy.verifyField('Source', 'Web')
-        cy.verifyField('Department', editDepartment)
-        cy.verifyField('Priority', 'Low')
+        cy.verifyField('app-edit-case', 'Status', 'Closed')
+        cy.verifyField('app-edit-case', 'Disposition Code', 'Test_Reason_Update_1')
+        cy.verifyField('app-edit-case', 'Source', 'Web')
+        cy.verifyField('app-edit-case', 'Priority', 'Low')
     });
 
     it('Verify Note History', () => {
         cy.contains('app-edit-case > div', 'Case Information').click()
         cy.contains('li', 'Note History').click()
         cy.get('app-note-history kendo-grid-list tr:first td:eq(0)').should('contain.text', today)
-        cy.get('app-note-history kendo-grid-list tr:first td:eq(2)').should('contain.text', 'Test Note')
+        cy.get('app-note-history kendo-grid-list tr:first td:eq(2)').should('contain.text', 'Test note')
     });
     
     it('Changed Note History', () => {
         cy.contains('li', 'Changed History').click()
         cy.get('app-changed-history kendo-grid-list tr:first td:eq(0)').should('contain.text', today)
-        //TODO changed values verification
     });
 
     it('Attachment History', () => {

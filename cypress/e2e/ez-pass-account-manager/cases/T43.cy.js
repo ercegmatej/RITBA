@@ -1,8 +1,8 @@
 Cypress._.times(3, (i) => {
-    const accNumber = [ '50002370', '52136866', '52034047' ];
+    const accNumber = [ Cypress.env('individual'), Cypress.env('commercial'), Cypress.env('non-revenue') ];
     const accType = [ 'Individual', 'Commercial', 'Non-revenue' ];
     const department = 'TR194';
-    const case_type = 'TR_Case_DEP';
+    const case_type = 'TR_CDaa';
     const priority = 'Medium';
     describe('T43 - EZ Pass - Cases - Add new case (all fields)' + ' - ' + accType[i], () => {
         it('Login', () => {
@@ -21,14 +21,14 @@ Cypress._.times(3, (i) => {
             cy.get('app-account-cases kendo-grid-toolbar [title="Add New Case "]').click()
             cy.get('kendo-dialog-titlebar').should('contain.text', 'Add New Case')
             cy.contains('kendo-dialog-actions button', 'Create Case').click()
-            cy.requiredError('Department')
-            cy.requiredError('Description')
+            cy.requiredError('app-add-case', 'Department')
+            cy.requiredError('app-add-case', 'Description')
         });
 
         it('Select department', () => {
             cy.field('app-add-case', 'Department', department)
             cy.contains('kendo-dialog-actions button', 'Create Case').click()
-            cy.requiredError('Case Type')
+            cy.requiredError('app-add-case', 'Case Type')
         });
 
         it('Select case type and enter description', () => {
@@ -56,9 +56,9 @@ Cypress._.times(3, (i) => {
         });
 
         it('Verify addition', () => {
-            cy.verifyGridAdd('app-account-cases', 'Department', ' ' + department + ' ')
-            cy.verifyGridAdd('app-account-cases', 'Case Type', ' ' +  case_type + ' ')
-            cy.verifyGridAdd('app-account-cases', 'Priority', ' ' + priority + ' ')
+            cy.verifyGridData('app-account-cases', 'Department', 0, ' ' + department + ' ')
+            cy.verifyGridData('app-account-cases', 'Case Type', 0, ' ' +  case_type + ' ')
+            cy.verifyGridData('app-account-cases', 'Priority', 0, ' ' + priority + ' ')
         });
     });
 })
