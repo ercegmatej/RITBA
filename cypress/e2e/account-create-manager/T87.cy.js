@@ -75,7 +75,6 @@ describe('T87 - Create new E-Z pass acc, type Individual - Cash - test mandatory
         cy.wait(500)
         cy.get('app-account-transponder [title="Add"]').click()
         cy.wait(500)
-        cy.get('app-transponder-edit kendo-formfield:visible:first')
         cy.dropdownItems('app-transponder-edit kendo-formfield:visible:first', dropdownItems)
         cy.field('app-transponder-edit app-select-one:visible:first', 'Tag', 'Ivory')
         cy.field('app-transponder-edit app-select-one:visible', 'IAG Codes', '72')

@@ -139,13 +139,22 @@ Cypress.Commands.add('itemsPerPage', (selector, items, url) => {
 })
 
 Cypress.Commands.add('openAccount', (category, value) => {
+    cy.intercept('POST', Cypress.env('ip') + '/Search/MatchingAccountsList').as('search')
     cy.intercept('GET', Cypress.env('ip') + '/Account/**').as('openAccount')
 
     cy.dropdown('app-account-search kendo-grid-toolbar', category)
     cy.get('app-account-search kendo-grid-toolbar input').clear().type(value)
     cy.get('app-account-search kendo-grid-toolbar [aria-label="Search"]').click()
-    cy.wait('@openAccount').its('response.statusCode').should('eq', 200)
-    cy.wait(2000)
+    if(category == 'Account Number') {
+        cy.wait('@openAccount').its('response.statusCode').should('eq', 200)
+        cy.wait(2000)
+    }
+    else {
+        cy.wait('@search').its('response.statusCode').should('eq', 200)
+        cy.get('app-account-search kendo-grid-list tr:eq(0) td:eq(0)').click().dblclick()
+        cy.wait('@openAccount').its('response.statusCode').should('eq', 200)
+        cy.wait(2000)
+    }
 })
 
 Cypress.Commands.add('tab', (name) => {
@@ -484,13 +493,18 @@ Cypress.Commands.add('mandatoryFields', () => {
 
 Cypress.Commands.add('accountPlan', (type, method, delivery, corrMethod) => {
     cy.field('app-account-information', 'Account Type', type)
-    cy.field('app-account-information', 'Payment Method', method)
-    if(method == 'Credit Card') {
-        
-    }
-    else {
+    if(type == 'Non Revenue') {
         cy.field('app-account-information', 'Statement Delivery', delivery)
         cy.field('app-account-information', 'Correspond. Method', corrMethod)
+    }
+    else {
+        cy.field('app-account-information', 'Payment Method', method)
+        if(method == 'Credit Card') {
+        }
+        else {
+            cy.field('app-account-information', 'Statement Delivery', delivery)
+            cy.field('app-account-information', 'Correspond. Method', corrMethod)
+        }
     }
 })
 
@@ -526,4 +540,21 @@ Cypress.Commands.add('newCreditCard', (card) => {
     cy.field('app-credit-debit-card-edit', 'Expiration Year', card.year)
     cy.field('app-credit-debit-card-edit', 'Postal Code', '02886')
     cy.contains('kendo-dialog-actions button', 'Save').click()
+})
+
+Cypress.Commands.add('addTransponder', () => {
+    cy.contains('li', 'Transponder').click()
+    cy.get('app-account-transponder [title="Add"]').click()
+    cy.field('app-transponder-edit app-select-one:visible:first', 'Tag', ':first')
+    cy.field('app-transponder-edit app-select-one:visible', 'IAG Codes', ':first')
+    cy.wait(500)
+    
+})
+
+Cypress.Commands.add('createAcc', (type) => {
+    cy.sidenav('Account Establishment', 'New E-ZPass Account')
+    cy.mandatoryFields()
+    cy.accountPlan(type, 'Cash', 'Email', 'Email')
+    cy.addVehicle()
+    cy.addTransponder()
 })
