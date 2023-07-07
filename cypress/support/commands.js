@@ -543,12 +543,13 @@ Cypress.Commands.add('newCreditCard', (card) => {
 })
 
 Cypress.Commands.add('addTransponder', () => {
-    cy.contains('li', 'Transponder').click()
+    cy.contains('li', 'Transponders').click()
     cy.get('app-account-transponder [title="Add"]').click()
     cy.field('app-transponder-edit app-select-one:visible:first', 'Tag', ':first')
     cy.field('app-transponder-edit app-select-one:visible', 'IAG Codes', ':first')
-    cy.wait(500)
-    
+    cy.wait(1000)
+    cy.contains('kendo-dialog-actions', 'Save').click()
+    cy.popup('Success', 'Transponder saved successfully', 'Ok')
 })
 
 Cypress.Commands.add('createAcc', (type) => {

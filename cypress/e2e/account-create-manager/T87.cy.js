@@ -125,7 +125,7 @@ describe('T87 - Create new E-Z pass acc, type Individual - Cash - test mandatory
 
     it('Verify data of the account', () => {
         cy.popup('Success', 'Account created successfully.', 'Ok')
-        cy.verifyField('app-account-status', 'Account Status', 'Open Pending')
+        cy.verifyField('app-account-status', 'Account Status', 'Open')
         //cy.contains('div', 'Current Balance').next('div').should('contain.text', '$2.00')
 
         cy.tab('Vehicles')
