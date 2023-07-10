@@ -1,6 +1,6 @@
 //TODO Uncomment when everything is fixed
 
-describe('T88 - Create new E-Z pass acc, type Individual - Credit card - status OPEN PENDING', () => {
+describe('T89 - Create new E-Z pass acc, type Individual - Credit card - all fields', () => {
     it('Login', () => {
         cy.login(Cypress.env('username'), Cypress.env('password'), 'Call Center')
     });
@@ -14,8 +14,23 @@ describe('T88 - Create new E-Z pass acc, type Individual - Credit card - status 
     });
 
     it('Account Plan', () => {
-        cy.accountPlan('Individual', 'Credit Card', 'Email', 'Email')
-        cy.newCreditCard(Cypress.env('VISAF'))
+        cy.field('app-account-information', 'Correspond. Method', 'SMS')
+        cy.contains('kendo-label', 'Mobile Phone').should('have.class', 'app-label-required')
+        cy.field('app-account-information', 'Mobile Phone', '0987654321')
+
+        cy.accountPlan('Individual', 'Credit Card', 'Email', 'SMS')
+        cy.newCreditCard(Cypress.env('VISA'))
+    });
+
+    it('Fill all non mandatory fields', () => {
+        cy.field('app-account-information', 'Salutation', ':first')
+        cy.field('app-account-information', 'Middle Name', 'SREDNJE')
+        cy.field('app-account-information', 'Company', 'INDIVIDUAL')
+        cy.field('app-account-information', 'Contact Name', 'KONTAKT')
+
+        cy.field('app-account-information', 'Address Line 2', 'ADRESA 2')
+        cy.field('app-account-information', 'Evening Phone', '0987654321')
+        cy.field('app-account-information', 'Fax', '1234567890')
     });
 
     it('Replenishment tab', () => {
@@ -24,7 +39,16 @@ describe('T88 - Create new E-Z pass acc, type Individual - Credit card - status 
         cy.get('app-credit-debit-cards kendo-grid-list tr:eq(0) [aria-colindex="5"] input').should('be.checked')
     });
 
-    it('Save (error)', () => {
+    it('Go back to info tab and delete non mandatory fields', () => {
+        cy.contains('li', 'Information').click()
+        cy.field('app-account-information', 'Middle Name', '')
+    });
+
+    it('Add a transponder', () => {
+        cy.addTransponder()
+    });
+
+    it('Payments tab (Error)', () => {
         cy.contains('li', 'Payments').click()
         cy.contains('button', 'Save').click()
         cy.popup('Error', 'Account must have at least one vehicle.', 'Ok')
@@ -32,15 +56,6 @@ describe('T88 - Create new E-Z pass acc, type Individual - Credit card - status 
 
     it('Add a vehicle', () => {
         cy.addVehicle()
-    });
-
-    it('Go to payments', () => {
-        cy.contains('li', 'Payments').click()
-        cy.contains('h5', 'Payment Summary').parent('div').find('input:eq(0)').should('have.attr', 'aria-valuenow', 0)
-    });
-
-    it('Add a transponder', () => {
-        cy.addTransponder()
     });
 
     it('Payments tab', () => {
@@ -52,13 +67,12 @@ describe('T88 - Create new E-Z pass acc, type Individual - Credit card - status 
         // cy.contains('h5', 'Payment Summary').parent('div').find('input:eq(1)').should('have.attr', 'disabled')
         // cy.contains('h5', 'Payment Summary').parent('div').find('input:eq(2)').should('have.attr', 'aria-valuenow', 35)
         cy.contains('app-account-create-manager button', 'Save').click()
-        //! Payment should fail somehow
         cy.wait('@create').its('response.statusCode').should('eq', 200)
     });
 
     it('Verify data of the account', () => {
         cy.popup('Success', 'Account created successfully.', 'Ok')
-        cy.verifyField('app-account-status', 'Account Status', 'Open Pending')
+        cy.verifyField('app-account-status', 'Account Status', 'Open')
         //cy.contains('div', 'Current Balance').next('div').should('contain.text', '$0.00')
 
         cy.tab('Vehicles')

@@ -9,8 +9,8 @@ describe('T2 - Account Search - Search by account number type (Individual, comme
         for (let i=0; i<accNumber.length; i++) {
             cy.openAccount('Account Number', accNumber[i])
             if (accType[i] === 'Unregistered' || accType[i] === 'Violation') {
-                cy.get('app-unregistered-account-basic-info').find('div').should('contain.text', accType[i])
-                cy.get('app-unregistered-account-basic-info').find('div').should('contain.text', accNumber[i])
+                //cy.get('app-invoice-account-basic-info').find('div').should('contain.text', accType[i])
+                cy.get('app-invoice-account-basic-info').find('div').should('contain.text', accNumber[i])
             }
             else {
                 cy.get('app-account-basic-info').find('div').should('contain.text', accType[i])

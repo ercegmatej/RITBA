@@ -393,7 +393,7 @@ Cypress.Commands.add('field', (selector, label, text) => {
             cy.get($field).find('textarea').clear().type(text)
         }
         else if ($field.find('kendo-numerictextbox').length > 0) {
-            cy.get($field).find('input').clear().type(text)
+            cy.get($field).find('input').type('{selectAll}' + text)
         }
         else if ($field.find('kendo-textbox').length > 0) {
             if (text == '') {
@@ -523,6 +523,8 @@ Cypress.Commands.add('addVehicle', () => {
     cy.randomPlate().then(($plate) => {
         cy.field('app-add-vehicle', 'Lic. Plate Number', $plate)
     })
+    cy.get('app-add-vehicle kendo-label:first').click() //!!Delete after fix
+    cy.contains('kendo-dialog-actions button', 'Ok').click() //!!Delete after fix
     cy.field('app-add-vehicle', 'Veh. Year', '2019')
     cy.field('app-add-vehicle', 'Veh. Make', 'AUDI')
     cy.field('app-add-vehicle', 'Veh. Model', 'A7')
@@ -543,12 +545,13 @@ Cypress.Commands.add('newCreditCard', (card) => {
 })
 
 Cypress.Commands.add('addTransponder', () => {
-    cy.contains('li', 'Transponder').click()
+    cy.contains('li', 'Transponders').click()
     cy.get('app-account-transponder [title="Add"]').click()
     cy.field('app-transponder-edit app-select-one:visible:first', 'Tag', ':first')
     cy.field('app-transponder-edit app-select-one:visible', 'IAG Codes', ':first')
-    cy.wait(500)
-    
+    cy.wait(1000)
+    cy.contains('kendo-dialog-actions button', 'Save').click()
+    cy.popup('Success', 'Transponder saved successfully', 'Ok')
 })
 
 Cypress.Commands.add('createAcc', (type) => {
