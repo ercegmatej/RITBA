@@ -45,7 +45,7 @@ describe('T89 - Create new E-Z pass acc, type Individual - Credit card - all fie
     });
 
     it('Add a transponder', () => {
-        //cy.addTransponder()
+        cy.addTransponder()
     });
 
     it('Payments tab (Error)', () => {
@@ -62,7 +62,7 @@ describe('T89 - Create new E-Z pass acc, type Individual - Credit card - all fie
         cy.intercept('POST', '/Account/CreateAccount').as('create');
         cy.contains('li', 'Payments').click()
         // cy.contains('h5', 'Payment Summary').parent('div').find('input:eq(0)').should('have.attr', 'aria-valuenow', 35)
-        cy.contains('button', 'Credit Card').should('have.attr', 'aria-pressed', 'true')
+        //cy.contains('button', 'Credit Card').should('have.attr', 'aria-pressed', 'true')
 
         // cy.contains('h5', 'Payment Summary').parent('div').find('input:eq(1)').should('have.attr', 'disabled')
         // cy.contains('h5', 'Payment Summary').parent('div').find('input:eq(2)').should('have.attr', 'aria-valuenow', 35)

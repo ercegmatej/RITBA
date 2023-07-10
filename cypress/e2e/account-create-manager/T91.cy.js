@@ -56,40 +56,43 @@ describe('T91 - Create new E-Z pass acc, type Individual/Commercial - Credit car
         cy.contains('kendo-formfield', ' Exclude from automatic replenishment amount evaluation').find('input').should('be.checked')
     });
 
-    // it('Add a transponder', () => {
-    //     //cy.addTransponder()
-    // });
+    it('Add a transponder', () => {
+        cy.addTransponder()
+    });
 
-    // it('Add a vehicle', () => {
-    //     cy.addVehicle()
-    // });
+    it('Add a vehicle', () => {
+        cy.addVehicle()
+    });
 
-    // it('Payments tab', () => {
-    //     cy.intercept('POST', '/Account/CreateAccount').as('create');
-    //     cy.contains('li', 'Payments').click()
-    //     // cy.contains('h5', 'Payment Summary').parent('div').find('input:eq(0)').should('have.attr', 'aria-valuenow', 35)
-    //     cy.contains('button', 'Credit Card').should('have.attr', 'aria-pressed', 'true')
+    it('Payments tab', () => {
+        cy.intercept('POST', '/Account/CreateAccount').as('create');
+        cy.contains('li', 'Payments').click()
+        cy.contains('h5', 'Payment Summary').parent('div').find('input:eq(0)').should('have.attr', 'aria-valuenow', 35)
+        cy.contains('button', 'Credit Card').should('have.attr', 'aria-pressed', 'true')
 
-    //     // cy.contains('h5', 'Payment Summary').parent('div').find('input:eq(1)').should('have.attr', 'disabled')
-    //     // cy.contains('h5', 'Payment Summary').parent('div').find('input:eq(2)').should('have.attr', 'aria-valuenow', 35)
-    //     cy.contains('app-account-create-manager button', 'Save').click()
-    //     cy.wait('@create').its('response.statusCode').should('eq', 200)
-    // });
+        cy.contains('h5', 'Payment Summary').parent('div').find('input:eq(1)').should('have.attr', 'disabled')
+        cy.contains('h5', 'Payment Summary').parent('div').find('input:eq(2)').should('have.attr', 'aria-valuenow', 35)
+        cy.contains('app-account-create-manager button', 'Save').click()
+        cy.wait('@create').its('response.statusCode').should('eq', 200)
+    });
 
-    // it('Verify data of the account', () => {
-    //     cy.popup('Success', 'Account created successfully.', 'Ok')
-    //     cy.verifyField('app-account-status', 'Account Status', 'Open')
-    //     //cy.contains('div', 'Current Balance').next('div').should('contain.text', '$0.00')
+    it('Verify data of the account', () => {
+        cy.popup('Success', 'Account created successfully.', 'Ok')
+        cy.verifyField('app-account-status', 'Account Status', 'Open')
+        cy.contains('div', 'Current Balance').next('div').should('contain.text', '$0.00')
+        cy.contains('app-account-plan-information kendo-formfield', 'Replenishment Amount').find('input').should('have.attr', 'aria-valuenow', 50)
+        cy.contains('app-account-plan-information kendo-formfield', 'Low Balance').find('input').should('have.attr', 'aria-valuenow', 25)
+        cy.contains('kendo-formfield', ' Exclude from automatic replenishment amount evaluation').find('input').should('be.checked')
 
-    //     cy.tab('Vehicles')
-    //     cy.verifyGridData('app-account-vehicles', 'Plate Type', 0, 'Passenger')
-    //     cy.verifyGridData('app-account-vehicles', 'State', 0, 'RI')
-    //     cy.verifyGridData('app-account-vehicles', 'IAG Code', 0, '72')
+        cy.tab('Vehicles')
+        cy.verifyGridData('app-account-vehicles', 'Plate Type', 0, 'Passenger')
+        cy.verifyGridData('app-account-vehicles', 'State', 0, 'RI')
+        cy.verifyGridData('app-account-vehicles', 'IAG Code', 0, '72')
 
-    //     cy.tab('Transponders')
-    //     cy.verifyGridData('app-account-transponder', 'Request Mode', 0, 'CALL')
-    //     cy.verifyGridData('app-account-transponder', 'Status', 0, 'To Be Assigned')
-    //     cy.verifyGridData('app-account-transponder', 'IAG Code', 0, '72')
-    //     cy.verifyGridData('app-account-transponder', 'Device Color', 0, 'Ivory')
-    // });
+        cy.tab('Transponders')
+        cy.verifyGridData('app-account-transponder', 'Request Mode', 0, 'CALL')
+        cy.verifyGridData('app-account-transponder', 'Status', 0, 'To Be Assigned')
+        cy.verifyGridData('app-account-transponder', 'IAG Code', 0, '72')
+        cy.verifyGridData('app-account-transponder', 'Device Color', 0, 'Ivory')
+    });
 });
