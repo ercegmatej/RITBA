@@ -17,29 +17,31 @@ describe('T92 - Create new E-Z pass acc, type Individual - Cash - add multiple p
         cy.accountPlan('Individual', 'Cash', 'Email', 'Email')
     });
 
-    // it('Add a vehicle', () => {
-    //     cy.contains('li', 'Vehicles').click()
-    //     cy.get('app-account-vehicles [title="Add"]').click()
-    //     cy.wait(500)
-    //     cy.contains('kendo-dialog-actions button', 'Save').click()
-    //     cy.requiredError('app-add-vehicle', 'Plate Type')
-    //     cy.requiredError('app-add-vehicle', 'Lic. Plate Number')
-    //     cy.requiredError('app-add-vehicle', 'Veh. Make')
-    //     cy.requiredError('app-add-vehicle', 'IAG Codes')
-    //     cy.verifyField('app-add-vehicle', 'Veh. Country', 'United States')
-    //     cy.verifyField('app-add-vehicle', 'Veh. State/Province', 'Rhode Island')
-    //     cy.field('app-add-vehicle', 'Plate Type', ':first')
-    //     cy.randomPlate().then(($plate) => {
-    //         cy.field('app-add-vehicle', 'Lic. Plate Number', $plate)
-    //     })
-    //     cy.field('app-add-vehicle', 'Veh. Year', '2019')
-    //     cy.field('app-add-vehicle', 'Veh. Make', 'AUDI')
-    //     cy.field('app-add-vehicle', 'Veh. Model', 'A7')
-    //     cy.field('app-add-vehicle', 'GVW', '3000')
-    //     cy.field('app-add-vehicle', 'IAG Codes', '136')
-    //     cy.contains('kendo-dialog-actions button', 'Save').click()
-    //     cy.popup('Success', 'New Vehicle has been added', 'Ok')
-    // });
+    it('Add a vehicle', () => {
+        cy.contains('li', 'Vehicles').click()
+        cy.get('app-account-vehicles [title="Add"]').click()
+        cy.wait(500)
+        cy.contains('kendo-dialog-actions button', 'Save').click()
+        cy.requiredError('app-add-vehicle', 'Plate Type')
+        cy.requiredError('app-add-vehicle', 'Lic. Plate Number')
+        cy.requiredError('app-add-vehicle', 'Veh. Make')
+        cy.requiredError('app-add-vehicle', 'IAG Codes')
+        cy.verifyField('app-add-vehicle', 'Veh. Country', 'United States')
+        cy.verifyField('app-add-vehicle', 'Veh. State/Province', 'Rhode Island')
+        cy.field('app-add-vehicle', 'Plate Type', ':first')
+        cy.randomPlate().then(($plate) => {
+            cy.field('app-add-vehicle', 'Lic. Plate Number', $plate)
+        })
+        cy.get('app-add-vehicle kendo-label:first').click() //!!Delete after fix
+        cy.contains('kendo-dialog-actions button', 'Ok').click() //!!Delete after fix
+        cy.field('app-add-vehicle', 'Veh. Year', '2019')
+        cy.field('app-add-vehicle', 'Veh. Make', 'AUDI')
+        cy.field('app-add-vehicle', 'Veh. Model', 'A7')
+        cy.field('app-add-vehicle', 'GVW', '3000')
+        cy.field('app-add-vehicle', 'IAG Codes', '136')
+        cy.contains('kendo-dialog-actions button', 'Save').click()
+        cy.popup('Success', 'New Vehicle has been added', 'Ok')
+    });
 
     it('Add a transponder', () => {
         cy.contains('li', 'Transponders').click()
@@ -48,7 +50,7 @@ describe('T92 - Create new E-Z pass acc, type Individual - Cash - add multiple p
         cy.field('app-transponder-edit app-select-one:visible', 'IAG Codes', '136')
         cy.wait(1000)
 
-
+        //TODO Continue after plans fix
         // cy.contains('kendo-dialog-actions button', 'Save').click()
         // cy.popup('Success', 'Transponder saved successfully', 'Ok')
     });

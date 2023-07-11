@@ -1,0 +1,35 @@
+{
+    "data": [
+        {
+            "statusDate": "2018-06-09T10:57:09.907",
+            "fromStatus": "ToBeAssigned",
+            "toStatus": "Active"
+        },
+        {
+            "statusDate": "2018-06-09T10:57:09.907",
+            "fromStatus": "ToBeAssigned",
+            "toStatus": "Active"
+        },
+        {
+            "statusDate": "2018-06-09T10:57:09.907",
+            "fromStatus": "ToBeAssigned",
+            "toStatus": "Active"
+        },
+        {
+            "statusDate": "2018-06-09T10:57:09.907",
+            "fromStatus": "ToBeAssigned",
+            "toStatus": "Active"
+        },
+        {
+            "statusDate": "2018-06-09T10:57:09.907",
+            "fromStatus": "ToBeAssigned",
+            "toStatus": "Active"
+        },
+        {
+            "statusDate": "2018-06-09T10:57:09.907",
+            "fromStatus": "ToBeAssigned",
+            "toStatus": "Active"
+        }
+    ],
+    "total": 6
+}

@@ -124,7 +124,8 @@ Cypress._.times(3, (i) => {
             cy.get('app-authorised-users [title="Remove User"]').click()
             cy.popup('Warning', 'Are you sure you want to delete this contact?', 'Yes')
             cy.popup('Success', 'Contact has been deleted', 'Ok')
-            cy.contains('td', 'John Doe').should('not.be.visible')
+            cy.contains('td', 'John Doe').should('not.exist')
         });
     });
+    //TODO add before test delete (also check for not exist)
 })

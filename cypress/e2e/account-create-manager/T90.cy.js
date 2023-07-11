@@ -1,9 +1,11 @@
-Cypress._.times(3, (i) => {
-    const startType = ['Commercial', 'Commercial', 'Non Revenue']
-    Cypress._.times(3, (j) => {
+Cypress._.times(3, (j) => {
+    const startType = ['Individual', 'Commercial', 'Non Revenue']
+
+    Cypress._.times(3, (i) => {
         const changeType = ['Individual', 'Commercial', 'Non Revenue']
+
         if (startType[i] !== changeType[j]) {
-            describe('T90 - Create new E-Z pass acc. - maximum number of transponders - ' + startType[i] + ' to ' + changeType[j], () => {
+            describe('T90 - Create new E-Z pass acc. - maximum number of transponders - ' + startType[j] + ' to ' + changeType[i], () => {
                 it('Login', () => {
                     cy.login(Cypress.env('username'), Cypress.env('password'), 'Call Center')
                 });
@@ -17,14 +19,10 @@ Cypress._.times(3, (i) => {
                 });
             
                 it('Account Plan', () => {
-                    if (startType[i] == 'Individual') {
-                        cy.accountPlan(startType[i], 'Cash', 'Email', 'Email')
-
-                    }
-                    else {
-                        cy.accountPlan(startType[i], 'Cash', 'Email', 'Email')
-                        cy.field('app-account-information', 'Company Name', startType[i])
-                    }
+                    console.log(j)
+                    console.log(startType[j])
+                    cy.accountPlan(startType[j], 'Cash', 'Email', 'Email')
+                    cy.field('app-account-information', 'Company Name', startType[j])
                 });
             
                 it('Add new vehicle', () => {
@@ -32,7 +30,7 @@ Cypress._.times(3, (i) => {
                 });
             
                 it('Add transponders for first acc type', () => {
-                    if (startType[i] == 'Individual') {
+                    if (startType[j] == 'Individual') {
                         cy.contains('li', 'Transponders').click()
                         cy.get('app-account-transponder [title="Add"]').click()
                         cy.field('app-transponder-edit app-select-one:visible:first', 'Tag', 'Ivory')
@@ -79,6 +77,7 @@ Cypress._.times(3, (i) => {
                         cy.popup('Success', 'Transponder saved successfully', 'Ok')
                         cy.get('app-account-transponder kendo-grid:eq(1) [data-kendo-grid-column-index="7"]').should('contain.text', 'Black')
                         cy.get('app-account-transponder kendo-grid:eq(1) > div').should('have.attr', 'aria-rowcount', 11)
+
                         cy.contains('li', 'Transponders').click()
                         cy.get('app-account-transponder [title="Add"]').click()
                         cy.field('app-transponder-edit app-select-one:visible:first', 'Tag', 'Exterior Roof Tag Black')
@@ -102,20 +101,25 @@ Cypress._.times(3, (i) => {
             
                 it('Delete transponders and go to information tab', () => {
                     cy.contains('li', 'Transponders').click()
-                    cy.get('app-account-transponder kendo-grid:eq(1) kendo-grid-list tr').each(($tr) => {
-                        cy.get($tr).click()
-                        cy.get('app-account-transponder kendo-grid:eq(1) [title="Delete"]').click()
-                        cy.wait(1000)
-                        //TODO WIP
+                    cy.get('app-account-transponder kendo-grid:eq(1) > div').then(($grid) => {
+                        const len1 = $grid.attr('aria-rowcount');
+                        const len = len1-1;
+                        for (let x=0; x<len; x++) {
+                            cy.get('app-account-transponder kendo-grid:eq(1) kendo-grid-list tr:first').click()
+                            cy.get('app-account-transponder kendo-grid:eq(1) [title="Delete"]').click()
+                            cy.wait(500)
+                        }
                     })
                     cy.contains('li', 'Information').click()
                     cy.contains('app-account-plan-information kendo-formfield', 'Account Type').find('kendo-dropdownlist').should('not.have.attr', 'readonly')
                 });
 
-                it('Change account type to ' + changeType[j], () => {
-                    cy.field('app-account-information', 'Account Type', changeType[j])
-                    if (changeType[j] !== 'Individual') {
-                        cy.field('app-account-information', 'Company Name', changeType[j])
+                it('Change account type to ' + changeType[i], () => {
+                    console.log(changeType[i])
+                    console.log(i)
+                    cy.field('app-account-information', 'Account Type', changeType[i])
+                    if (changeType[i] !== 'Individual') {
+                        cy.field('app-account-information', 'Company Name', changeType[i])
                     }
                 });
                 
@@ -126,7 +130,7 @@ Cypress._.times(3, (i) => {
                 })
 
                 it('Add transponders for second acc type', () => {
-                    if (changeType[j] == 'Individual') {
+                    if (changeType[i] == 'Individual') {
                         cy.contains('li', 'Transponders').click()
                         cy.get('app-account-transponder [title="Add"]').click()
                         cy.field('app-transponder-edit app-select-one:visible:first', 'Tag', 'Ivory')
@@ -195,41 +199,41 @@ Cypress._.times(3, (i) => {
                     cy.contains('app-account-plan-information kendo-formfield', 'Account Type').find('kendo-dropdownlist').should('have.attr', 'readonly')
                 });
 
-                // it('Payments tab', () => {
-                //     cy.intercept('POST', '/Account/CreateAccount').as('create');
-                //     cy.contains('li', 'Payments').click()
-                //     // if (changeType[j] == 'Individual') {
-                //     //     cy.contains('h5', 'Payment Summary').parent('div').find('input:eq(0)').should('have.attr', 'aria-valuenow', 35)
-                //     // }
-                //     // else {
-                //     //     cy.contains('h5', 'Payment Summary').parent('div').find('input:eq(0)').should('have.attr', 'aria-valuenow', 525)
-                //     // }
-                //     cy.contains('button', 'Cash').should('have.attr', 'aria-pressed', 'true')
-                //     cy.contains('app-account-create-manager button', 'Save').click()
-                //     cy.wait('@create').its('response.statusCode').should('eq', 200)
-                // });
+                it('Payments tab', () => {
+                    cy.intercept('POST', '/Account/CreateAccount').as('create');
+                    cy.contains('li', 'Payments').click()
+                    // if (changeType[j] == 'Individual') {
+                    //     cy.contains('h5', 'Payment Summary').parent('div').find('input:eq(0)').should('have.attr', 'aria-valuenow', 35)
+                    // }
+                    // else {
+                    //     cy.contains('h5', 'Payment Summary').parent('div').find('input:eq(0)').should('have.attr', 'aria-valuenow', 525)
+                    // }
+                    cy.contains('button', 'Cash').should('have.attr', 'aria-pressed', 'true')
+                    cy.contains('app-account-create-manager button', 'Save').click()
+                    cy.wait('@create').its('response.statusCode').should('eq', 200)
+                });
             
-                // it('Verify data of the account', () => {
-                //     cy.popup('Success', 'Account created successfully.', 'Ok')
-                //     cy.verifyField('app-account-status', 'Account Status', 'Open Pending')
+                it('Verify data of the account', () => {
+                    cy.popup('Success', 'Account created successfully.', 'Ok')
+                    cy.verifyField('app-account-status', 'Account Status', 'Open Pending')
             
-                //     cy.tab('Vehicles')
-                //     cy.get('app-account-vehicles kendo-grid > div').should('have.attr', 'aria-rowcount', 4)
+                    cy.tab('Vehicles')
+                    cy.get('app-account-vehicles kendo-grid > div').should('have.attr', 'aria-rowcount', 4)
             
-                //     cy.tab('Transponders')
-                //     if (changeType[j] == 'Individual') {
-                //         cy.verifyGridData('app-account-transponder', 'Request Mode', 0, 'CALL')
-                //         cy.verifyGridData('app-account-transponder', 'Status', 0, 'To Be Assigned')
-                //         cy.verifyGridData('app-account-transponder', 'IAG Code', 0, '72')
-                //         cy.verifyGridData('app-account-transponder', 'Device Color', 0, 'Ivory')
-                //     }
-                //     else {
-                //         cy.itemsPerPage('app-account-transponder kendo-grid:eq(0)', 100, '/Account/TranspondersList')
-                //         cy.get('app-account-transponder kendo-grid:eq(0) [data-kendo-grid-column-index="10"]').should('contain.text', 'Blue')
-                //         cy.get('app-account-transponder kendo-grid:eq(0) [data-kendo-grid-column-index="10"]').should('contain.text', 'Black')
-                //         cy.get('app-account-transponder kendo-grid:eq(0) > div').should('have.attr', 'aria-rowcount', 16)
-                //     }
-                // });
+                    cy.tab('Transponders')
+                    if (changeType[j] == 'Individual') {
+                        cy.verifyGridData('app-account-transponder', 'Request Mode', 0, 'CALL')
+                        cy.verifyGridData('app-account-transponder', 'Status', 0, 'To Be Assigned')
+                        cy.verifyGridData('app-account-transponder', 'IAG Code', 0, '72')
+                        cy.verifyGridData('app-account-transponder', 'Device Color', 0, 'Ivory')
+                    }
+                    else {
+                        cy.itemsPerPage('app-account-transponder kendo-grid:eq(0)', 100, '/Account/TranspondersList')
+                        cy.get('app-account-transponder kendo-grid:eq(0) [data-kendo-grid-column-index="10"]').should('contain.text', 'Blue')
+                        cy.get('app-account-transponder kendo-grid:eq(0) [data-kendo-grid-column-index="10"]').should('contain.text', 'Black')
+                        cy.get('app-account-transponder kendo-grid:eq(0) > div').should('have.attr', 'aria-rowcount', 16)
+                    }
+                });
             })
         }
     })

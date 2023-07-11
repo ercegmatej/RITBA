@@ -1,3 +1,73 @@
 -- BY FOLDERS --
+ACCOUNT CREATE:
+npm run cypress:run -- --spec cypress/e2e/account-create-manager/**cy.js ; npm run merge_and_report
+
 ACCOUNT SEARCH:
 npm run cypress:run -- --spec cypress/e2e/account-search/**cy.js ; npm run merge_and_report
+
+CASE MANAGEMENT (FULL):
+npm run cypress:run -- --spec cypress/e2e/case-management/**/**cy.js ; npm run merge_and_report
+
+CASE MANAGEMENT - CASES:
+npm run cypress:run -- --spec cypress/e2e/case-management/cases/**cy.js ; npm run merge_and_report
+
+CASE MANAGEMENT - CONFIGURATION/SUMMARY:
+npm run cypress:run -- --spec cypress/e2e/case-management/configuration-summary/**cy.js ; npm run merge_and_report
+
+CASE MANAGEMENT - TEMPLATE LIBRARY:
+npm run cypress:run -- --spec cypress/e2e/case-management/template-library/**cy.js ; npm run merge_and_report
+
+
+EZ PASS (FULL):
+npm run cypress:run -- --spec cypress/e2e/ez-pass-account-manager/**/**cy.js ; npm run merge_and_report
+
+EZ PASS - ACCOUNT LINKS:
+npm run cypress:run -- --spec cypress/e2e/ez-pass-account-manager/account-links/**cy.js ; npm run merge_and_report
+
+EZ PASS - CASES:
+npm run cypress:run -- --spec cypress/e2e/ez-pass-account-manager/cases/**cy.js ; npm run merge_and_report
+
+EZ PASS - CORRESPONDENCE:
+npm run cypress:run -- --spec cypress/e2e/ez-pass-account-manager/correspondence/**cy.js ; npm run merge_and_report
+
+EZ PASS - DISCOUNT PLANS:
+npm run cypress:run -- --spec cypress/e2e/ez-pass-account-manager/discount-plans/**cy.js ; npm run merge_and_report
+
+EZ PASS - EZ PASS PLUS:
+npm run cypress:run -- --spec cypress/e2e/ez-pass-account-manager/ez-pass-plus/**cy.js ; npm run merge_and_report
+
+EZ PASS - FINANCIALS:
+npm run cypress:run -- --spec cypress/e2e/ez-pass-account-manager/financials/**cy.js ; npm run merge_and_report
+
+EZ PASS - HISTORY:
+npm run cypress:run -- --spec cypress/e2e/ez-pass-account-manager/history/**cy.js ; npm run merge_and_report
+
+EZ PASS - INFORMATION:
+npm run cypress:run -- --spec cypress/e2e/ez-pass-account-manager/information/**cy.js ; npm run merge_and_report
+
+EZ PASS - MORE DETAILS:
+npm run cypress:run -- --spec cypress/e2e/ez-pass-account-manager/more-details/**cy.js ; npm run merge_and_report
+
+EZ PASS - NOTES:
+npm run cypress:run -- --spec cypress/e2e/ez-pass-account-manager/notes/**cy.js ; npm run merge_and_report
+
+EZ PASS - REPLENISHMENT:
+npm run cypress:run -- --spec cypress/e2e/ez-pass-account-manager/replenishment/**cy.js ; npm run merge_and_report
+
+EZ PASS - SPEED-VIOLATIONS:
+npm run cypress:run -- --spec cypress/e2e/ez-pass-account-manager/speed-violations/**cy.js ; npm run merge_and_report
+
+EZ PASS - STATEMENTS:
+npm run cypress:run -- --spec cypress/e2e/ez-pass-account-manager/statements/**cy.js ; npm run merge_and_report
+
+EZ PASS - TOLLS:
+npm run cypress:run -- --spec cypress/e2e/ez-pass-account-manager/tolls/**cy.js ; npm run merge_and_report
+
+EZ PASS - TOOLS:
+npm run cypress:run -- --spec cypress/e2e/ez-pass-account-manager/tools/**cy.js ; npm run merge_and_report
+
+EZ PASS - TRANSPONDER:
+npm run cypress:run -- --spec cypress/e2e/ez-pass-account-manager/transponder/**cy.js ; npm run merge_and_report
+
+EZ PASS - VEHICLES:
+npm run cypress:run -- --spec cypress/e2e/ez-pass-account-manager/vehicles/**cy.js ; npm run merge_and_report
